@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+  --color-petrol: #1E3A45;
+  --color-petrol-light: #2a4d5a;
+  --color-cream: #FDFDF9;
+  --color-accent: #FF8844;
+  --color-accent-hover: #ff9a5c;
+}

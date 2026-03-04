@@ -1,14 +1,90 @@
 ---
+const navItems = [
+  { href: '/coverage', label: 'Coverage' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/documentation', label: 'Documentation' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/contact', label: 'Contact' },
+];
 ---
 
-<header class="border-b border-gray-200 bg-white">
-  <div class="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
-    <nav class="flex items-center justify-between">
-      <a href="/" class="text-lg font-semibold">Logo</a>
-      <div class="flex gap-6">
-        <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
-        <a href="/blog" class="text-gray-600 hover:text-gray-900">Blog</a>
+<header class="sticky top-0 z-50 bg-petrol shadow-lg backdrop-blur-sm">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <nav class="flex h-16 items-center justify-between gap-8">
+      <!-- Logo -->
+      <a href="/" class="flex shrink-0 items-center transition-opacity hover:opacity-90">
+        <span class="text-lg font-bold tracking-wider text-white sm:text-xl">VEHICLE IMAGERY</span>
+      </a>
+
+      <!-- Navigation Links - schwebend mit Hover-Effekt -->
+      <div class="hidden items-center gap-1 md:flex" id="nav-menu">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class="group relative rounded-lg px-4 py-2 text-sm font-medium text-white/90 transition-all duration-200 hover:text-white"
+          >
+            <span class="relative z-10">{item.label}</span>
+            <span class="absolute inset-0 -z-0 rounded-lg bg-white/0 transition-all duration-200 group-hover:bg-white/10" />
+          </a>
+        ))}
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="flex shrink-0 items-center gap-3">
+        <a
+          href="/book-a-call"
+          class="hidden rounded-lg border border-white/30 px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:border-white/50 hover:bg-white/10 sm:inline-block"
+        >
+          Book a Call
+        </a>
+        <a
+          href="/try-it-out"
+          class="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:bg-accent-hover hover:shadow-lg"
+        >
+          Try it Out
+        </a>
+        <!-- Mobile Menu Button -->
+        <button
+          type="button"
+          class="flex h-10 w-10 items-center justify-center rounded-lg text-white/90 transition-colors hover:bg-white/10 md:hidden"
+          aria-label="Menü öffnen"
+          id="mobile-menu-btn"
+        >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
       </div>
     </nav>
+
+    <!-- Mobile Menu -->
+    <div class="hidden border-t border-white/10 py-4 md:hidden" id="mobile-menu">
+      <div class="flex flex-col gap-1">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class="rounded-lg px-4 py-3 text-white/90 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            {item.label}
+          </a>
+        ))}
+        <a
+          href="/book-a-call"
+          class="mt-2 rounded-lg border border-white/30 px-4 py-3 text-center text-sm font-semibold text-white"
+        >
+          Book a Call
+        </a>
+      </div>
+    </div>
   </div>
 </header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+</script>

@@ -14,5 +14,8 @@
     "astro": "^5.17.1",
     "contentful": "^11.10.5",
     "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "contentful-management": "^11.73.1"
   }
 }
