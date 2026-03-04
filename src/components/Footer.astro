@@ -19,8 +19,9 @@
         <div class="w-full lg:w-auto flex flex-col items-end">
           <picture><source srcset="/images/footer_vehicles.webp" type="image/webp" /><img alt="Vehicle fleet showcase" loading="lazy" decoding="async" width="1200" height="300" class="h-24 md:h-32 w-auto object-contain opacity-80 mb-6" src="/images/footer_vehicles.png" draggable="false"/></picture>
           <p class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Stay updated</p>
-          <form class="flex flex-col sm:flex-row gap-2">
-            <input type="email" required placeholder="Enter email address" class="px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-white w-full sm:w-80 rounded-none"/>
+          <form class="flex flex-col sm:flex-row gap-2" action="https://submit-form.com/v6dFS1FAS" method="POST">
+            <input type="hidden" name="subject" value="Newsletter Subscribe"/>
+            <input type="email" name="email" required placeholder="Enter email address" class="px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-white w-full sm:w-80 rounded-none"/>
             <button type="submit" class="px-6 py-3 font-bold uppercase tracking-widest transition-colors rounded-none bg-white text-black hover:bg-gray-200">Subscribe</button>
           </form>
         </div>

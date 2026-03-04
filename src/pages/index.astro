@@ -18,6 +18,8 @@ import Footer from '../components/Footer.astro';
       .hero-section { grid-template-columns: 65% 35%; }
     }
     .vi-font { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; }
+    .interior-cell.img-failed picture { display: none; }
+    .interior-cell.img-failed .img-placeholder { display: flex; }
   </style>
 
   <!-- Hero Section -->
@@ -63,78 +65,61 @@ import Footer from '../components/Footer.astro';
     </div>
   </section>
 
-  <!-- Vehicle Perspectives -->
-  <section class="border-t border-black/5 py-16 md:py-24 w-full vi-font" style="background-color:rgb(255, 254, 252);">
-    <div class="w-full px-6 sm:px-8 md:px-12 lg:px-16 xl:px-8">
-      <div class="max-w-[1400px] mx-auto">
-        <div class="mb-16">
-          <h2 class="text-4xl sm:text-5xl font-black mb-6 text-black tracking-tighter leading-none">VEHICLE PERSPECTIVES.</h2>
-          <p class="text-lg text-gray-600 max-w-md font-light">Comprehensive vehicle photography from every angle with professional studio quality.</p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          <div class="lg:order-1">
-            <div class="p-8">
-              <div class="mb-6">
-                <h3 class="text-sm font-bold uppercase tracking-widest text-black mb-4 border-b border-gray-400 pb-2">Exterior Vehicle Images</h3>
-                <div class="grid grid-cols-4 gap-3 mb-6">
-                {[
-                  { name: "Front", img: "cupra_front" },
-                  { name: "Front-L", img: "cupra_front_left" },
-                  { name: "Side-L", img: "cupra_side_left" },
-                  { name: "Rear-L", img: "cupra_rear_left" }
-                ].map((a, i) => (
-                  <button class={`group cursor-pointer transition-all duration-300 ${i === 0 ? 'scale-105' : ''}`}>
-                    <div class={`aspect-[4/3] border-2 transition-colors mb-2 relative overflow-hidden ${i === 0 ? 'border-black bg-white' : 'border-gray-200 bg-gray-50 group-hover:border-gray-400'}`} style="border-top-left-radius:8px;border-bottom-right-radius:8px;">
-                      <picture><source srcset={`/images/${a.img}.webp`} type="image/webp" /><img src={`/images/${a.img}.png`} alt={a.name} class="w-full h-full object-cover" loading={i === 0 ? "eager" : "lazy"} decoding="async" draggable="false"/></picture>
-                      <div class={`absolute top-1 right-1 text-[7px] font-mono px-1 ${i === 0 ? 'bg-white/80 text-black' : 'bg-white/80 text-gray-300'}`}>{String(i + 1).padStart(2, '0')}</div>
-                    </div>
-                    <div class={`text-[9px] font-bold uppercase tracking-wider text-center leading-tight ${i === 0 ? 'text-black' : 'text-gray-400 group-hover:text-[rgb(200,90,70)]'}`}>{a.name}</div>
-                  </button>
-                ))}
+  <!-- Vehicle Perspectives Gallery -->
+  <section class="pt-16 md:pt-24 pb-0 w-full vi-font overflow-hidden" style="background-color:rgb(255, 254, 252);">
+    <div class="w-full">
+      <div class="mb-12 md:mb-16 px-6 md:px-12">
+        <h2 class="text-4xl sm:text-5xl md:text-6xl font-black text-black tracking-tighter leading-none">VEHICLE PERSPECTIVES.</h2>
+        <p class="mt-4 text-base sm:text-lg text-gray-600 font-light max-w-2xl">Comprehensive vehicle photography from every angle with professional studio quality.</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-0" style="grid-auto-rows: minmax(220px, 1fr);">
+        {[
+          { name: "Front", img: "cupra_front", num: "01", span: "", bg: "#f8f8f8", interior: false },
+          { name: "Front-L", img: "cupra_front_left", num: "02", span: "", bg: "#efefef", interior: false },
+          { name: "Side-L", img: "cupra_side_left", num: "03", span: "", bg: "#e8e8e8", interior: false },
+          { name: "Rear-L", img: "cupra_rear_left", num: "04", span: "", bg: "#f5f5f5", interior: false },
+          { name: "Rear", img: "cupra_rear", num: "05", span: "", bg: "#e0e0e0", interior: false },
+          { name: "Rear-R", img: "cupra_rear_right", num: "06", span: "", bg: "#fafafa", interior: false },
+          { name: "Side-R", img: "cupra_side_right", num: "07", span: "", bg: "#ebebeb", interior: false },
+          { name: "Front-R", img: "cupra_front_right", num: "08", span: "", bg: "#f0f0f0", interior: false },
+          { name: "Cockpit", img: "cupra_cockpit", num: "09", span: "", bg: "#e5e5e5", interior: true, ext: "jpeg" },
+          { name: "Steering Wheel", img: "cupra_front_row", num: "10", span: "", bg: "#eeeeee", interior: true, ext: "jpeg" },
+          { name: "Center Console", img: "cupra_rear_row", num: "11", span: "", bg: "#e8e8e8", interior: true, ext: "jpeg" },
+          { name: "—", img: null, num: "", span: "", bg: "#f2f2f2", placeholder: true }
+        ].map((a, i) => (
+          <article class={`group relative flex items-center justify-center min-h-[180px] ${a.span || ""}`} style={`background-color:${a.bg}`}>
+            {a.placeholder ? (
+              <div class="w-full h-full flex items-center justify-center">
+                <span class="text-[10px] font-mono text-black/30 uppercase tracking-widest">—</span>
+              </div>
+            ) : a.interior ? (
+              <div class="interior-cell absolute inset-0">
+                <div class="img-placeholder absolute inset-0 hidden items-center justify-center bg-black/5">
+                  <div class="w-12 h-12 border-2 border-dashed border-black/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-black/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path></svg>
+                  </div>
+                  <span class="absolute top-2 right-2 text-[8px] font-bold uppercase tracking-wider text-black/40 px-1.5 py-0.5 bg-white/80">Coming soon</span>
                 </div>
-                <div class="grid grid-cols-4 gap-3">
-                {[
-                  { name: "Rear", img: "cupra_rear" },
-                  { name: "Rear-R", img: "cupra_rear_right" },
-                  { name: "Side-R", img: "cupra_side_right" },
-                  { name: "Front-R", img: "cupra_front_right" }
-                ].map((a, i) => (
-                  <button class="group cursor-pointer transition-all duration-300">
-                    <div class="aspect-[4/3] bg-gray-50 border-2 border-gray-200 group-hover:border-gray-400 transition-colors mb-2 relative overflow-hidden" style="border-top-left-radius:8px;border-bottom-right-radius:8px;">
-                      <picture><source srcset={`/images/${a.img}.webp`} type="image/webp" /><img src={`/images/${a.img}.png`} alt={a.name} class="w-full h-full object-cover" loading="lazy" decoding="async" draggable="false"/></picture>
-                      <div class="absolute top-1 right-1 text-[7px] font-mono bg-white/80 px-1 text-gray-300">{String(i + 5).padStart(2, '0')}</div>
-                    </div>
-                    <div class="text-[9px] font-bold uppercase tracking-wider text-center leading-tight text-gray-400 group-hover:text-[rgb(200,90,70)]">{a.name}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div class="flex items-center justify-between mb-4 border-b border-gray-400 pb-2">
-                <h3 class="text-sm font-bold uppercase tracking-widest text-black">Interior Vehicle Images</h3>
-                <span class="text-[8px] font-bold uppercase tracking-wider text-white px-2 py-1 rounded-none" style="background-color:rgb(10, 43, 49);">New</span>
-              </div>
-              <div class="p-4">
-                <div class="grid grid-cols-3 gap-4">
-                  {["Cockpit", "Front Row", "Rear Row"].map((view) => (
-                    <button class="group cursor-pointer transition-all duration-300">
-                      <div class="aspect-[4/3] bg-gray-50 border-2 border-gray-200 group-hover:border-gray-400 transition-colors mb-2 relative overflow-hidden ">
-                        <div class="absolute inset-0 bg-gray-100 animate-pulse"></div>
-                      </div>
-                      <div class="text-[9px] font-bold uppercase tracking-wider text-center leading-tight text-gray-400 group-hover:text-[rgb(200,90,70)]">{view}</div>
-                    </button>
-                  ))}
+                <picture class="absolute inset-0" data-fallback="placeholder">
+                  <img src={`/images/${a.img}.${a.ext || 'png'}`} alt={a.name} class="w-full h-full object-cover" loading="lazy" decoding="async" draggable="false" onerror="this.closest('.interior-cell').classList.add('img-failed')"/>
+                </picture>
+                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center">
+                  <span class="text-xs font-bold uppercase tracking-widest text-black px-3 py-1.5 bg-white/95 rounded-lg shadow-sm">{a.name}</span>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="relative lg:order-2">
-            <div class="relative">
-              <picture><source srcset="/images/cupra_front.webp" type="image/webp" /><img src="/images/cupra_front.png" alt="Cupra Front View" class="w-full h-auto object-contain" style="filter:drop-shadow(0 15px 30px rgba(0,0,0,0.15));" loading="lazy" decoding="async" draggable="false"/></picture>
-              <div class="absolute top-6 right-6 bg-black/70 text-white px-3 py-1.5 text-[10px] font-mono">01 / Front</div>
-            </div>
-          </div>
-        </div>
+            ) : (
+              <>
+                <picture class="absolute inset-0 flex items-center justify-center p-2">
+                  <source srcset={`/images/${a.img}.webp`} type="image/webp" />
+                  <img src={`/images/${a.img}.png`} alt={a.name} class="max-w-full max-h-full w-auto h-auto object-contain" loading={i < 4 ? "eager" : "lazy"} decoding="async" draggable="false"/>
+                </picture>
+                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center">
+                  <span class="text-xs font-bold uppercase tracking-widest text-black px-3 py-1.5 bg-white/95 rounded-lg shadow-sm">{a.name}</span>
+                </div>
+              </>
+            )}
+          </article>
+        ))}
       </div>
     </div>
   </section>
@@ -293,8 +278,9 @@ import Footer from '../components/Footer.astro';
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Try it free</h2>
         <p class="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8">Request your free trial access. Enter your email and we&apos;ll send you everything you need to get started. No credit card required.</p>
-        <form class="flex flex-col sm:flex-row gap-0 max-w-lg mx-auto border-b border-white/20 pb-2">
-          <input type="email" required placeholder="you@company.com" class="flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"/>
+        <form class="flex flex-col sm:flex-row gap-0 max-w-lg mx-auto border-b border-white/20 pb-2" action="https://submit-form.com/v6dFS1FAS" method="POST">
+          <input type="hidden" name="subject" value="Free Trial Request"/>
+          <input type="email" name="email" required placeholder="you@company.com" class="flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"/>
           <button type="submit" class="px-6 py-3 font-semibold whitespace-nowrap uppercase tracking-widest text-sm transition-colors text-white hover:text-[rgb(200,90,70)]">Request Free Trial →</button>
         </form>
         <p class="text-xs sm:text-sm text-gray-400 mt-3 sm:mt-4">We&apos;ll send you an email with your trial access details.</p>
@@ -345,24 +331,25 @@ import Footer from '../components/Footer.astro';
             </div>
           </div>
           <div class="lg:w-[60%] p-10 sm:p-12 lg:p-16">
-            <form class="space-y-6">
+            <form class="space-y-6" action="https://submit-form.com/v6dFS1FAS" method="POST">
+              <input type="hidden" name="subject" value="Contact Form"/>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">First name</label>
-                  <input type="text" required placeholder="John" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                  <input type="text" name="name" required placeholder="John" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Work Email</label>
-                  <input type="email" required placeholder="john@company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                  <input type="email" name="email" required placeholder="john@company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
                 </div>
               </div>
               <div>
                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Company Website</label>
-                <input type="url" placeholder="https://company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                <input type="url" name="company" placeholder="https://company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
               </div>
               <div>
                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Message</label>
-                <textarea rows="4" required placeholder="Tell us about your project..." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all resize-none"></textarea>
+                <textarea rows="4" name="message" required placeholder="Tell us about your project..." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all resize-none"></textarea>
               </div>
               <div class="pt-2">
                 <button type="submit" class="w-full px-8 py-4 rounded-[2px] text-sm font-bold uppercase tracking-widest transition-colors shadow-lg bg-black text-white hover:bg-[rgb(200,90,70)] hover:shadow-xl transform hover:-translate-y-0.5 duration-200">Send Message</button>
