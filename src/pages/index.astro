@@ -21,11 +21,11 @@ import Footer from '../components/Footer.astro';
   </style>
 
   <!-- Hero Section -->
-  <section class="hero-section relative grid grid-cols-1 min-h-[calc(100vh-80px)] md:h-[calc(100vh-80px)] overflow-hidden">
+  <section class="hero-section relative grid grid-cols-1 min-h-[calc(100vh-80px)] md:h-[calc(100vh-80px)] overflow-hidden md:overflow-visible">
     <div class="pointer-events-none absolute left-0 right-0 -top-[2px] z-10" style="height:2px; background-color:var(--vi-dark); background-image:linear-gradient(to right, var(--vi-cream) 0%, var(--vi-cream) 65%, var(--vi-dark) 65%, var(--vi-dark) 100%);"></div>
     <div class="px-10 md:px-16 flex flex-col justify-center items-start relative w-full order-1 self-stretch min-h-full" style="background-color:var(--vi-cream);">
       <div class="absolute top-0 left-0 w-full h-px bg-black/5 md:hidden"></div>
-      <div class="max-w-[640px] w-full" style="margin-top:-30%;">
+      <div class="max-w-[640px] w-full" style="margin-top:-15%;">
         <div class="flex items-center space-x-4 mb-8">
           <span class="text-xs font-mono text-gray-500 uppercase">Studio Quality Standards</span>
         </div>
@@ -49,23 +49,17 @@ import Footer from '../components/Footer.astro';
         </div>
       </div>
     </div>
-    <div class="hidden md:flex items-center justify-center p-0 relative z-0 overflow-visible order-2 self-stretch" style="background-color:var(--vi-dark);">
-      <div class="absolute inset-0 opacity-20" style="background-image:radial-gradient(#4a4a4a 1px, transparent 1px); background-size:32px 32px;"></div>
+    <div class="hidden md:flex items-center justify-center p-0 relative z-0 overflow-hidden order-2 self-stretch" style="background-color:var(--vi-dark); border-bottom-left-radius: 48px;">
+      <div class="absolute inset-0 opacity-20" style="background-image:radial-gradient(#4a4a4a 1px, transparent 1px); background-size:32px 32px; border-radius: inherit;"></div>
       <div class="p-10 md:p-16 w-full relative z-10">
         <div class="font-black text-white uppercase tracking-tighter leading-[0.8] pointer-events-none select-none mix-blend-overlay" style="font-size:clamp(3rem, 12vw, 230px); line-height:0.8; font-weight:900; opacity:0.05; transform:scale(1.5); transform-origin:center center;" aria-hidden="true">EVERY CAR STOCK IMAGERY, API.</div>
       </div>
     </div>
     <div class="hidden md:block absolute inset-0 z-20 pointer-events-none" style="left:65%; transform:translateX(-50%);">
-      <img src="/images/hero-car.png" alt="BMW X6 - Vehicle Imagery API Preview" draggable="false" class="w-auto max-w-none object-contain pointer-events-auto" style="height:58.5%; margin-top:20%; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.3)); user-select:none;"/>
-    </div>
-  </section>
-
-  <!-- Trusted Companies -->
-  <section class="border-t border-black/5 py-16 w-full overflow-hidden vi-font" style="background-color:rgb(255, 254, 252);">
-    <div class="w-full px-6 sm:px-12 md:px-16 lg:px-24 xl:px-64 mb-10">
-      <div class="max-w-[1400px] mx-auto">
-        <p class="text-center text-xs font-bold uppercase tracking-widest text-gray-400">Trusted by modern automotive companies</p>
-      </div>
+      <picture>
+      <source srcset="/images/hero-car.webp" type="image/webp" />
+      <img src="/images/hero-car.png" alt="BMW X6 - Vehicle Imagery API Preview" draggable="false" fetchpriority="high" decoding="async" class="w-auto max-w-none object-contain pointer-events-auto" style="height:58.5%; margin-top:20%; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.3)); user-select:none;"/>
+    </picture>
     </div>
   </section>
 
@@ -78,36 +72,41 @@ import Footer from '../components/Footer.astro';
           <p class="text-lg text-gray-600 max-w-md font-light">Comprehensive vehicle photography from every angle with professional studio quality.</p>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          <div>
+          <div class="lg:order-1">
             <div class="p-8">
               <div class="mb-6">
                 <h3 class="text-sm font-bold uppercase tracking-widest text-black mb-4 border-b border-gray-400 pb-2">Exterior Vehicle Images</h3>
                 <div class="grid grid-cols-4 gap-3 mb-6">
-                  {["Front", "Front-L", "Side-L", "Rear-L"].map((angle, i) => (
-                    <button class={`group cursor-pointer transition-all duration-300 ${i === 0 ? 'scale-105' : ''}`}>
-                      <div class={`aspect-[4/3] border-2 transition-colors mb-2 relative overflow-hidden ${i === 0 ? 'border-black bg-white' : 'border-gray-200 bg-gray-50 group-hover:border-gray-400'}`} style="border-top-left-radius:8px;border-bottom-right-radius:8px;">
-                        {i === 0 ? (
-                          <img src="/images/cupra_front.png" alt={angle} class="w-full h-full object-cover" loading="eager" draggable="false"/>
-                        ) : (
-                          <div class="absolute inset-0 bg-gray-100 animate-pulse"></div>
-                        )}
-                        <div class={`absolute top-1 right-1 text-[7px] font-mono px-1 ${i === 0 ? 'bg-white/80 text-black' : 'bg-white/80 text-gray-300'}`}>{String(i + 1).padStart(2, '0')}</div>
-                      </div>
-                      <div class={`text-[9px] font-bold uppercase tracking-wider text-center leading-tight ${i === 0 ? 'text-black' : 'text-gray-400 group-hover:text-[rgb(200,90,70)]'}`}>{angle}</div>
-                    </button>
-                  ))}
+                {[
+                  { name: "Front", img: "cupra_front" },
+                  { name: "Front-L", img: "cupra_front_left" },
+                  { name: "Side-L", img: "cupra_side_left" },
+                  { name: "Rear-L", img: "cupra_rear_left" }
+                ].map((a, i) => (
+                  <button class={`group cursor-pointer transition-all duration-300 ${i === 0 ? 'scale-105' : ''}`}>
+                    <div class={`aspect-[4/3] border-2 transition-colors mb-2 relative overflow-hidden ${i === 0 ? 'border-black bg-white' : 'border-gray-200 bg-gray-50 group-hover:border-gray-400'}`} style="border-top-left-radius:8px;border-bottom-right-radius:8px;">
+                      <picture><source srcset={`/images/${a.img}.webp`} type="image/webp" /><img src={`/images/${a.img}.png`} alt={a.name} class="w-full h-full object-cover" loading={i === 0 ? "eager" : "lazy"} decoding="async" draggable="false"/></picture>
+                      <div class={`absolute top-1 right-1 text-[7px] font-mono px-1 ${i === 0 ? 'bg-white/80 text-black' : 'bg-white/80 text-gray-300'}`}>{String(i + 1).padStart(2, '0')}</div>
+                    </div>
+                    <div class={`text-[9px] font-bold uppercase tracking-wider text-center leading-tight ${i === 0 ? 'text-black' : 'text-gray-400 group-hover:text-[rgb(200,90,70)]'}`}>{a.name}</div>
+                  </button>
+                ))}
                 </div>
                 <div class="grid grid-cols-4 gap-3">
-                  {["Rear", "Rear-R", "Side-R", "Front-R"].map((angle, i) => (
-                    <button class="group cursor-pointer transition-all duration-300">
-                      <div class="aspect-[4/3] bg-gray-50 border-2 border-gray-200 group-hover:border-gray-400 transition-colors mb-2 relative overflow-hidden" style="border-top-left-radius:8px;border-bottom-right-radius:8px;">
-                        <div class="absolute inset-0 bg-gray-100 animate-pulse"></div>
-                        <div class="absolute top-1 right-1 text-[7px] font-mono bg-white/80 px-1 text-gray-300">{String(i + 5).padStart(2, '0')}</div>
-                      </div>
-                      <div class="text-[9px] font-bold uppercase tracking-wider text-center leading-tight text-gray-400 group-hover:text-[rgb(200,90,70)]">{angle}</div>
-                    </button>
-                  ))}
-                </div>
+                {[
+                  { name: "Rear", img: "cupra_rear" },
+                  { name: "Rear-R", img: "cupra_rear_right" },
+                  { name: "Side-R", img: "cupra_side_right" },
+                  { name: "Front-R", img: "cupra_front_right" }
+                ].map((a, i) => (
+                  <button class="group cursor-pointer transition-all duration-300">
+                    <div class="aspect-[4/3] bg-gray-50 border-2 border-gray-200 group-hover:border-gray-400 transition-colors mb-2 relative overflow-hidden" style="border-top-left-radius:8px;border-bottom-right-radius:8px;">
+                      <picture><source srcset={`/images/${a.img}.webp`} type="image/webp" /><img src={`/images/${a.img}.png`} alt={a.name} class="w-full h-full object-cover" loading="lazy" decoding="async" draggable="false"/></picture>
+                      <div class="absolute top-1 right-1 text-[7px] font-mono bg-white/80 px-1 text-gray-300">{String(i + 5).padStart(2, '0')}</div>
+                    </div>
+                    <div class="text-[9px] font-bold uppercase tracking-wider text-center leading-tight text-gray-400 group-hover:text-[rgb(200,90,70)]">{a.name}</div>
+                  </button>
+                ))}
               </div>
             </div>
             <div>
@@ -129,9 +128,9 @@ import Footer from '../components/Footer.astro';
               </div>
             </div>
           </div>
-          <div class="relative">
+          <div class="relative lg:order-2">
             <div class="relative">
-              <img src="/images/cupra_front.png" alt="Cupra Front View" class="w-full h-auto object-contain" style="filter:drop-shadow(0 15px 30px rgba(0,0,0,0.15));" draggable="false"/>
+              <picture><source srcset="/images/cupra_front.webp" type="image/webp" /><img src="/images/cupra_front.png" alt="Cupra Front View" class="w-full h-auto object-contain" style="filter:drop-shadow(0 15px 30px rgba(0,0,0,0.15));" loading="lazy" decoding="async" draggable="false"/></picture>
               <div class="absolute top-6 right-6 bg-black/70 text-white px-3 py-1.5 text-[10px] font-mono">01 / Front</div>
             </div>
           </div>
@@ -248,7 +247,7 @@ import Footer from '../components/Footer.astro';
         <div id="before-after-slider" class="relative w-full aspect-[16/9]  overflow-hidden shadow-2xl cursor-ew-resize select-none">
           <div class="absolute inset-0 bg-white" id="slider-left" style="clip-path:inset(0 50% 0 0);"></div>
           <div class="absolute inset-0 z-0" id="slider-right" style="clip-path:inset(0 0 0 50%);">
-            <img alt="Showroom background" loading="lazy" class="w-full h-full object-cover" style="transform:scale(1.3);" src="/images/showroom.png" draggable="false"/>
+            <picture><source srcset="/images/showroom.webp" type="image/webp" /><img alt="Showroom background" loading="lazy" decoding="async" class="w-full h-full object-cover" style="transform:scale(1.3);" src="/images/showroom.png" draggable="false"/></picture>
           </div>
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
             <div class="relative w-full h-full flex items-center justify-center px-4">
@@ -282,7 +281,7 @@ import Footer from '../components/Footer.astro';
           </div>
         </div>
         <div class="relative z-10">
-          <img alt="Vehicle Colors API Showcase" loading="lazy" width="1200" height="426" class="w-full h-auto object-cover block" src="/images/vehicle_colors_api.png" draggable="false"/>
+          <picture><source srcset="/images/vehicle_colors_api.webp" type="image/webp" /><img alt="Vehicle Colors API Showcase" loading="lazy" decoding="async" width="1200" height="426" class="w-full h-auto object-cover block" src="/images/vehicle_colors_api.png" draggable="false"/></picture>
         </div>
       </div>
     </div>
