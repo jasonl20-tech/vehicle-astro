@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getEntries } from '../../lib/contentful';
+
+let posts: Array<{ slug: string; title: string; date?: string }> = [];
+
+try {
+  const res = await getEntries({
+    content_type: 'blogPost',
+    order: ['-fields.publishedAt'],
+  });
+  posts = res.items.map((item: { fields?: { slug?: string; title?: string; publishedAt?: string } }) => ({
+    slug: item.fields?.slug ?? '',
+    title: item.fields?.title ?? 'Untitled',
+    date: item.fields?.publishedAt,
+  }));
+} catch {
+  // Contentful nicht konfiguriert oder keine Einträge
+}
+---
+
+<BaseLayout title="Blog" description="Blog-Übersicht">
+  <Header />
+  <main class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold">Blog</h1>
+    <ul class="mt-8 space-y-4">
+      {posts.length > 0 ? (
+        posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.slug}`} class="text-blue-600 hover:underline">
+              {post.title}
+            </a>
+            {post.date && (
+              <span class="ml-2 text-sm text-gray-500">
+                {new Date(post.date).toLocaleDateString('de-DE')}
+              </span>
+            )}
+          </li>
+        ))
+      ) : (
+        <li class="text-gray-500">Keine Blog-Posts. Contentful mit Content-Type „blogPost“ konfigurieren.</li>
+      )}
+    </ul>
+  </main>
+  <Footer />
+</BaseLayout>

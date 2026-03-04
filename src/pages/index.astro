@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Home" description="Willkommen">
+  <Header />
+  <main class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold">Willkommen</h1>
+    <p class="mt-4 text-lg text-gray-600">
+      Neues Astro-Projekt mit Contentful CMS und Cloudflare Pages.
+    </p>
+  </main>
+  <Footer />
+</BaseLayout>
