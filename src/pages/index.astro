@@ -4,13 +4,427 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 ---
 
-<BaseLayout title="Home" description="Willkommen">
+<BaseLayout title="Vehicle Imagery API" description="The definitive car photography API. Studio-quality vehicle images for dealerships, leasing, and automotive platforms.">
   <Header />
-  <main class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-    <h1 class="text-4xl font-bold">Willkommen</h1>
-    <p class="mt-4 text-lg text-gray-600">
-      Neues Astro-Projekt mit Contentful CMS und Cloudflare Pages.
-    </p>
-  </main>
+
+  <style>
+    .hero-section {
+      --vi-dark: rgb(10, 43, 49);
+      --vi-cream: rgb(255, 254, 252);
+      --vi-red: rgb(200, 90, 70);
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    }
+    @media (min-width: 768px) {
+      .hero-section { grid-template-columns: 65% 35%; }
+    }
+    .vi-font { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; }
+  </style>
+
+  <!-- Hero Section -->
+  <section class="hero-section relative grid grid-cols-1 min-h-[calc(100vh-80px)] md:h-[calc(100vh-80px)] overflow-hidden">
+    <div class="pointer-events-none absolute left-0 right-0 -top-[2px] z-10" style="height:2px; background-color:var(--vi-dark); background-image:linear-gradient(to right, var(--vi-cream) 0%, var(--vi-cream) 65%, var(--vi-dark) 65%, var(--vi-dark) 100%);"></div>
+    <div class="px-10 md:px-16 flex flex-col justify-center items-start relative w-full order-1 self-stretch min-h-full" style="background-color:var(--vi-cream);">
+      <div class="absolute top-0 left-0 w-full h-px bg-black/5 md:hidden"></div>
+      <div class="max-w-[640px] w-full" style="margin-top:-30%;">
+        <div class="flex items-center space-x-4 mb-8">
+          <span class="text-xs font-mono text-gray-500 uppercase">Studio Quality Standards</span>
+        </div>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-8 text-black leading-[0.9] tracking-tighter uppercase">
+          VEHICLE<br/>IMAGES<br/>API.
+        </h1>
+        <p class="text-lg sm:text-xl text-gray-600 mb-10 leading-relaxed max-w-lg font-light">
+          The definitive car photography API. Studio-quality assets for dealerships, leasing, and automotive platforms. Consistent. Scalable. Beautiful.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+          <a class="group relative px-8 py-4 text-white text-sm font-bold uppercase tracking-widest overflow-hidden rounded-none" style="background-color:var(--vi-dark);" href="/contact">
+            <span class="relative z-10 group-hover:text-white transition-colors">Contact Us</span>
+            <div class="absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" style="background-color:var(--vi-red);"></div>
+          </a>
+          <a class="group flex items-center text-black text-sm font-bold uppercase tracking-widest transition-colors hover:text-[rgb(200,90,70)]" href="/documentation">
+            Read Documentation
+            <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="hidden md:flex items-center justify-center p-0 relative z-0 overflow-visible order-2 self-stretch" style="background-color:var(--vi-dark);">
+      <div class="absolute inset-0 opacity-20" style="background-image:radial-gradient(#4a4a4a 1px, transparent 1px); background-size:32px 32px;"></div>
+      <div class="p-10 md:p-16 w-full relative z-10">
+        <div class="font-black text-white uppercase tracking-tighter leading-[0.8] pointer-events-none select-none mix-blend-overlay" style="font-size:clamp(3rem, 12vw, 230px); line-height:0.8; font-weight:900; opacity:0.05; transform:scale(1.5); transform-origin:center center;" aria-hidden="true">EVERY CAR STOCK IMAGERY, API.</div>
+      </div>
+    </div>
+    <div class="hidden md:block absolute inset-0 z-20 pointer-events-none" style="left:65%; transform:translateX(-50%);">
+      <img src="/images/hero-car.png" alt="BMW X6 - Vehicle Imagery API Preview" draggable="false" class="w-auto max-w-none object-contain pointer-events-auto" style="height:58.5%; margin-top:20%; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.3)); user-select:none;"/>
+    </div>
+  </section>
+
+  <!-- Trusted Companies -->
+  <section class="border-t border-black/5 py-16 w-full overflow-hidden vi-font" style="background-color:rgb(255, 254, 252);">
+    <div class="w-full px-6 sm:px-12 md:px-16 lg:px-24 xl:px-64 mb-10">
+      <div class="max-w-[1400px] mx-auto">
+        <p class="text-center text-xs font-bold uppercase tracking-widest text-gray-400">Trusted by modern automotive companies</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vehicle Perspectives -->
+  <section class="border-t border-black/5 py-16 md:py-24 w-full vi-font" style="background-color:rgb(255, 254, 252);">
+    <div class="w-full px-6 sm:px-8 md:px-12 lg:px-16 xl:px-8">
+      <div class="max-w-[1400px] mx-auto">
+        <div class="mb-16">
+          <h2 class="text-4xl sm:text-5xl font-black mb-6 text-black tracking-tighter leading-none">VEHICLE PERSPECTIVES.</h2>
+          <p class="text-lg text-gray-600 max-w-md font-light">Comprehensive vehicle photography from every angle with professional studio quality.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          <div>
+            <div class="p-8">
+              <div class="mb-6">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-black mb-4 border-b border-gray-400 pb-2">Exterior Vehicle Images</h3>
+                <div class="grid grid-cols-4 gap-3 mb-6">
+                  {["Front", "Front-L", "Side-L", "Rear-L"].map((angle, i) => (
+                    <button class={`group cursor-pointer transition-all duration-300 ${i === 0 ? 'scale-105' : ''}`}>
+                      <div class={`aspect-[4/3] border-2 transition-colors mb-2 relative overflow-hidden ${i === 0 ? 'border-black bg-white' : 'border-gray-200 bg-gray-50 group-hover:border-gray-400'}`} style="border-top-left-radius:8px;border-bottom-right-radius:8px;">
+                        {i === 0 ? (
+                          <img src="/images/cupra_front.png" alt={angle} class="w-full h-full object-cover" loading="eager" draggable="false"/>
+                        ) : (
+                          <div class="absolute inset-0 bg-gray-100 animate-pulse"></div>
+                        )}
+                        <div class={`absolute top-1 right-1 text-[7px] font-mono px-1 ${i === 0 ? 'bg-white/80 text-black' : 'bg-white/80 text-gray-300'}`}>{String(i + 1).padStart(2, '0')}</div>
+                      </div>
+                      <div class={`text-[9px] font-bold uppercase tracking-wider text-center leading-tight ${i === 0 ? 'text-black' : 'text-gray-400 group-hover:text-[rgb(200,90,70)]'}`}>{angle}</div>
+                    </button>
+                  ))}
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                  {["Rear", "Rear-R", "Side-R", "Front-R"].map((angle, i) => (
+                    <button class="group cursor-pointer transition-all duration-300">
+                      <div class="aspect-[4/3] bg-gray-50 border-2 border-gray-200 group-hover:border-gray-400 transition-colors mb-2 relative overflow-hidden" style="border-top-left-radius:8px;border-bottom-right-radius:8px;">
+                        <div class="absolute inset-0 bg-gray-100 animate-pulse"></div>
+                        <div class="absolute top-1 right-1 text-[7px] font-mono bg-white/80 px-1 text-gray-300">{String(i + 5).padStart(2, '0')}</div>
+                      </div>
+                      <div class="text-[9px] font-bold uppercase tracking-wider text-center leading-tight text-gray-400 group-hover:text-[rgb(200,90,70)]">{angle}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-4 border-b border-gray-400 pb-2">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-black">Interior Vehicle Images</h3>
+                <span class="text-[8px] font-bold uppercase tracking-wider text-white px-2 py-1 rounded-none" style="background-color:rgb(10, 43, 49);">New</span>
+              </div>
+              <div class="p-4">
+                <div class="grid grid-cols-3 gap-4">
+                  {["Cockpit", "Front Row", "Rear Row"].map((view) => (
+                    <button class="group cursor-pointer transition-all duration-300">
+                      <div class="aspect-[4/3] bg-gray-50 border-2 border-gray-200 group-hover:border-gray-400 transition-colors mb-2 relative overflow-hidden ">
+                        <div class="absolute inset-0 bg-gray-100 animate-pulse"></div>
+                      </div>
+                      <div class="text-[9px] font-bold uppercase tracking-wider text-center leading-tight text-gray-400 group-hover:text-[rgb(200,90,70)]">{view}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="relative">
+              <img src="/images/cupra_front.png" alt="Cupra Front View" class="w-full h-auto object-contain" style="filter:drop-shadow(0 15px 30px rgba(0,0,0,0.15));" draggable="false"/>
+              <div class="absolute top-6 right-6 bg-black/70 text-white px-3 py-1.5 text-[10px] font-mono">01 / Front</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Developer Experience -->
+  <section class="py-16 sm:py-24 w-full text-white overflow-hidden vi-font" style="background-color:rgb(10, 43, 49);">
+    <div class="w-full px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24">
+      <div class="w-full mx-auto max-w-[1400px]">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-6 tracking-tighter">Developer Experience First</h2>
+            <p class="text-lg text-gray-400 mb-8 leading-relaxed">Our API is designed to be intuitive and powerful. Unlike legacy providers, we don&apos;t hide behind complex SDKs or sales calls. You get instant access to clean, RESTful documentation.</p>
+            <ul class="space-y-4 mb-10">
+              {["RESTful API architecture", "JSON responses", "Comprehensive error handling", "99.99% Uptime SLA", "Global CDN Delivery"].map((item) => (
+                <li class="flex items-center text-gray-300">
+                  <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a class="inline-block bg-white text-black px-8 py-4 rounded-none font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] hover:text-white transition-colors" href="/documentation">View API Docs</a>
+          </div>
+          <div class="bg-[#1e1e1e]  shadow-2xl overflow-hidden border border-white/10">
+            <div class="flex items-center px-6 py-4 bg-[#252526] border-b border-white/5">
+              <div class="flex space-x-2 mr-4">
+                <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+              </div>
+              <div class="text-sm text-gray-400 font-mono">example-request.js</div>
+            </div>
+            <div class="p-8 font-mono text-base leading-relaxed overflow-x-auto">
+              <div class="text-gray-300">
+                <span class="text-[#c586c0]">const</span> response <span class="text-[#c586c0]">=</span> <span class="text-[#c586c0]">await</span> <span class="text-[#dcdcaa]">fetch(</span><br/>
+                &nbsp;&nbsp;<span class="text-[#ce9178]">'https://api.vehicleimagery.com/api/bmw/x5/2024/front-left'</span>,<br/>
+                &nbsp;&nbsp;<span class="text-[#dcdcaa]">&#123;</span><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;headers: <span class="text-[#dcdcaa]">&#123;</span><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ce9178]">'x-api-key'</span>: <span class="text-[#ce9178]">'YOUR_API_KEY'</span><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#dcdcaa]">&#125;</span><br/>
+                &nbsp;&nbsp;<span class="text-[#dcdcaa]">&#125;</span><br/>
+                <span class="text-[#dcdcaa]">)</span>;<br/><br/>
+                <span class="text-[#c586c0]">const</span> data <span class="text-[#c586c0]">=</span> <span class="text-[#c586c0]">await</span> response.<span class="text-[#dcdcaa]">json()</span>;<br/>
+                console.<span class="text-[#dcdcaa]">log(</span>data[<span class="text-[#b5cea8]">0</span>].image_url<span class="text-[#dcdcaa]">)</span>;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industries We Serve -->
+  <section class="border-t border-black/10 py-16 md:py-32 text-black w-full vi-font" style="background-color:rgb(255, 254, 252);">
+    <div class="w-full px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24">
+      <div class="w-full mx-auto max-w-[1400px]">
+        <div class="flex flex-col md:flex-row gap-16 items-start">
+          <div class="md:w-1/3 md:sticky md:top-32">
+            <h2 class="text-4xl sm:text-5xl font-black mb-6 text-black tracking-tighter leading-none">INDUSTRIES<br/>WE SERVE</h2>
+            <p class="text-lg text-gray-600 max-w-sm mb-8">Where vehicle stock imagery API and automotive photography make a measurable difference.</p>
+            <div class="hidden md:block max-w-sm mt-12 p-6 bg-[#fafafa] border border-black/5 shadow-sm relative transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-black/5 backdrop-blur-sm border border-black/5 rotate-2"></div>
+              <div class="space-y-4">
+                <div class="flex items-center space-x-2 mb-2 opacity-40">
+                  <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                  <span class="text-[10px] font-mono uppercase tracking-widest text-black">Technical Memo</span>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed font-light">Our <span class="text-black font-medium">Automotive Image API</span> is engineered for speed and precision. Whether you are building a dealership website or a global leasing platform, we provide <span class="text-black font-medium">high-resolution car stock photos</span> that adapt to your brand.</p>
+                <p class="text-sm text-gray-600 leading-relaxed font-light">From <span class="text-black font-medium">transparent PNG backgrounds</span> for seamless UI integration to factory-accurate color representation, our fleet of 40,000+ assets is ready to scale with your business needs.</p>
+              </div>
+            </div>
+          </div>
+          <div class="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
+            {[
+              { title: "Leasing Companies", desc: "Replace blurry stock photos in your quotes and contracts with professional studio shots. Fleet consistency that builds trust.", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
+              { title: "Mobile & Web Apps", desc: "Perfect car photos for your app without the file size headache. CDN-optimized images that load instantly on any device.", icon: "M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" },
+              { title: "Car Dealerships", desc: "Show every car in your inventory with professional photos. No more scheduling photo shoots - focus on selling.", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" },
+              { title: "Rental Companies", desc: "Document vehicle condition with consistent, professional photos. Standardized angles for streamlined check-in/out.", icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
+              { title: "Online Marketplaces", desc: "Give every listing the same professional look. Consistent, high-quality photos are proven to convert better.", icon: "M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" },
+              { title: "Websites & CMS", desc: "Drop-in replacement for stock photos. Just change the image URL and get professional car photography.", icon: "M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" }
+            ].map((industry) => (
+              <div class="group relative p-8 overflow-hidden">
+                <div class="absolute inset-0 bg-[rgb(200,90,70)] opacity-0 group-hover:opacity-15 transition-opacity duration-300 pointer-events-none"></div>
+                <div class="relative z-10">
+                  <div class="w-10 h-10 flex items-center justify-center mb-6 group-hover:bg-[rgb(200,90,70)] transition-colors">
+                    <svg class="w-5 h-5 text-black group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={industry.icon}></path></svg>
+                  </div>
+                  <h3 class="text-lg font-black mb-3 text-black tracking-tight">{industry.title}</h3>
+                  <p class="text-sm text-gray-500 leading-relaxed font-light mb-6">{industry.desc}</p>
+                  <a href="#" class="group/link flex items-center text-[11px] font-bold uppercase tracking-widest text-black hover:text-[rgb(200,90,70)] transition-colors">
+                    Explore More
+                    <svg class="w-3 h-3 ml-2 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transparent Background -->
+  <section class="border-t border-black/5 py-16 md:py-24 w-full vi-font" style="background-color:rgb(255, 254, 252);">
+    <div class="w-full px-6 sm:px-8 md:px-12 lg:px-16 xl:px-8">
+      <div class="max-w-[1400px] mx-auto">
+        <div class="mb-8 text-center">
+          <h2 class="text-3xl sm:text-4xl font-black mb-4 text-black tracking-tighter uppercase">Transparent Background.</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Drag the slider to see how our images seamlessly integrate with any background. Every vehicle image is delivered as a high-resolution PNG with a transparent background.</p>
+        </div>
+        <div id="before-after-slider" class="relative w-full aspect-[16/9]  overflow-hidden shadow-2xl cursor-ew-resize select-none">
+          <div class="absolute inset-0 bg-white" id="slider-left" style="clip-path:inset(0 50% 0 0);"></div>
+          <div class="absolute inset-0 z-0" id="slider-right" style="clip-path:inset(0 0 0 50%);">
+            <img alt="Showroom background" loading="lazy" class="w-full h-full object-cover" style="transform:scale(1.3);" src="/images/showroom.png" draggable="false"/>
+          </div>
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+            <div class="relative w-full h-full flex items-center justify-center px-4">
+              <img src="/images/peugot.png" alt="Vehicle side view" class="max-w-full max-h-full w-auto h-auto object-contain" loading="eager" draggable="false" style="filter:drop-shadow(0 25px 50px rgba(0,0,0,0.3));"/>
+            </div>
+          </div>
+          <div class="absolute top-0 bottom-0 w-px bg-white/50 shadow-lg z-[5]" id="slider-handle" style="left:50%; transform:translateX(-50%);">
+            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-white shadow-xl flex items-center justify-center border-2 border-gray-200 z-20">
+              <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"></path></svg>
+            </div>
+          </div>
+          <div class="absolute top-4 left-4 bg-black/70 text-white px-4 py-2  text-sm font-bold uppercase tracking-wider z-30">White</div>
+          <div class="absolute top-4 right-4 bg-black/70 text-white px-4 py-2  text-sm font-bold uppercase tracking-wider z-30">With Background</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vehicle Colors -->
+  <section class="relative border-t border-black/10 pt-8 md:pt-12 pb-0 w-full overflow-hidden vi-font">
+    <div class="absolute inset-0 bg-[#fdfbf7]"></div>
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image:radial-gradient(circle, #000 1px, transparent 1px); background-size:32px 32px;"></div>
+    <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[80%] rounded-full bg-blue-200/20 blur-[100px] pointer-events-none mix-blend-multiply"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[80%] rounded-full bg-[rgb(200,90,70)]/10 blur-[100px] pointer-events-none mix-blend-multiply"></div>
+    <div class="w-full px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 relative z-10">
+      <div class="max-w-[1200px] mx-auto text-center">
+        <div class="mb-20 md:mb-32">
+          <h2 class="text-4xl sm:text-5xl lg:text-7xl font-black mb-4 text-black tracking-tighter uppercase leading-[0.9]">Vehicle Colors.</h2>
+          <div class="max-w-3xl mx-auto">
+            <p class="text-lg sm:text-xl text-gray-600 leading-relaxed font-light">Color matters more than anything. We don&apos;t just guess &quot;red&quot; or &quot;blue&quot;. Our API provides consistent and vibrant vehicle colors across the entire fleet.</p>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <img alt="Vehicle Colors API Showcase" loading="lazy" width="1200" height="426" class="w-full h-auto object-cover block" src="/images/vehicle_colors_api.png" draggable="false"/>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Try it Free -->
+  <section class="bg-[#1a1a1a] py-12 sm:py-16 text-white w-full relative z-20 mt-[-2px] vi-font">
+    <div class="w-full px-6 sm:px-12 md:px-16 lg:px-24 xl:px-64 text-center">
+      <div class="max-w-[1024px] mx-auto">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Try it free</h2>
+        <p class="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8">Request your free trial access. Enter your email and we&apos;ll send you everything you need to get started. No credit card required.</p>
+        <form class="flex flex-col sm:flex-row gap-0 max-w-lg mx-auto border-b border-white/20 pb-2">
+          <input type="email" required placeholder="you@company.com" class="flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"/>
+          <button type="submit" class="px-6 py-3 font-semibold whitespace-nowrap uppercase tracking-widest text-sm transition-colors text-white hover:text-[rgb(200,90,70)]">Request Free Trial →</button>
+        </form>
+        <p class="text-xs sm:text-sm text-gray-400 mt-3 sm:mt-4">We&apos;ll send you an email with your trial access details.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-24 md:py-32 w-full bg-[#F5F5F7] vi-font">
+    <div class="w-full px-4 sm:px-6 md:px-8">
+      <div class="max-w-[1200px] mx-auto">
+        <div class="bg-white rounded-[2px] shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+          <div class="lg:w-[40%] p-10 sm:p-12 lg:p-16 text-white relative overflow-hidden" style="background-color:rgb(10, 43, 49);">
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-[rgb(200,90,70)]/20 blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 h-full flex flex-col justify-between">
+              <div>
+                <h2 class="text-3xl sm:text-4xl font-black mb-6 tracking-tighter text-white">Let&apos;s talk business.</h2>
+                <p class="text-gray-300 mb-12 leading-relaxed font-light">Whether you need a custom enterprise plan, API integration support, or just want to say hello - we are here.</p>
+                <div class="space-y-8">
+                  <div class="flex items-start space-x-4">
+                    <div class="mt-1 w-8 h-8 bg-white/10 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Email</h3>
+                      <a href="mailto:info@vehicleimagery.com" class="text-lg font-bold text-white hover:text-[rgb(200,90,70)] transition-colors">info@vehicleimagery.com</a>
+                    </div>
+                  </div>
+                  <div class="flex items-start space-x-4">
+                    <div class="mt-1 w-8 h-8 bg-white/10 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <div>
+                      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Office</h3>
+                      <p class="text-white font-bold">Vehicle Imagery HQ</p>
+                      <p class="text-gray-400">Berlin, Germany</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-12">
+                <a class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-white hover:text-[rgb(200,90,70)] transition-colors" href="/book-a-call">
+                  Book a 15-min Demo
+                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="lg:w-[60%] p-10 sm:p-12 lg:p-16">
+            <form class="space-y-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">First name</label>
+                  <input type="text" required placeholder="John" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Work Email</label>
+                  <input type="email" required placeholder="john@company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Company Website</label>
+                <input type="url" placeholder="https://company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Message</label>
+                <textarea rows="4" required placeholder="Tell us about your project..." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all resize-none"></textarea>
+              </div>
+              <div class="pt-2">
+                <button type="submit" class="w-full px-8 py-4 rounded-[2px] text-sm font-bold uppercase tracking-widest transition-colors shadow-lg bg-black text-white hover:bg-[rgb(200,90,70)] hover:shadow-xl transform hover:-translate-y-0.5 duration-200">Send Message</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted Performance Stats -->
+  <section class="py-16 w-full bg-white border-t border-black/5 vi-font">
+    <div class="w-full px-6 sm:px-12 md:px-16 lg:px-24 xl:px-64">
+      <div class="max-w-[1400px] mx-auto">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div class="text-center lg:text-left">
+            <h2 class="text-2xl sm:text-3xl font-black text-black tracking-tighter mb-2">Trusted Performance.</h2>
+            <a class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors" href="/status">Check System Status →</a>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12">
+            {[
+              { value: "99.9%", label: "Uptime" },
+              { value: "50ms", label: "Latency" },
+              { value: "40k+", label: "Assets" },
+              { value: "2.5M", label: "Requests" }
+            ].map((stat) => (
+              <div class="text-center lg:text-left">
+                <div class="text-3xl font-black tracking-tighter text-black">{stat.value}</div>
+                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <Footer />
+
+  <script>
+    const slider = document.getElementById('before-after-slider');
+    if (slider) {
+      const handle = document.getElementById('slider-handle');
+      const left = document.getElementById('slider-left');
+      const right = document.getElementById('slider-right');
+      let isDragging = false;
+      function updateSlider(x: number) {
+        const rect = slider.getBoundingClientRect();
+        let pct = ((x - rect.left) / rect.width) * 100;
+        pct = Math.max(0, Math.min(100, pct));
+        if (handle) handle.style.left = pct + '%';
+        if (left) left.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+        if (right) right.style.clipPath = `inset(0 0 0 ${pct}%)`;
+      }
+      slider.addEventListener('mousedown', (e: MouseEvent) => { isDragging = true; updateSlider(e.clientX); });
+      document.addEventListener('mousemove', (e: MouseEvent) => { if (isDragging) updateSlider(e.clientX); });
+      document.addEventListener('mouseup', () => { isDragging = false; });
+      slider.addEventListener('touchstart', (e: TouchEvent) => { isDragging = true; updateSlider(e.touches[0].clientX); });
+      document.addEventListener('touchmove', (e: TouchEvent) => { if (isDragging) updateSlider(e.touches[0].clientX); });
+      document.addEventListener('touchend', () => { isDragging = false; });
+    }
+  </script>
 </BaseLayout>

@@ -73,12 +73,12 @@ const navItems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 border-b border-white/10 bg-[#1C2B32]">
-  <div class="mx-auto w-full max-w-[90rem] px-6 lg:px-12 relative">
-    <nav class="flex h-20 w-full items-center justify-between">
+<header class="sticky top-0 z-50 border-b border-white/10 bg-[#1C2B32]" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+  <div style="position:relative; width:100%; padding-left:48px; padding-right:48px;">
+    <nav style="display:flex; height:5rem; width:100%; align-items:center;">
       
       <!-- Linker Bereich: Logo & Menü direkt daneben -->
-      <div class="flex items-center gap-12">
+      <div style="display:flex; align-items:center; gap:3rem;">
         <!-- Logo -->
         <a href="/" class="group flex shrink-0 items-center transition-opacity hover:opacity-80">
           <img 
@@ -91,24 +91,23 @@ const navItems = [
         <!-- Navigation (Links neben dem Logo) -->
         <div class="hidden items-center gap-9 md:flex relative" id="nav-menu">
           {navItems.map((item) => (
-            <div class="group/nav flex h-20 items-center">
+            <div class="group/nav relative flex h-20 items-center" data-nav-item>
               <a
                 href={item.href}
-                class="peer relative text-[15px] font-semibold tracking-wide text-white/80 transition-colors duration-200 hover:text-white uppercase"
+                class="peer relative text-[14px] font-medium text-white/80 transition-colors duration-200 hover:text-white"
               >
                 {item.label}
-                <!-- Indicator Connection Line (Verbindungslinie vom Menüpunkt) -->
                 <span class="pointer-events-none absolute -bottom-[31px] left-0 h-[3px] w-0 bg-white opacity-0 transition-all duration-300 group-hover/nav:w-full group-hover/nav:opacity-100 z-[60]"></span>
               </a>
               
               <!-- Bridge (unsichtbar) für den Hover -->
               <div class="absolute top-[80px] left-0 h-[30px] w-full bg-transparent z-[40]"></div>
               
-              <!-- Eckiges Overlay: Absolut zentriert auf den Bildschirm (mittig für alle Menüpunkte) -->
-              <div class="pointer-events-none fixed left-1/2 top-[80px] z-50 w-[860px] -translate-x-1/2 opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 group-hover/nav:pointer-events-auto group-hover/nav:translate-y-0 group-hover/nav:opacity-100">
+              <!-- Overlay: Positioniert unter dem ausgewählten Nav-Punkt -->
+              <div class="nav-overlay pointer-events-none fixed top-[80px] z-50 w-[860px] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 group-hover/nav:pointer-events-auto group-hover/nav:translate-y-0 group-hover/nav:opacity-100" style="left: 0;">
                 
-                <!-- Visuelle Verbindungslinie (Stem) zum Menü -->
-                <div class="absolute -top-[1px] left-1/2 h-[1px] w-full -translate-x-1/2 bg-white/20"></div>
+                <!-- Visuelle Verbindungslinie zum Menü -->
+                <div class="absolute -top-[1px] left-0 h-[1px] w-full bg-white/20"></div>
 
                 <!-- Eckige Box mit scharfen Kanten -->
                 <div class="border border-white/15 bg-[#1C2B32] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.6)] relative overflow-hidden">
@@ -186,19 +185,19 @@ const navItems = [
         ))}
       </div>
 
-      <!-- CTA Buttons: Eckig -->
-      <div class="ml-auto flex shrink-0 items-center gap-4">
+      <!-- CTA Buttons -->
+      <div style="position:absolute; right:48px; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:0.75rem;">
         <a
           href="/book-a-call"
-          class="hidden h-[44px] items-center justify-center border border-white/30 bg-transparent px-6 text-[13px] font-semibold tracking-widest text-white transition-all duration-300 hover:border-white hover:bg-white/5 sm:inline-flex uppercase"
+          class="hidden h-[38px] items-center justify-center border border-white/40 bg-transparent px-5 text-[13px] font-medium text-white transition-all duration-300 hover:border-white hover:bg-white/5 sm:inline-flex"
         >
-          BOOK A CALL
+          Book a Call
         </a>
         <a
           href="/try-it-out"
-          class="inline-flex h-[44px] items-center justify-center bg-white px-7 text-[13px] font-bold tracking-widest text-[#1C2B32] transition-all duration-300 hover:bg-[#FBFBF7] hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] uppercase"
+          class="inline-flex h-[38px] items-center justify-center border border-white bg-white px-5 text-[13px] font-medium text-[rgb(10,43,49)] transition-all duration-300 hover:bg-[rgb(255,254,252)] hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]"
         >
-          TRY IT OUT
+          Try Now
         </a>
         
         <!-- Mobile Menu Button -->
@@ -241,15 +240,15 @@ const navItems = [
         <div class="mt-6 flex flex-col gap-3 px-4">
           <a
             href="/book-a-call"
-            class="flex items-center justify-center border border-white/40 py-3.5 text-[15px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-white/10"
+            class="flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10"
           >
-            BOOK A CALL
+            Book a Call
           </a>
           <a
             href="/try-it-out"
-            class="flex items-center justify-center bg-white py-3.5 text-[15px] font-bold uppercase tracking-widest text-[#1C2B32] transition-colors hover:bg-white/90"
+            class="flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10"
           >
-            TRY IT OUT
+            Try Now
           </a>
         </div>
       </div>
@@ -265,4 +264,22 @@ const navItems = [
       menu.classList.toggle('hidden');
     });
   }
+
+  function positionOverlays() {
+    const navItems = document.querySelectorAll('[data-nav-item]');
+    navItems.forEach((item) => {
+      const overlay = item.querySelector('.nav-overlay');
+      if (!overlay) return;
+      const rect = item.getBoundingClientRect();
+      let left = rect.left;
+      const overlayWidth = 860;
+      const maxLeft = window.innerWidth - overlayWidth;
+      if (left > maxLeft) left = maxLeft;
+      if (left < 0) left = 0;
+      overlay.style.left = left + 'px';
+    });
+  }
+
+  positionOverlays();
+  window.addEventListener('resize', positionOverlays);
 </script>

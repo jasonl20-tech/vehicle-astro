@@ -7,3 +7,14 @@
   --color-accent: #FF8844;
   --color-accent-hover: #ff9a5c;
 }
+
+/* Bilder nicht kopierbar / nicht ziehbar */
+img {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  pointer-events: auto;
+}
