@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const benefits = [
+  { num: '01', title: 'Live Demo', desc: 'See the API in action with your specific use case. We\'ll walk you through endpoints, image quality, and integration flow.' },
+  { num: '02', title: 'Custom Assessment', desc: 'We\'ll analyze your requirements — volume, vehicle types, regions — and recommend the right plan.' },
+  { num: '03', title: 'Technical Q&A', desc: 'Bring your engineering team. We\'ll answer architecture questions and help plan your integration.' },
+];
+---
+
+<BaseLayout
+  title="Book a Call | Vehicle Imagery API"
+  description="Schedule a call with the Vehicle Imagery team. Get a live demo, discuss your requirements, and find the right plan for your business."
+  canonicalUrl="/book-a-call"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+
+    <!-- Hero -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
+      <div class="max-w-3xl">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Schedule</p>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
+          Book a Call
+        </h1>
+        <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
+          Talk to our team directly. Whether you need a demo, want to discuss pricing, or have technical questions — we're here to help.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Content: Calendly + Info -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-24 sm:px-12 lg:px-16">
+      <div class="grid gap-16 lg:grid-cols-[1.2fr_1fr] lg:gap-24 items-start">
+
+        <!-- Left: Calendly inline widget -->
+        <div class="rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white min-w-0">
+          <div
+            class="calendly-inline-widget"
+            data-url="https://calendly.com/lohrejason5?hide_gdpr_banner=1"
+            style="min-width:320px;height:700px;"
+          ></div>
+        </div>
+
+        <!-- Right: Info -->
+        <div class="pt-4">
+          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">What to Expect</p>
+          <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-6">
+            30 minutes that save you weeks
+          </h2>
+          <p class="text-[14px] text-black/50 leading-relaxed max-w-md mb-16">
+            Our calls are focused and tailored to your needs. No sales pitch — just honest answers and a clear path forward.
+          </p>
+
+          <div class="space-y-0">
+            {benefits.map((b) => (
+              <div class="group flex gap-6 py-8 border-b border-black/[0.06] first:border-t">
+                <span class="text-[11px] font-mono text-black/20 pt-1 shrink-0">{b.num}</span>
+                <div>
+                  <h3 class="text-[16px] font-medium text-black mb-2 group-hover:text-[rgb(200,90,70)] transition-colors">{b.title}</h3>
+                  <p class="text-[13px] text-black/50 leading-relaxed max-w-md">{b.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="grid grid-cols-3 gap-6 mt-16">
+            <div>
+              <p class="text-3xl sm:text-4xl font-light text-black tracking-tight">24h</p>
+              <p class="text-[11px] text-black/40 mt-1">Response time</p>
+            </div>
+            <div>
+              <p class="text-3xl sm:text-4xl font-light text-black tracking-tight">30m</p>
+              <p class="text-[11px] text-black/40 mt-1">Call duration</p>
+            </div>
+            <div>
+              <p class="text-3xl sm:text-4xl font-light text-black tracking-tight">Free</p>
+              <p class="text-[11px] text-black/40 mt-1">No obligations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="pb-24 sm:pb-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] px-8 py-20 sm:px-16 sm:py-24" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+            <div class="max-w-xl">
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Prefer Self-Service?</p>
+              <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-white leading-[1.05] mb-4">
+                Start your free trial right now
+              </h2>
+              <p class="text-[14px] text-white/40 leading-relaxed">
+                No call needed. Sign up, get your API key, and start integrating in minutes.
+              </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 shrink-0">
+              <a href="/pricing" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
+                View Plans
+              </a>
+              <a href="/documentation" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
+                Documentation
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+</BaseLayout>
