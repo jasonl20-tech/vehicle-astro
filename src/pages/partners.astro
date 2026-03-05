@@ -3,15 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-const partners = [
-  { name: 'AutoScout24', category: 'Marketplace', desc: 'Europe\'s largest online car marketplace with over 2 million listings.' },
-  { name: 'mobile.de', category: 'Marketplace', desc: 'Germany\'s leading vehicle marketplace for new and used cars.' },
-  { name: 'LeasePlan', category: 'Leasing', desc: 'Global fleet management and driver mobility company.' },
-  { name: 'ALD Automotive', category: 'Leasing', desc: 'International leader in full-service vehicle leasing and fleet management.' },
-  { name: 'Sixt', category: 'Mobility', desc: 'Premium mobility provider for rental, leasing, and ride services.' },
-  { name: 'CHECK24', category: 'Comparison', desc: 'Germany\'s leading comparison portal including automotive services.' },
-];
-
 const benefits = [
   { num: '01', title: 'Revenue Share', desc: 'Earn commissions on every customer you bring. Transparent tracking, monthly payouts.' },
   { num: '02', title: 'Co-Marketing', desc: 'Joint campaigns, case studies, and featured placement on our website and materials.' },
@@ -41,32 +32,6 @@ const benefits = [
       </div>
     </section>
 
-    <!-- Partner Logos / List -->
-    <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-32 sm:px-12 lg:px-16">
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-16">
-        <div>
-          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Trusted By</p>
-          <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight">
-            Our partners
-          </h2>
-        </div>
-        <p class="text-[13px] text-black/40 max-w-sm leading-relaxed">
-          From marketplaces to leasing companies — the automotive industry trusts Vehicle Imagery.
-        </p>
-      </div>
-
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {partners.map((p) => (
-          <div class="group relative rounded-lg border border-black/[0.06] bg-white p-8 transition-all duration-500 hover:border-black/10 hover:shadow-xl hover:shadow-black/5">
-            <div class="flex items-start justify-between mb-6">
-              <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-black/25 px-2.5 py-1 rounded border border-black/[0.06]">{p.category}</span>
-            </div>
-            <h3 class="text-2xl font-light text-black tracking-tight mb-3 group-hover:text-[rgb(200,90,70)] transition-colors">{p.name}</h3>
-            <p class="text-[13px] text-black/45 leading-relaxed">{p.desc}</p>
-          </div>
-        ))}
-      </div>
-    </section>
 
     <!-- Why Partner -->
     <section class="py-24 sm:py-32 bg-[#fafafa]">
