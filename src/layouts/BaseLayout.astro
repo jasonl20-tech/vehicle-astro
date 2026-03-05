@@ -4,9 +4,14 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  canonicalUrl?: string;
 }
 
-const { title, description = '' } = Astro.props;
+const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl } = Astro.props;
+const siteUrl = Astro.url.origin;
+const ogImageUrl = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`) : null;
 ---
 
 <!doctype html>
@@ -19,6 +24,21 @@ const { title, description = '' } = Astro.props;
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    {canonicalUrl && <link rel="canonical" href={`${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}`} />}
+    {ogImageUrl && (
+      <>
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogImageUrl} />
+        {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl ? `${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}` : Astro.url.href} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImageUrl} />
+      </>
+    )}
     <link rel="preload" as="image" href="/images/hero-car.webp" />
   </head>
   <body class="antialiased min-h-screen bg-cream text-gray-900">

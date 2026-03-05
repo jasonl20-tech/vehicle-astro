@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getEntries } from '../../lib/contentful';
+import { renderRichText, buildAssetMap } from '../../lib/contentful-rich-text';
+
+function getAssetUrl(asset: { fields?: { file?: { url?: string } } } | null | undefined): string | undefined {
+  if (!asset?.fields?.file?.url) return undefined;
+  const url = asset.fields.file.url;
+  return url.startsWith('//') ? `https:${url}` : url;
+}
+
+function parseChangesText(text: string | unknown): Array<{ type: string; title: string; description?: string }> {
+  if (typeof text !== 'string' || !text.trim()) return [];
+  const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+  const types = ['added', 'fixed', 'changed', 'deprecated', 'removed'];
+  return lines.map((line) => {
+    const colonIdx = line.indexOf(':');
+    if (colonIdx === -1) return { type: 'added', title: line, description: undefined };
+    const type = line.slice(0, colonIdx).toLowerCase().trim();
+    const rest = line.slice(colonIdx + 1).trim();
+    const validType = types.includes(type) ? type : 'added';
+    const dashIdx = rest.indexOf(' - ');
+    const title = dashIdx >= 0 ? rest.slice(0, dashIdx).trim() : rest;
+    const description = dashIdx >= 0 ? rest.slice(dashIdx + 3).trim() : undefined;
+    return { type: validType, title, description };
+  });
+}
+
+export async function getStaticPaths() {
+  try {
+    const res = await getEntries({ content_type: 'changelog', order: '-sys.createdAt', include: 2 });
+    const assetMap = buildAssetMap(res.includes);
+    return res.items
+      .filter((item: { fields?: { slug?: string } }) => item.fields?.slug)
+      .map((item: { fields?: { slug?: string } }) => ({
+        params: { slug: item.fields!.slug! },
+        props: { entry: item, assetMap },
+      }));
+  } catch {
+    return [];
+  }
+}
+
+const { entry, assetMap } = Astro.props;
+const fields = entry?.fields ?? {};
+const title = fields.title ?? 'Changelog';
+const slug = fields.slug ?? '';
+const body = fields.body;
+const metaTitle = fields.metaTitle ?? `${title} | Vehicle Imagery Changelog`;
+const metaDescription = fields.metaDescription ?? (typeof fields.excerpt === 'string' ? fields.excerpt : title);
+const ogImageAsset = fields.ogImage ?? fields.featuredImage;
+const ogImageUrl = getAssetUrl(ogImageAsset);
+const ogImageAlt = fields.ogImageAlt ?? fields.featuredImageAlt ?? title;
+const bodyHtml = body ? renderRichText(body, assetMap) : '';
+const createdAt = fields.publishedDate ?? entry?.sys?.createdAt ?? '';
+const version = fields.version;
+const category = fields.category;
+const author = fields.author;
+const tags = Array.isArray(fields.tags) ? fields.tags : (fields.tags ? [fields.tags] : []);
+const changesRaw = fields.changesText ?? fields.changes ?? '';
+const changes = parseChangesText(changesRaw);
+const featuredImage = fields.featuredImage;
+const featuredImageUrl = getAssetUrl(featuredImage);
+const featuredImageAlt = fields.featuredImageAlt ?? title;
+const gallery = Array.isArray(fields.gallery) ? fields.gallery : (fields.gallery ? [fields.gallery] : []);
+
+const changeTypeLabels: Record<string, string> = {
+  added: 'Added',
+  fixed: 'Fixed',
+  changed: 'Changed',
+  deprecated: 'Deprecated',
+  removed: 'Removed',
+};
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogImage={ogImageUrl}
+  ogImageAlt={ogImageAlt}
+  canonicalUrl={`/changelog/${slug}`}
+>
+  <Header />
+  <main class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 vi-font" style="background-color:rgb(255, 254, 252);">
+    <article>
+      <header class="mb-12">
+        <div class="flex flex-wrap items-center gap-3 text-sm">
+          <time class="font-mono text-[rgb(200,90,70)] uppercase tracking-widest" datetime={createdAt}>
+            {createdAt ? new Date(createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
+          </time>
+          {version && <span class="px-2 py-0.5 bg-black/5 font-mono text-black/70">{version}</span>}
+          {category && <span class="px-2 py-0.5 border border-black/20 text-black/70 uppercase tracking-wider">{category}</span>}
+          {author && <span class="text-gray-500">by {author}</span>}
+        </div>
+        <h1 class="mt-4 text-4xl sm:text-5xl font-black text-black tracking-tighter leading-tight">{title}</h1>
+        {tags.length > 0 && (
+          <div class="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag: string) => (
+              <span class="text-xs font-mono text-gray-500">#{tag}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      {featuredImageUrl && (
+        <figure class="mb-12 -mx-4 sm:mx-0">
+          <img
+            src={featuredImageUrl}
+            alt={featuredImageAlt}
+            class="w-full h-auto object-cover"
+            width="1200"
+            height="600"
+            loading="eager"
+            decoding="async"
+          />
+        </figure>
+      )}
+
+      {changes.length > 0 && (
+        <div class="mb-12 p-6 bg-black/[0.02] border border-black/5">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-black/60 mb-4">Changes</h2>
+          <ul class="space-y-3">
+            {changes.map((change) => {
+              const label = changeTypeLabels[change.type] ?? change.type;
+              return (
+                <li class="flex gap-3">
+                  <span class="shrink-0 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded bg-black/5 text-black/70 w-20">
+                    {label}
+                  </span>
+                  <div>
+                    <span class="font-semibold text-black">{change.title}</span>
+                    {change.description && (
+                      <p class="text-sm text-gray-600 mt-0.5">{change.description}</p>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {bodyHtml ? (
+        <div class="prose prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg" set:html={bodyHtml} />
+      ) : (
+        <p class="text-gray-600">No content.</p>
+      )}
+
+      {gallery.length > 0 && (
+        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {gallery.map((asset: { fields?: { file?: { url?: string }; title?: string } }) => {
+            const url = getAssetUrl(asset);
+            if (!url) return null;
+            return (
+              <figure class="overflow-hidden rounded-lg">
+                <img src={url} alt={asset.fields?.title ?? ''} class="w-full h-auto object-cover" loading="lazy" decoding="async" />
+              </figure>
+            );
+          })}
+        </div>
+      )}
+    </article>
+    <div class="mt-16 pt-8 border-t border-black/10">
+      <a href="/changelog" class="text-sm font-bold uppercase tracking-widest text-black hover:text-[rgb(200,90,70)] transition-colors">← All Changelog Entries</a>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

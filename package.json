@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "build": "node scripts/optimize-images.mjs && astro build",
     "download-interior": "node scripts/download-interior-images.mjs",
+    "contentful:create-changelog": "node scripts/create-changelog-content-type.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

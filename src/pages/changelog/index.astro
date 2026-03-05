@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getEntries } from '../../lib/contentful';
+
+function getAssetUrl(asset: { fields?: { file?: { url?: string } } } | null | undefined): string | undefined {
+  if (!asset?.fields?.file?.url) return undefined;
+  const url = asset.fields.file.url;
+  return url.startsWith('//') ? `https:${url}` : url;
+}
+
+let changelogs: Array<{
+  slug: string;
+  title: string;
+  date: string;
+  version?: string;
+  category?: string;
+  excerpt?: string;
+  featuredImageUrl?: string;
+  featuredImageAlt?: string;
+}> = [];
+
+try {
+  const res = await getEntries({
+    content_type: 'changelog',
+    order: '-sys.createdAt',
+    include: 2,
+  });
+  changelogs = res.items.map((item: {
+    fields?: {
+      slug?: string;
+      title?: string;
+      excerpt?: string;
+      version?: string;
+      category?: string;
+      featuredImage?: { fields?: { file?: { url?: string }; title?: string } };
+      featuredImageAlt?: string;
+    };
+    sys?: { createdAt?: string };
+  }) => {
+    const featuredImage = item.fields?.featuredImage;
+    const featuredImageUrl = getAssetUrl(featuredImage);
+    return {
+      slug: item.fields?.slug ?? '',
+      title: item.fields?.title ?? 'Untitled',
+      date: item.sys?.createdAt ?? '',
+      version: item.fields?.version,
+      category: item.fields?.category,
+      excerpt: item.fields?.excerpt,
+      featuredImageUrl,
+      featuredImageAlt: item.fields?.featuredImageAlt ?? item.fields?.title ?? '',
+    };
+  }).filter((log) => log.slug);
+} catch {
+  // Contentful nicht konfiguriert oder keine Einträge
+}
+---
+
+<BaseLayout
+  title="Changelog | Vehicle Imagery API"
+  description="Latest updates, new features, and improvements to the Vehicle Imagery API. Stay informed about new vehicle coverage, API enhancements, and platform updates."
+  ogImage="/images/hero-car.png"
+  canonicalUrl="/changelog"
+>
+  <Header />
+  <main class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 vi-font" style="background-color:rgb(255, 254, 252);">
+    <div class="mb-16">
+      <h1 class="text-4xl sm:text-5xl font-black text-black tracking-tighter leading-none">CHANGELOG.</h1>
+      <p class="mt-4 text-lg text-gray-600 max-w-2xl">Latest updates, new features, and improvements to the Vehicle Imagery API.</p>
+    </div>
+    <ul class="space-y-0 border-t border-black/10">
+      {changelogs.length > 0 ? (
+        changelogs.map((log) => (
+          <li class="border-b border-black/10">
+            <a href={`/changelog/${log.slug}`} class="group flex flex-col sm:flex-row gap-4 py-8 hover:bg-black/[0.02] transition-colors -mx-4 px-4 sm:px-6">
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-1">
+                  {log.version && <span class="text-xs font-mono text-[rgb(200,90,70)]">{log.version}</span>}
+                  {log.category && <span class="text-xs uppercase tracking-wider text-gray-500">{log.category}</span>}
+                </div>
+                <h2 class="text-lg sm:text-xl font-bold text-black group-hover:text-[rgb(200,90,70)] transition-colors">{log.title}</h2>
+                {log.excerpt && <p class="mt-1 text-sm text-gray-600 line-clamp-2">{log.excerpt}</p>}
+                <time class="mt-2 block text-sm font-mono text-gray-500" datetime={log.date}>
+                  {log.date ? new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                </time>
+              </div>
+              {log.featuredImageUrl && (
+                <div class="sm:w-32 shrink-0 aspect-video overflow-hidden rounded-lg bg-black/5">
+                  <img
+                    src={log.featuredImageUrl}
+                    alt={log.featuredImageAlt}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              )}
+            </a>
+          </li>
+        ))
+      ) : (
+        <li class="py-16 text-gray-500 text-center">
+          No changelog entries yet. Add entries in Contentful with content type &quot;changelog&quot;.
+        </li>
+      )}
+    </ul>
+  </main>
+  <Footer />
+</BaseLayout>
