@@ -57,9 +57,10 @@ if (type === 'page') {
 if (type === 'dynamicPage') {
   const f = entry?.fields ?? {};
   const toPlain = (v: unknown, max = 500) => (typeof v === 'string' ? v : richTextToPlainText(v as any, max));
-  var dpLayout = (f.layout as string) || 'hero-text';
+  const rawLayout = String(f.layout || 'hero-text').toLowerCase().replace(/\s+/g, '-').replace(/_/g, '-');
+  var dpLayout = ['hero-text', 'hero-features', 'hero-cards', 'dark-premium', 'minimal'].includes(rawLayout) ? rawLayout : 'hero-text';
   var dpLabel = f.label as string | undefined;
-  var dpHeadline = (f.headline as string) || (f.title as string) || '';
+  var dpHeadline = (f.headline as string) || (f.title as string) || (f.slug as string) || 'Page';
   var dpDescription = toPlain(f.description);
   var dpBodyHtml = f.body ? renderRichText(f.body as any, assetMap) : '';
 
