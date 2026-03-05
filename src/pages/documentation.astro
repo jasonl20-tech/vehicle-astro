@@ -83,36 +83,36 @@ const errornotes = [
       <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
 
         <!-- Sidebar Navigation -->
-        <nav class="lg:w-64 shrink-0 lg:sticky lg:top-24">
-          <div class="rounded-2xl bg-[#f4f4f5] p-6">
+        <aside class="w-full lg:w-64 shrink-0 order-2 lg:order-1">
+          <nav class="lg:sticky lg:top-20 rounded-2xl bg-[#f4f4f5] p-6 border border-black/[0.06]">
             <h3 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-4">Quick Navigation</h3>
-            <ul class="space-y-1">
-              <li><a href="#authentication" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Authentication</a></li>
-              <li><a href="#base-url" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Base URL</a></li>
-              <li><a href="#query-params" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Global Parameters</a></li>
-              <li>
-                <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest mt-4">Endpoints</span>
+            <ul class="space-y-0.5">
+              <li><a href="#authentication" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Authentication</a></li>
+              <li><a href="#base-url" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Base URL</a></li>
+              <li><a href="#query-params" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Global Parameters</a></li>
+              <li class="pt-4 mt-2 border-t border-black/5">
+                <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest">Endpoints</span>
               </li>
               {endpoints.map((ep) => (
                 <li>
-                  <a href={`#${ep.id}`} class="group flex items-center gap-2.5 py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">
-                    <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-mono">{ep.method}</span>
+                  <a href={`#${ep.id}`} class="group flex items-center gap-2.5 py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">
+                    <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-mono shrink-0">{ep.method}</span>
                     <span class="truncate">{ep.title}</span>
                   </a>
                 </li>
               ))}
-              <li>
-                <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest mt-4">Reference</span>
+              <li class="pt-4 mt-2 border-t border-black/5">
+                <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest">Reference</span>
               </li>
-              <li><a href="#errors" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Error Codes</a></li>
-              <li><a href="#errornotes" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Error Notes</a></li>
-              <li><a href="#rate-limits" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Rate Limits</a></li>
+              <li><a href="#errors" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Error Codes</a></li>
+              <li><a href="#errornotes" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Error Notes</a></li>
+              <li><a href="#rate-limits" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Rate Limits</a></li>
             </ul>
-          </div>
-        </nav>
+          </nav>
+        </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 min-w-0 max-w-3xl">
+        <div class="flex-1 min-w-0 max-w-3xl order-1 lg:order-2">
 
           <!-- Authentication -->
           <section id="authentication" class="mb-20 scroll-mt-24">
@@ -132,8 +132,8 @@ const errornotes = [
                 </div>
                 <span class="text-[11px] text-white/40 font-mono">curl</span>
               </div>
-              <pre class="p-5 text-[13px] text-gray-300 font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#c586c0]">curl</span> -H <span class="text-[#ce9178]">"x-api-key: YOUR_API_KEY"</span> \
-  <span class="text-[#ce9178]">{BASE_URL}/api/brands</span></code></pre>
+              <pre class="p-5 text-[13px] text-gray-300 font-mono leading-relaxed overflow-x-auto whitespace-pre"><code>curl -H "x-api-key: YOUR_API_KEY" \
+  {BASE_URL}/api/brands</code></pre>
             </div>
             <div class="mt-6 p-4 border border-amber-200 bg-amber-50 rounded-xl">
               <p class="text-[13px] text-amber-900 leading-relaxed">
@@ -278,7 +278,7 @@ const errornotes = [
                     </div>
                     <span class="text-[11px] text-white/40 font-mono">response.json</span>
                   </div>
-                  <pre class="p-5 text-[13px] text-gray-300 font-mono leading-relaxed overflow-x-auto"><code>{ep.response}</code></pre>
+                  <pre class="p-5 text-[13px] text-gray-300 font-mono leading-relaxed overflow-x-auto whitespace-pre"><code>{ep.response}</code></pre>
                 </div>
               </div>
             </section>
