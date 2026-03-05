@@ -5,17 +5,69 @@ import Footer from '../components/Footer.astro';
 ---
 
 <BaseLayout
-  title="Seite nicht gefunden | Vehicle Imagery"
-  description="Die angeforderte Seite existiert nicht."
+  title="Seite nicht gefunden (404) | Vehicle Imagery"
+  description="Die angeforderte Seite existiert nicht. Zurück zur Startseite oder nutzen Sie die Navigation."
   noIndex={true}
 >
   <Header />
-  <main class="mx-auto max-w-3xl px-4 py-24 sm:px-6 lg:px-8 text-center">
-    <h1 class="text-4xl font-bold text-[#1C2B32] mb-4">404</h1>
-    <p class="text-lg text-black/70 mb-8">Die angeforderte Seite wurde nicht gefunden.</p>
-    <a href="/" class="inline-flex items-center px-6 py-3 rounded-lg bg-[rgb(200,90,70)] text-white font-medium hover:opacity-90 transition-opacity">
-      Zur Startseite
-    </a>
+  <main class="min-h-[70vh] bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    <!-- Hero-Bereich -->
+    <section class="px-4 pt-8 pb-16 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] min-h-[320px] sm:min-h-[380px] flex flex-col justify-center items-center">
+          <img
+            src="/images/showroom.webp"
+            alt=""
+            class="absolute inset-0 h-full w-full object-cover"
+            aria-hidden="true"
+          />
+          <div class="absolute inset-0 bg-[#1C2B32]/85" aria-hidden="true" />
+          <div class="absolute inset-0 opacity-20" style="background: linear-gradient(135deg, transparent 0%, rgba(200,90,70,0.3) 100%);" aria-hidden="true" />
+
+          <div class="relative text-center px-6 py-12">
+            <p class="text-[11px] font-medium tracking-widest text-white/60 uppercase mb-4">Fehler</p>
+            <h1 class="text-8xl sm:text-9xl font-light tracking-tighter text-white mb-4" style="text-shadow: 0 0 60px rgba(0,0,0,0.3);">404</h1>
+            <p class="text-xl sm:text-2xl font-normal text-white/90 max-w-md mx-auto mb-2">
+              Diese Seite existiert nicht oder wurde verschoben.
+            </p>
+            <p class="text-sm text-white/60 max-w-sm mx-auto mb-10">
+              Nutzen Sie die Navigation oder kehren Sie zur Startseite zurück.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a href="/" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[rgb(200,90,70)] text-white font-medium hover:opacity-90 transition-opacity shadow-lg shadow-[rgb(200,90,70)]/20">
+                Zur Startseite
+              </a>
+              <a href="/contact" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/30 text-white font-medium hover:bg-white/10 transition-colors">
+                Kontakt
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hilfreiche Links -->
+    <section class="mx-auto max-w-4xl px-6 pb-24 pt-4 sm:px-12">
+      <p class="text-[11px] font-medium text-black/50 mb-6 text-center">/ hilfreiche links /</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+        <a href="/documentation" class="block p-4 rounded-2xl bg-black/[0.03] hover:bg-black/[0.06] transition-colors">
+          <span class="text-[13px] font-medium text-black block">Documentation</span>
+          <span class="text-[12px] text-black/50">API Reference</span>
+        </a>
+        <a href="/pricing" class="block p-4 rounded-2xl bg-black/[0.03] hover:bg-black/[0.06] transition-colors">
+          <span class="text-[13px] font-medium text-black block">Pricing</span>
+          <span class="text-[12px] text-black/50">Pläne & Trial</span>
+        </a>
+        <a href="/faq" class="block p-4 rounded-2xl bg-black/[0.03] hover:bg-black/[0.06] transition-colors">
+          <span class="text-[13px] font-medium text-black block">FAQ</span>
+          <span class="text-[12px] text-black/50">Häufige Fragen</span>
+        </a>
+        <a href="/blog" class="block p-4 rounded-2xl bg-black/[0.03] hover:bg-black/[0.06] transition-colors">
+          <span class="text-[13px] font-medium text-black block">Blog</span>
+          <span class="text-[12px] text-black/50">Aktuelles</span>
+        </a>
+      </div>
+    </section>
   </main>
   <Footer />
 </BaseLayout>
