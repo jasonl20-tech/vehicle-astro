@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Seite nicht gefunden | Vehicle Imagery"
+  description="Die angeforderte Seite existiert nicht."
+  noIndex={true}
+>
+  <Header />
+  <main class="mx-auto max-w-3xl px-4 py-24 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-4xl font-bold text-[#1C2B32] mb-4">404</h1>
+    <p class="text-lg text-black/70 mb-8">Die angeforderte Seite wurde nicht gefunden.</p>
+    <a href="/" class="inline-flex items-center px-6 py-3 rounded-lg bg-[rgb(200,90,70)] text-white font-medium hover:opacity-90 transition-opacity">
+      Zur Startseite
+    </a>
+  </main>
+  <Footer />
+</BaseLayout>
