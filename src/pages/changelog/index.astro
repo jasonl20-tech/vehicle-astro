@@ -10,6 +10,7 @@ function getAssetUrl(asset: { fields?: { file?: { url?: string } } } | null | un
   return url.startsWith('//') ? `https:${url}` : url;
 }
 
+let contentfulError: string | null = null;
 let changelogs: Array<{
   slug: string;
   title: string;
@@ -26,7 +27,13 @@ try {
     content_type: 'changelog',
     order: '-sys.createdAt',
     include: 2,
+    limit: 100,
   });
+  if (res.items.length === 0) {
+    console.warn('[Changelog] Contentful lieferte 0 Einträge. Prüfe: Content Type API ID = "changelog", Einträge sind PUBLISHED, Slug ist ausgefüllt.');
+  } else {
+    console.log('[Changelog] Contentful:', res.items.length, 'Einträge geladen');
+  }
   changelogs = res.items.map((item: {
     fields?: {
       slug?: string;
@@ -52,8 +59,12 @@ try {
       featuredImageAlt: item.fields?.featuredImageAlt ?? item.fields?.title ?? '',
     };
   }).filter((log) => log.slug);
-} catch {
-  // Contentful nicht konfiguriert oder keine Einträge
+  if (res.items.length > 0 && changelogs.length < res.items.length) {
+    console.warn('[Changelog]', res.items.length - changelogs.length, 'Einträge ohne Slug wurden ausgefiltert');
+  }
+} catch (e) {
+  contentfulError = e instanceof Error ? e.message : String(e);
+  console.error('[Changelog] Contentful-Fehler:', contentfulError);
 }
 ---
 
@@ -100,8 +111,13 @@ try {
           </li>
         ))
       ) : (
-        <li class="py-16 text-gray-500 text-center">
-          No changelog entries yet. Add entries in Contentful with content type &quot;changelog&quot;.
+        <li class="py-16 text-center">
+          <p class="text-gray-500">No changelog entries yet. Add entries in Contentful with content type &quot;changelog&quot;.</p>
+          {contentfulError && (
+            <p class="mt-4 text-sm text-amber-700 bg-amber-50 px-4 py-2 rounded max-w-xl mx-auto">
+              Contentful-Fehler: {contentfulError}
+            </p>
+          )}
         </li>
       )}
     </ul>
