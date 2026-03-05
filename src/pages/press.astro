@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getEntries } from '../lib/contentful';
 
 const facts = [
   { label: 'Founded', value: '2024' },
@@ -11,18 +12,26 @@ const facts = [
 ];
 
 const mediaAssets = [
-  { title: 'Logo (SVG)', desc: 'Primary logo mark in vector format. Use on light backgrounds.', file: '/logo.svg', type: 'SVG' },
-  { title: 'Logo (Dark)', desc: 'Inverted logo for dark backgrounds. White version.', file: '/logo.svg', type: 'SVG' },
-  { title: 'Product Screenshot', desc: 'Vehicle front-left view rendered via the API. Studio quality.', file: '/images/cupra_front_left.webp', type: 'WebP' },
-  { title: 'API Color Output', desc: 'Multi-color vehicle imagery showcase from the API.', file: '/images/vehicle_colors_api.webp', type: 'WebP' },
-  { title: 'Vehicle Fleet', desc: 'Fleet overview image with multiple vehicles.', file: '/images/footer_vehicles.webp', type: 'WebP' },
-  { title: 'Hero Image', desc: 'High-quality hero vehicle image.', file: '/images/hero-car.webp', type: 'WebP' },
+  { title: 'Logo (Light)', desc: 'Primary logo in vector format. Use on light backgrounds.', file: '/logo.svg', type: 'SVG', bg: 'light' },
+  { title: 'Logo (Dark)', desc: 'Inverted logo for dark backgrounds. White version.', file: '/logo.svg', type: 'SVG', bg: 'dark' },
+  { title: 'Vehicle Fleet', desc: 'Fleet overview with multiple vehicles. Use for editorial and feature images.', file: '/images/footer_vehicles.webp', type: 'WebP', bg: 'light' },
 ];
 
-const pressReleases = [
-  { date: '2024', title: 'Vehicle Imagery Launches Studio-Quality API for the Automotive Industry', excerpt: 'Vehicle Imagery introduces its developer-first API, delivering studio-quality vehicle images via global CDN for dealerships, leasing platforms, and automotive marketplaces.' },
-  { date: '2024', title: 'Vehicle Imagery Reaches 50+ Brands Coverage', excerpt: 'The API now covers over 50 automotive brands with multiple model years, variants, trims, and camera angles — all in studio quality.' },
-];
+type PressRelease = { title: string; date: string; excerpt: string };
+let pressReleases: PressRelease[] = [];
+try {
+  const res = await getEntries({ content_type: 'pressRelease', order: '-fields.date', limit: 20 });
+  pressReleases = (res.items || []).map((item: { fields?: { title?: string; date?: string; excerpt?: string } }) => ({
+    title: item.fields?.title ?? '',
+    date: item.fields?.date ?? '',
+    excerpt: item.fields?.excerpt ?? '',
+  }));
+} catch {
+  pressReleases = [
+    { date: '2024', title: 'Vehicle Imagery Launches Studio-Quality API for the Automotive Industry', excerpt: 'Vehicle Imagery introduces its developer-first API, delivering studio-quality vehicle images via global CDN for dealerships, leasing platforms, and automotive marketplaces.' },
+    { date: '2024', title: 'Vehicle Imagery Reaches 50+ Brands Coverage', excerpt: 'The API now covers over 50 automotive brands with multiple model years, variants, trims, and camera angles — all in studio quality.' },
+  ];
+}
 ---
 
 <BaseLayout
@@ -86,28 +95,29 @@ const pressReleases = [
           </p>
         </div>
 
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-6 lg:grid-cols-3">
           {mediaAssets.map((asset) => (
-            <div class="group rounded-2xl overflow-hidden border border-black/[0.04] bg-white transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:border-black/10">
-              <div class={`relative h-48 flex items-center justify-center overflow-hidden ${asset.title.includes('Dark') ? 'bg-[rgb(10,43,49)]' : 'bg-[#f0f0f0]'}`}>
+            <div class="group rounded-lg overflow-hidden border border-black/[0.06] bg-white transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:border-black/10">
+              <div class={`relative h-52 flex items-center justify-center overflow-hidden ${asset.bg === 'dark' ? 'bg-[rgb(10,43,49)]' : 'bg-[#ebebeb]'}`}>
                 <img
                   src={asset.file}
                   alt={asset.title}
-                  class={`max-h-28 max-w-[80%] object-contain transition-transform duration-500 group-hover:scale-105 ${asset.title.includes('Dark') ? 'brightness-0 invert' : ''}`}
+                  class={`max-h-20 max-w-[70%] object-contain transition-transform duration-500 group-hover:scale-110 ${asset.bg === 'dark' ? 'brightness-0 invert' : ''}`}
                   loading="lazy"
                 />
-                <div class="absolute top-3 right-3">
-                  <span class="text-[9px] font-bold uppercase tracking-widest text-black/25 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-full">{asset.type}</span>
+                <div class="absolute top-4 right-4">
+                  <span class="text-[9px] font-bold uppercase tracking-widest text-black/30 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded">{asset.type}</span>
                 </div>
               </div>
-              <div class="p-6">
-                <h3 class="text-[14px] font-medium text-black mb-1">{asset.title}</h3>
-                <p class="text-[12px] text-black/45 leading-relaxed mb-4">{asset.desc}</p>
-                <a href={asset.file} download class="group/btn inline-flex items-center gap-2 text-[12px] font-medium text-black/60 hover:text-[rgb(200,90,70)] transition-colors">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="p-6 flex items-center justify-between gap-4">
+                <div>
+                  <h3 class="text-[14px] font-medium text-black">{asset.title}</h3>
+                  <p class="text-[11px] text-black/40 mt-0.5">{asset.desc}</p>
+                </div>
+                <a href={asset.file} download class="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-black/[0.04] hover:bg-[rgb(200,90,70)] hover:text-white text-black/40 transition-all duration-300">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16"></path>
                   </svg>
-                  Download
                 </a>
               </div>
             </div>
@@ -190,17 +200,24 @@ const pressReleases = [
           Press releases
         </h2>
 
-        <div class="space-y-0">
-          {pressReleases.map((pr) => (
-            <div class="group flex flex-col sm:flex-row gap-6 sm:gap-12 py-10 border-b border-black/[0.06] first:border-t">
-              <span class="text-[12px] font-mono text-black/25 shrink-0 pt-1">{pr.date}</span>
-              <div>
-                <h3 class="text-[17px] font-medium text-black mb-3 group-hover:text-[rgb(200,90,70)] transition-colors leading-snug">{pr.title}</h3>
-                <p class="text-[13px] text-black/50 leading-relaxed max-w-2xl">{pr.excerpt}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {pressReleases.length > 0 ? (
+          <div class="space-y-0">
+            {pressReleases.map((pr) => {
+              const d = pr.date && pr.date.length > 4 ? new Date(pr.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : pr.date;
+              return (
+                <div class="group flex flex-col sm:flex-row gap-6 sm:gap-12 py-10 border-b border-black/[0.06] first:border-t">
+                  <span class="text-[12px] font-mono text-black/25 shrink-0 pt-1 min-w-[100px]">{d}</span>
+                  <div>
+                    <h3 class="text-[17px] font-medium text-black mb-3 group-hover:text-[rgb(200,90,70)] transition-colors leading-snug">{pr.title}</h3>
+                    <p class="text-[13px] text-black/50 leading-relaxed max-w-2xl">{pr.excerpt}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p class="text-[14px] text-black/40">No press releases yet. Check back soon.</p>
+        )}
       </div>
     </section>
 
