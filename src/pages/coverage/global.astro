@@ -6,7 +6,7 @@ import Footer from '../../components/Footer.astro';
 const regions = [
   {
     title: 'Europe',
-    desc: 'Complete coverage of all European markets including UK, DACH, Nordics, and Southern Europe. Right-hand drive variants for UK market.',
+    desc: 'Complete coverage of all European markets including UK, DACH, Nordics, and Southern Europe.',
     countries: 'Germany, UK, France, Italy, Spain, Sweden, Netherlands, Switzerland, Austria, Norway, Belgium, Denmark, Poland, Czech Republic, Finland',
     brands: '85+',
   },
@@ -18,7 +18,7 @@ const regions = [
   },
   {
     title: 'Asia Pacific',
-    desc: 'Japanese, Korean, and Australian market vehicles. Right-hand drive variants for Japan, Australia, and select Southeast Asian markets.',
+    desc: 'Japanese, Korean, and Australian market vehicles with region-specific trim levels and configurations.',
     countries: 'Japan, South Korea, Australia, China, India, Thailand, Indonesia, Malaysia',
     brands: '45+',
   },
@@ -44,7 +44,7 @@ const regions = [
       <div class="max-w-3xl">
         <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Global Coverage</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Worldwide.<br />Market-specific.
+          Worldwide.<br />Every market.
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
           Our vehicle imagery database covers all major automotive markets — with region-specific configurations, specifications, and trim levels.
@@ -59,7 +59,7 @@ const regions = [
           { value: '140+', label: 'Brands' },
           { value: '4', label: 'Regions' },
           { value: '40+', label: 'Countries' },
-          { value: 'LHD & RHD', label: 'Drive Configs' },
+          { value: '65,000+', label: 'Models' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -70,194 +70,39 @@ const regions = [
     </section>
 
     <!-- World Map -->
-    <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
-      <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-8 sm:p-12">
-        <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/10 via-black/5 to-transparent"></div>
-        <div class="flex items-center gap-4 mb-8">
-          <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/20">Map</span>
-          <h2 class="text-2xl sm:text-3xl font-light text-black tracking-tight">Active Markets</h2>
-        </div>
-        <div class="w-full">
-          <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
-            <!-- Background -->
-            <rect width="1200" height="600" fill="#fafafa" rx="16"/>
-
-            <!-- World map simplified paths — highlighted = major auto manufacturing countries -->
-            <!-- Non-highlighted countries (light gray) -->
-            <g fill="#e5e5e5" stroke="#d4d4d4" stroke-width="0.5">
-              <!-- South America -->
-              <path d="M280,320 L300,310 L320,320 L330,350 L325,380 L320,410 L310,440 L300,470 L290,490 L280,500 L270,490 L265,460 L260,430 L255,400 L260,370 L265,340 Z"/>
-              <!-- Central America -->
-              <path d="M220,280 L240,275 L255,280 L260,290 L255,300 L245,305 L235,300 L225,295 Z"/>
-              <!-- Africa -->
-              <path d="M520,280 L560,270 L600,275 L620,290 L630,320 L625,360 L620,400 L610,430 L595,450 L575,455 L555,450 L540,435 L525,410 L515,380 L510,350 L510,320 L515,295 Z"/>
-              <!-- Russia (non-auto) -->
-              <path d="M700,80 L780,75 L860,80 L920,90 L960,100 L980,115 L970,135 L940,150 L900,155 L850,150 L800,145 L750,140 L710,130 L695,115 L690,100 Z"/>
-              <!-- Southeast Asia -->
-              <path d="M830,270 L850,265 L870,270 L880,280 L885,295 L878,305 L865,310 L850,305 L838,295 L833,280 Z"/>
-              <!-- New Zealand -->
-              <path d="M1050,440 L1060,435 L1065,445 L1060,455 L1050,450 Z"/>
-              <!-- Iceland -->
-              <path d="M440,70 L455,68 L462,75 L455,82 L442,80 Z"/>
-              <!-- Indonesia -->
-              <path d="M850,320 L880,315 L910,318 L930,325 L920,335 L890,338 L860,335 L845,328 Z"/>
-              <!-- Philippines -->
-              <path d="M900,260 L910,255 L915,265 L910,275 L900,270 Z"/>
-            </g>
-
-            <!-- Highlighted countries — major auto manufacturers/markets -->
-            <g fill="rgb(200,90,70)" fill-opacity="0.15" stroke="rgb(200,90,70)" stroke-width="0.8" stroke-opacity="0.4">
-              <!-- USA -->
-              <path d="M120,140 L230,135 L260,145 L270,160 L265,180 L250,195 L230,200 L200,200 L170,195 L145,190 L125,180 L115,165 L110,150 Z"/>
-              <!-- Alaska -->
-              <path d="M60,100 L95,95 L110,105 L108,118 L95,125 L75,122 L60,115 Z"/>
-              <!-- Canada -->
-              <path d="M120,80 L230,75 L270,80 L280,95 L275,115 L260,130 L230,135 L180,133 L140,130 L120,125 L110,110 L112,92 Z"/>
-              <!-- Mexico -->
-              <path d="M160,210 L200,205 L220,215 L230,230 L225,248 L215,260 L200,265 L185,258 L172,245 L165,230 Z"/>
-              <!-- Germany -->
-              <path d="M520,120 L535,115 L545,120 L548,135 L542,148 L530,152 L520,148 L515,135 Z"/>
-              <!-- France -->
-              <path d="M490,135 L510,130 L520,140 L518,158 L508,168 L495,170 L485,162 L482,148 Z"/>
-              <!-- UK -->
-              <path d="M475,100 L488,95 L495,105 L492,120 L483,128 L472,125 L468,112 Z"/>
-              <!-- Italy -->
-              <path d="M530,155 L540,152 L548,160 L545,178 L538,195 L530,200 L525,192 L522,175 L525,162 Z"/>
-              <!-- Spain -->
-              <path d="M465,160 L490,155 L500,162 L498,178 L488,188 L472,190 L462,182 L460,170 Z"/>
-              <!-- Sweden -->
-              <path d="M535,60 L545,55 L555,62 L558,80 L552,98 L542,105 L533,100 L528,82 L530,68 Z"/>
-              <!-- Japan -->
-              <path d="M940,160 L952,155 L960,165 L958,182 L950,195 L940,198 L935,188 L933,172 Z"/>
-              <!-- South Korea -->
-              <path d="M920,170 L930,165 L936,175 L933,188 L925,195 L918,190 L916,180 Z"/>
-              <!-- China -->
-              <path d="M820,150 L870,140 L910,145 L930,160 L925,185 L910,205 L880,215 L850,210 L825,200 L810,185 L808,165 Z"/>
-              <!-- India -->
-              <path d="M770,220 L800,210 L820,220 L825,245 L818,270 L805,285 L785,290 L770,280 L762,258 L760,238 Z"/>
-              <!-- Australia -->
-              <path d="M920,380 L980,370 L1030,378 L1050,395 L1048,420 L1030,438 L1000,445 L960,442 L935,430 L920,412 L915,395 Z"/>
-              <!-- Brazil -->
-              <path d="M290,330 L320,320 L340,335 L345,360 L340,390 L330,410 L315,420 L300,415 L285,400 L278,375 L280,350 Z"/>
-              <!-- Thailand -->
-              <path d="M840,248 L852,242 L858,252 L855,268 L848,278 L838,275 L835,262 Z"/>
-              <!-- Poland -->
-              <path d="M545,112 L560,108 L570,115 L568,130 L558,138 L548,135 L543,125 Z"/>
-              <!-- Czech Republic -->
-              <path d="M535,130 L548,128 L555,135 L552,145 L542,148 L535,142 Z"/>
-              <!-- Netherlands -->
-              <path d="M505,108 L515,105 L520,112 L518,120 L510,123 L504,118 Z"/>
-              <!-- Belgium -->
-              <path d="M498,120 L508,118 L514,125 L510,133 L502,135 L496,128 Z"/>
-              <!-- Austria -->
-              <path d="M535,138 L550,135 L558,142 L555,152 L545,155 L535,150 Z"/>
-              <!-- Switzerland -->
-              <path d="M510,142 L522,140 L528,148 L525,155 L515,158 L508,150 Z"/>
-              <!-- Turkey -->
-              <path d="M580,170 L620,165 L645,172 L650,185 L638,195 L610,198 L585,192 L575,182 Z"/>
-            </g>
-
-            <!-- Dots for key cities/hubs -->
-            <g fill="rgb(200,90,70)">
-              <circle cx="190" cy="168" r="3.5"/> <!-- Detroit -->
-              <circle cx="530" cy="135" r="3.5"/> <!-- Munich -->
-              <circle cx="535" cy="170" r="3.5"/> <!-- Turin -->
-              <circle cx="948" cy="178" r="3.5"/> <!-- Tokyo -->
-              <circle cx="925" cy="180" r="3.5"/> <!-- Seoul -->
-              <circle cx="860" cy="180" r="3.5"/> <!-- Shanghai -->
-              <circle cx="485" cy="112" r="3.5"/> <!-- London -->
-              <circle cx="498" cy="158" r="3.5"/> <!-- Paris -->
-              <circle cx="540" cy="78" r="3.5"/>  <!-- Gothenburg -->
-            </g>
-
-            <!-- City labels -->
-            <g fill="rgb(200,90,70)" font-size="9" font-weight="600" font-family="Arial, sans-serif">
-              <text x="195" y="164" text-anchor="start">Detroit</text>
-              <text x="536" y="131" text-anchor="start">Munich</text>
-              <text x="541" y="167" text-anchor="start">Turin</text>
-              <text x="954" y="175" text-anchor="start">Tokyo</text>
-              <text x="931" y="177" text-anchor="start">Seoul</text>
-              <text x="866" y="177" text-anchor="start">Shanghai</text>
-              <text x="466" y="109" text-anchor="end">London</text>
-              <text x="479" y="155" text-anchor="end">Paris</text>
-              <text x="546" y="75" text-anchor="start">Gothenburg</text>
-            </g>
-
-            <!-- Legend -->
-            <g transform="translate(40, 530)">
-              <rect width="12" height="12" rx="2" fill="rgb(200,90,70)" fill-opacity="0.15" stroke="rgb(200,90,70)" stroke-width="0.8" stroke-opacity="0.4"/>
-              <text x="18" y="10" fill="#737373" font-size="10" font-family="Arial, sans-serif">Active coverage markets</text>
-              <circle cx="170" cy="6" r="3.5" fill="rgb(200,90,70)"/>
-              <text x="178" y="10" fill="#737373" font-size="10" font-family="Arial, sans-serif">Major automotive hubs</text>
-            </g>
-          </svg>
+    <section class="mx-auto max-w-[1400px] px-6 pb-24 sm:px-12 lg:px-16">
+      <div class="bg-[#fafafa] rounded-2xl p-6 sm:p-10">
+        <img src="/images/world-map.svg" alt="Global vehicle imagery coverage map" class="w-full h-auto" loading="eager" />
+        <div class="flex items-center gap-8 mt-6 pl-2">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: rgba(200,90,70,0.18); border: 1px solid rgba(200,90,70,0.5);"></span>
+            <span class="text-[11px] text-black/40">Active coverage</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm bg-[#e8e8e8] border border-[#d0d0d0]"></span>
+            <span class="text-[11px] text-black/40">Expanding</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Regional Coverage Cards -->
-    <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-32 sm:px-12 lg:px-16">
-      <div class="space-y-6">
+    <!-- Regional Coverage -->
+    <section class="mx-auto max-w-[1400px] px-6 pb-32 sm:px-12 lg:px-16">
+      <div class="grid sm:grid-cols-2 gap-px bg-black/[0.04]">
         {regions.map((region, idx) => (
-          <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white">
-            <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/10 via-black/5 to-transparent"></div>
-            <div class="p-8 sm:p-12">
-              <div class="grid lg:grid-cols-[1fr_1fr] gap-8 lg:gap-16 items-start">
-                <div>
-                  <div class="flex items-center gap-4 mb-6">
-                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/20">{String(idx + 1).padStart(2, '0')}</span>
-                    <h2 class="text-3xl sm:text-4xl font-light text-black tracking-tight">{region.title}</h2>
-                  </div>
-                  <p class="text-[14px] text-black/45 leading-relaxed mb-6">{region.desc}</p>
-                  <div class="border-t border-black/5 pt-6">
-                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25 mb-2">Markets</p>
-                    <p class="text-[13px] text-black/40 leading-relaxed">{region.countries}</p>
-                  </div>
-                </div>
-                <div class="flex items-center justify-end">
-                  <div class="flex items-baseline gap-2">
-                    <span class="text-5xl sm:text-6xl font-extralight text-black tracking-tight">{region.brands}</span>
-                    <span class="text-[11px] text-black/30 uppercase tracking-wider">brands</span>
-                  </div>
-                </div>
+          <div class="bg-white p-10 sm:p-12">
+            <div class="flex items-center justify-between mb-8">
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/20">{String(idx + 1).padStart(2, '0')}</span>
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-3xl sm:text-4xl font-extralight text-black tracking-tight">{region.brands}</span>
+                <span class="text-[10px] text-black/25 uppercase tracking-wider">brands</span>
               </div>
             </div>
+            <h2 class="text-2xl sm:text-3xl font-light text-black tracking-tight mb-3">{region.title}</h2>
+            <p class="text-[14px] text-black/40 leading-relaxed mb-8">{region.desc}</p>
+            <p class="text-[11px] text-black/25 leading-relaxed">{region.countries}</p>
           </div>
         ))}
-      </div>
-    </section>
-
-    <!-- Market-Specific Features -->
-    <section class="py-24 sm:py-32 bg-[#fafafa]">
-      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
-        <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start mb-20">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Regional</p>
-            <h2 class="text-4xl sm:text-5xl font-light leading-[1.05] text-black tracking-tight">
-              Market-specific<br />configurations
-            </h2>
-          </div>
-          <p class="text-[16px] text-black/50 leading-relaxed max-w-lg self-end">
-            Vehicles differ by market — lighting, bumpers, badges, and equipment packages change by region. We capture these differences.
-          </p>
-        </div>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            { title: 'Left & Right-Hand Drive', desc: 'Both LHD and RHD configurations for markets like UK, Japan, Australia, and select Southeast Asian countries.' },
-            { title: 'Regional Lighting', desc: 'US-spec amber reflectors, EU-spec clear lenses, and market-specific DRL configurations accurately rendered.' },
-            { title: 'Trim Variations', desc: 'Market-exclusive trims and packages. AMG-Line EU vs US differences, JDM-exclusive models, and GCC-spec variants.' },
-            { title: 'Badge & Naming', desc: 'Correct regional naming and badging. Vauxhall vs Opel, Acura vs Honda, and market-specific model names.' },
-            { title: 'Safety Equipment', desc: 'Region-specific safety equipment visibility including bumper designs, side markers, and rear fog lights.' },
-            { title: 'Wheel Options', desc: 'Market-specific wheel sizes and designs. European, North American, and Asian market wheel availability.' },
-          ].map((feature) => (
-            <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">
-              <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/10 via-black/5 to-transparent"></div>
-              <h3 class="text-[15px] font-bold text-black mb-3">{feature.title}</h3>
-              <p class="text-[13px] text-black/45 leading-relaxed">{feature.desc}</p>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
 
