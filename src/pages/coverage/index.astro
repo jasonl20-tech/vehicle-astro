@@ -1,0 +1,214 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const categories = [
+  {
+    title: 'Sport & Performance',
+    desc: 'High-performance sports cars and supercars from the world\'s most prestigious manufacturers.',
+    brands: [
+      { slug: 'ferrari', name: 'Ferrari' },
+      { slug: 'porsche', name: 'Porsche' },
+      { slug: 'lamborghini', name: 'Lamborghini' },
+      { slug: 'mclaren', name: 'McLaren' },
+      { slug: 'aston_martin', name: 'Aston Martin' },
+      { slug: 'bugatti', name: 'Bugatti' },
+      { slug: 'koenigsegg', name: 'Koenigsegg' },
+      { slug: 'lotus', name: 'Lotus' },
+      { slug: 'maserati', name: 'Maserati' },
+      { slug: 'abarth', name: 'Abarth' },
+    ],
+  },
+  {
+    title: 'Luxury',
+    desc: 'Premium luxury vehicles from the world\'s most exclusive automotive brands.',
+    brands: [
+      { slug: 'rolls_royce', name: 'Rolls-Royce' },
+      { slug: 'bentley', name: 'Bentley' },
+      { slug: 'mercedes_benz', name: 'Mercedes-Benz' },
+      { slug: 'bmw', name: 'BMW' },
+      { slug: 'audi', name: 'Audi' },
+      { slug: 'lexus', name: 'Lexus' },
+      { slug: 'jaguar', name: 'Jaguar' },
+      { slug: 'land_rover', name: 'Land Rover' },
+      { slug: 'genesis', name: 'Genesis' },
+      { slug: 'lincoln', name: 'Lincoln' },
+      { slug: 'cadillac', name: 'Cadillac' },
+      { slug: 'infiniti', name: 'Infiniti' },
+    ],
+  },
+  {
+    title: 'Mainstream',
+    desc: 'Popular mass-market vehicles from leading global manufacturers.',
+    brands: [
+      { slug: 'volkswagen', name: 'Volkswagen' },
+      { slug: 'toyota', name: 'Toyota' },
+      { slug: 'ford', name: 'Ford' },
+      { slug: 'honda', name: 'Honda' },
+      { slug: 'nissan', name: 'Nissan' },
+      { slug: 'hyundai', name: 'Hyundai' },
+      { slug: 'kia', name: 'Kia' },
+      { slug: 'mazda', name: 'Mazda' },
+      { slug: 'subaru', name: 'Subaru' },
+      { slug: 'mitsubishi', name: 'Mitsubishi' },
+      { slug: 'suzuki', name: 'Suzuki' },
+      { slug: 'isuzu', name: 'Isuzu' },
+    ],
+  },
+  {
+    title: 'European Brands',
+    desc: 'European automotive manufacturers including French, Italian, and other continental brands.',
+    brands: [
+      { slug: 'peugeot', name: 'Peugeot' },
+      { slug: 'renault', name: 'Renault' },
+      { slug: 'citroen', name: 'Citroën' },
+      { slug: 'seat', name: 'SEAT' },
+      { slug: 'skoda', name: 'Škoda' },
+      { slug: 'cupra', name: 'CUPRA' },
+      { slug: 'alfa_romeo', name: 'Alfa Romeo' },
+      { slug: 'fiat', name: 'Fiat' },
+      { slug: 'vauxhall', name: 'Vauxhall' },
+      { slug: 'mini', name: 'MINI' },
+      { slug: 'smart', name: 'smart' },
+      { slug: 'volvo', name: 'Volvo' },
+      { slug: 'saab', name: 'Saab' },
+      { slug: 'ineos', name: 'INEOS' },
+    ],
+  },
+  {
+    title: 'American Brands',
+    desc: 'American automotive manufacturers including trucks, SUVs, and classic American vehicles.',
+    brands: [
+      { slug: 'chevrolet', name: 'Chevrolet' },
+      { slug: 'gmc', name: 'GMC' },
+      { slug: 'dodge', name: 'Dodge' },
+      { slug: 'ram', name: 'RAM' },
+      { slug: 'jeep', name: 'Jeep' },
+      { slug: 'chrysler', name: 'Chrysler' },
+      { slug: 'buick', name: 'Buick' },
+      { slug: 'hummer', name: 'Hummer' },
+      { slug: 'acura', name: 'Acura' },
+      { slug: 'pontiac', name: 'Pontiac' },
+      { slug: 'oldsmobile', name: 'Oldsmobile' },
+      { slug: 'mercury', name: 'Mercury' },
+      { slug: 'saturn', name: 'Saturn' },
+      { slug: 'plymouth', name: 'Plymouth' },
+      { slug: 'scion', name: 'Scion' },
+    ],
+  },
+  {
+    title: 'Electric & Hybrid',
+    desc: 'Electric and hybrid vehicle manufacturers leading the transition to sustainable mobility.',
+    brands: [
+      { slug: 'tesla', name: 'Tesla' },
+      { slug: 'polestar', name: 'Polestar' },
+      { slug: 'lucid', name: 'Lucid' },
+    ],
+  },
+];
+
+const totalBrands = categories.reduce((sum, cat) => sum + cat.brands.length, 0);
+---
+
+<BaseLayout
+  title="Vehicle Coverage | 140+ Brands | Vehicle Imagery API"
+  description="Comprehensive vehicle imagery database covering 140+ automotive brands and 65,000+ models. Sports cars, luxury, mainstream, European, American, and electric vehicles."
+  canonicalUrl="/coverage"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+
+    <!-- Hero -->
+    <section class="px-4 pt-6 pb-0 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-[#1C2B32]">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#1C2B32] via-[#25363F] to-[#1C2B32]" aria-hidden="true" />
+          <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 70% 30%, rgba(200,90,70,0.3) 0%, transparent 60%);" aria-hidden="true" />
+          <div class="relative flex min-h-[280px] flex-col justify-end px-8 py-10 sm:min-h-[340px] sm:px-16 sm:py-16">
+            <div class="flex items-end justify-between">
+              <div>
+                <p class="text-[11px] font-bold uppercase tracking-widest text-white/30 mb-4">Coverage</p>
+                <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl leading-[0.95]">Global Vehicle<br />Coverage</h1>
+              </div>
+              <div class="hidden sm:flex gap-8 mb-2">
+                <div class="text-right">
+                  <p class="text-2xl font-black text-white">140+</p>
+                  <p class="text-[11px] text-white/40 uppercase tracking-widest">Brands</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-2xl font-black text-white">65K+</p>
+                  <p class="text-[11px] text-white/40 uppercase tracking-widest">Models</p>
+                </div>
+              </div>
+            </div>
+            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
+              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
+                <p class="text-[13px] tracking-wide text-black/80">
+                  <a href="/" class="transition-colors hover:text-black">Home</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <span class="font-medium text-black">Coverage</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand Categories -->
+    {categories.map((cat, catIdx) => (
+      <section class={`w-full px-4 sm:px-8 lg:px-12 ${catIdx === 0 ? 'pt-16' : 'pt-4'} pb-4`}>
+        <div class="mx-auto max-w-[1400px]">
+          <div class={`rounded-2xl p-8 sm:p-12 ${catIdx % 2 === 0 ? 'bg-[#f5f5f5]' : 'bg-white border border-black/[0.06]'}`}>
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10">
+              <div>
+                <h2 class="text-2xl sm:text-3xl font-black text-black tracking-tight">{cat.title}</h2>
+                <p class="text-[14px] text-black/45 mt-2 max-w-lg">{cat.desc}</p>
+              </div>
+              <span class="text-[11px] font-medium text-black/25 mt-3 sm:mt-0 shrink-0">{cat.brands.length} brands</span>
+            </div>
+            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
+              {cat.brands.map((brand) => (
+                <div class="group flex flex-col items-center justify-center rounded-xl bg-white p-5 sm:p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-default"
+                  style={catIdx % 2 !== 0 ? 'background-color: #fafafa;' : ''}
+                >
+                  <div class="w-full h-12 sm:h-14 flex items-center justify-center mb-3">
+                    <img
+                      src={`/manufactures/${brand.slug}_logo.svg`}
+                      alt={`${brand.name} logo`}
+                      width="96"
+                      height="48"
+                      class="object-contain max-w-full max-h-full opacity-60 group-hover:opacity-100 transition-opacity"
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                    />
+                  </div>
+                  <span class="text-[11px] font-medium text-black/40 group-hover:text-black/70 transition-colors text-center">{brand.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <!-- CTA -->
+    <section class="w-full px-4 sm:px-8 lg:px-12 pt-8 pb-24">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="rounded-2xl bg-[#1C2B32] p-10 sm:p-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">Need a specific brand?</h2>
+            <p class="text-[14px] text-white/50 max-w-md">Can't find a brand or model? We're constantly expanding our coverage and welcome requests.</p>
+          </div>
+          <div class="flex gap-3">
+            <a href="/contact" class="inline-flex items-center px-6 py-3.5 rounded-lg bg-white text-[13px] font-bold text-[#1C2B32] hover:bg-white/90 transition-colors">Request Coverage</a>
+            <a href="/documentation" class="inline-flex items-center px-6 py-3.5 rounded-lg border border-white/20 text-[13px] font-bold text-white hover:bg-white/10 transition-colors">View Docs</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
