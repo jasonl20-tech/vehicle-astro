@@ -76,34 +76,32 @@ const displayCategories = categories;
     </section>
 
     <!-- Category Cards -->
-    <section class="mx-auto max-w-5xl px-6 pb-24 pt-10 sm:px-12 lg:px-16">
-      {displayCategories.length > 0 ? (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {displayCategories.map((cat) => (
-            <a
-              href={`/faq/${cat.slug}`}
-              class="group relative overflow-hidden rounded-2xl border border-black/[0.06] bg-white p-7 sm:p-8 transition-all duration-300 hover:shadow-[0_8px_40px_-12px_rgba(0,0,0,0.12)] hover:-translate-y-1"
-            >
-              <div class="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-[rgb(200,90,70)] to-[rgb(200,90,70)]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div class="mb-10">
-                <span class="inline-block text-[11px] font-bold uppercase tracking-widest text-black/25 bg-black/[0.03] rounded-full px-3 py-1">{cat.count} {cat.count === 1 ? 'question' : 'questions'}</span>
-              </div>
-              <h2 class="text-2xl font-black text-black tracking-tight mb-2 group-hover:text-[rgb(200,90,70)] transition-colors">{cat.label}</h2>
-              <p class="text-[13px] text-black/45 leading-relaxed">{cat.desc}</p>
-              <div class="mt-6 flex items-center justify-between">
-                <span class="text-[11px] font-bold uppercase tracking-widest text-black/30 group-hover:text-[rgb(200,90,70)] transition-colors">Explore</span>
-                <span class="w-8 h-8 rounded-full bg-black/[0.04] flex items-center justify-center group-hover:bg-[rgb(200,90,70)] transition-all">
-                  <svg class="w-3.5 h-3.5 text-black/30 group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+    <section class="w-full px-4 pb-24 pt-10 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        {displayCategories.length > 0 ? (
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {displayCategories.map((cat) => (
+              <a
+                href={`/faq/${cat.slug}`}
+                class="group relative min-h-[220px] sm:min-h-[260px] flex flex-col justify-end rounded-2xl bg-[#f5f5f5] p-10 sm:p-12 transition-all duration-300 hover:bg-[#ebebeb]"
+              >
+                <span class="absolute top-10 right-10 sm:top-12 sm:right-12 w-10 h-10 rounded-full border border-black/10 flex items-center justify-center group-hover:border-[rgb(200,90,70)] group-hover:bg-[rgb(200,90,70)] transition-all">
+                  <svg class="w-4 h-4 text-black/25 group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
                 </span>
-              </div>
-            </a>
-          ))}
-        </div>
-      ) : (
-        <div class="text-center py-20">
-          <p class="text-black/40 text-sm">No FAQ categories found. Add FAQ entries in Contentful to see categories here.</p>
-        </div>
-      )}
+                <h2 class="text-3xl sm:text-4xl font-black text-black tracking-tight mb-3">{cat.label}</h2>
+                <p class="text-[14px] text-black/40 leading-relaxed max-w-md">{cat.desc}</p>
+                {cat.count > 0 && (
+                  <p class="mt-4 text-[11px] font-medium text-black/25">{cat.count} {cat.count === 1 ? 'question' : 'questions'}</p>
+                )}
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-20">
+            <p class="text-black/40 text-sm">No FAQ categories found. Add FAQ entries in Contentful to see categories here.</p>
+          </div>
+        )}
+      </div>
     </section>
   </main>
   <Footer />
