@@ -1,0 +1,30 @@
+---
+interface Props {
+  features: Array<{ title: string; desc: string }>;
+  label?: string;
+  heading?: string;
+}
+
+const { features, label, heading } = Astro.props;
+---
+
+{features && features.length > 0 && (
+  <section class="py-24 sm:py-32">
+    <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+      <div class="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
+        <div class="lg:sticky lg:top-32">
+          {label && <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">{label}</p>}
+          {heading && <h2 class="text-4xl sm:text-5xl font-light text-black tracking-tight leading-[1.05]" set:html={heading.replace(/\n/g, '<br />')} />}
+        </div>
+        <div class="space-y-0">
+          {features.map((item) => (
+            <div class="py-8 border-b border-black/5 first:border-t">
+              <h3 class="text-[15px] font-bold text-black mb-2">{item.title}</h3>
+              <p class="text-[14px] text-black/45 leading-relaxed max-w-xl">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+)}

@@ -1,0 +1,39 @@
+---
+import HeroSection from '../sections/HeroSection.astro';
+import StatsSection from '../sections/StatsSection.astro';
+import FeatureGrid from '../sections/FeatureGrid.astro';
+import CtaSection from '../sections/CtaSection.astro';
+
+interface Props {
+  label?: string;
+  headline: string;
+  description?: string;
+  stats?: Array<{ value: string; label: string }>;
+  features?: Array<{ title: string; desc: string }>;
+  bodyHtml?: string;
+  ctaTitle?: string;
+  ctaDescription?: string;
+  ctaButtonLabel?: string;
+  ctaButtonUrl?: string;
+  ctaSecondaryLabel?: string;
+  ctaSecondaryUrl?: string;
+}
+
+const { label, headline, description, stats, features, bodyHtml, ctaTitle, ctaDescription, ctaButtonLabel, ctaButtonUrl, ctaSecondaryLabel, ctaSecondaryUrl } = Astro.props;
+---
+
+<HeroSection label={label} headline={headline} description={description} />
+
+{stats && stats.length > 0 && <StatsSection stats={stats} />}
+
+{features && features.length > 0 && <FeatureGrid features={features} label={label} />}
+
+{bodyHtml && (
+  <section class="py-24 sm:py-32">
+    <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+      <div class="prose prose-lg max-w-3xl prose-headings:font-light prose-headings:tracking-tight prose-p:text-black/50 prose-p:text-[15px] prose-p:leading-relaxed prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-strong:text-black" set:html={bodyHtml} />
+    </div>
+  </section>
+)}
+
+<CtaSection title={ctaTitle} description={ctaDescription} buttonLabel={ctaButtonLabel} buttonUrl={ctaButtonUrl} secondaryLabel={ctaSecondaryLabel} secondaryUrl={ctaSecondaryUrl} />

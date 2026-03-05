@@ -1,0 +1,58 @@
+---
+import StatsSection from '../sections/StatsSection.astro';
+import FeatureGrid from '../sections/FeatureGrid.astro';
+import CtaSection from '../sections/CtaSection.astro';
+
+interface Props {
+  label?: string;
+  headline: string;
+  description?: string;
+  stats?: Array<{ value: string; label: string }>;
+  features?: Array<{ title: string; desc: string }>;
+  bodyHtml?: string;
+  ctaTitle?: string;
+  ctaDescription?: string;
+  ctaButtonLabel?: string;
+  ctaButtonUrl?: string;
+  ctaSecondaryLabel?: string;
+  ctaSecondaryUrl?: string;
+}
+
+const { label, headline, description, stats, features, bodyHtml, ctaTitle, ctaDescription, ctaButtonLabel, ctaButtonUrl, ctaSecondaryLabel, ctaSecondaryUrl } = Astro.props;
+---
+
+<!-- Dark Hero -->
+<section class="px-4 pt-6 pb-10 sm:px-8 lg:px-12">
+  <div class="mx-auto max-w-[1400px]">
+    <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]" style="background-color: rgb(10, 43, 49);">
+      <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+      <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[rgb(200,90,70)] via-[rgb(200,90,70)]/40 to-transparent"></div>
+      <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+      <div class="absolute -bottom-48 -left-24 w-72 h-72 rounded-full opacity-[0.03] pointer-events-none" style="background: radial-gradient(circle, rgba(200,90,70,1) 0%, transparent 60%);" aria-hidden="true"></div>
+
+      <div class="relative flex min-h-[360px] flex-col justify-end px-8 py-12 sm:min-h-[460px] sm:px-16 sm:py-16 lg:min-h-[500px]">
+        {label && (
+          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">{label}</p>
+        )}
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-white tracking-tight mb-6" set:html={headline.replace(/\n/g, '<br />')} />
+        {description && (
+          <p class="text-[16px] text-white/50 leading-relaxed max-w-lg">{description}</p>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+{stats && stats.length > 0 && <StatsSection stats={stats} />}
+
+{bodyHtml && (
+  <section class="py-24 sm:py-32">
+    <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+      <div class="prose prose-lg max-w-3xl prose-headings:font-light prose-headings:tracking-tight prose-p:text-black/50 prose-p:text-[15px] prose-p:leading-relaxed prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-strong:text-black" set:html={bodyHtml} />
+    </div>
+  </section>
+)}
+
+{features && features.length > 0 && <FeatureGrid features={features} label={label} />}
+
+<CtaSection title={ctaTitle} description={ctaDescription} buttonLabel={ctaButtonLabel} buttonUrl={ctaButtonUrl} secondaryLabel={ctaSecondaryLabel} secondaryUrl={ctaSecondaryUrl} />

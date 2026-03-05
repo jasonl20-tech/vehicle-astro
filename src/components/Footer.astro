@@ -1,4 +1,47 @@
 ---
+import { getEntries } from '../lib/contentful';
+
+interface DynamicLink {
+  label: string;
+  href: string;
+  order: number;
+}
+
+interface DynamicCategory {
+  name: string;
+  links: DynamicLink[];
+}
+
+let dynamicCategories: DynamicCategory[] = [];
+
+try {
+  const res = await getEntries({ content_type: 'dynamicPage', limit: 500 });
+  const footerItems = (res.items as any[]).filter((item) => item.fields?.footer === true);
+
+  const catMap = new Map<string, DynamicLink[]>();
+  for (const item of footerItems) {
+    const f = item.fields;
+    const category = (f.category as string) || 'Other';
+    const slug = f.slug as string;
+    const prefix = f.urlPrefix as string | undefined;
+    const href = prefix ? `/${prefix}/${slug}` : `/${slug}`;
+    const label = (f.footerLabel as string) || (f.title as string) || slug;
+    const order = (f.order as number) || 999;
+
+    if (!catMap.has(category)) catMap.set(category, []);
+    catMap.get(category)!.push({ label, href, order });
+  }
+
+  for (const [name, links] of catMap) {
+    links.sort((a, b) => a.order - b.order);
+    dynamicCategories.push({ name, links });
+  }
+  dynamicCategories.sort((a, b) => a.name.localeCompare(b.name));
+} catch {
+  dynamicCategories = [];
+}
+
+const totalCols = 5 + dynamicCategories.length;
 ---
 
 <footer class="text-white pt-24 pb-12 w-full border-t border-white/10" style="background-color:rgb(10, 43, 49); font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
@@ -28,7 +71,12 @@
       </div>
 
       <!-- Link columns -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10 mb-12 items-start">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-10 mb-12 items-start" style={`--cols: ${totalCols};`} data-footer-grid>
+        <style>
+          @media (min-width: 1024px) {
+            [data-footer-grid] { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) !important; }
+          }
+        </style>
         <div>
           <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">Product</h4>
           <ul class="space-y-4 text-sm text-gray-400">
@@ -55,6 +103,18 @@
             <li><a class="hover:text-white transition-colors" href="/faq">FAQ</a></li>
           </ul>
         </div>
+
+        {dynamicCategories.map((cat) => (
+          <div>
+            <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{cat.name}</h4>
+            <ul class="space-y-4 text-sm text-gray-400">
+              {cat.links.map((link) => (
+                <li><a class="hover:text-white transition-colors" href={link.href}>{link.label}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+
         <div>
           <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">Company</h4>
           <ul class="space-y-4 text-sm text-gray-400">

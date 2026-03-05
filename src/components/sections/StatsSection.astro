@@ -1,0 +1,21 @@
+---
+interface Props {
+  stats: Array<{ value: string; label: string }>;
+  dark?: boolean;
+}
+
+const { stats, dark = false } = Astro.props;
+---
+
+{stats && stats.length > 0 && (
+  <section class={`mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16 ${dark ? 'text-white' : ''}`}>
+    <div class={`flex flex-wrap gap-12 sm:gap-16 border-t ${dark ? 'border-white/10' : 'border-black/5'} pt-8`}>
+      {stats.map((stat) => (
+        <div>
+          <p class={`text-2xl sm:text-3xl font-light tracking-tight ${dark ? 'text-white' : 'text-black'}`}>{stat.value}</p>
+          <p class={`text-[10px] font-bold uppercase tracking-[0.2em] mt-1 ${dark ? 'text-white/30' : 'text-black/25'}`}>{stat.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

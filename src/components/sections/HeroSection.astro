@@ -1,0 +1,22 @@
+---
+interface Props {
+  label?: string;
+  headline: string;
+  description?: string;
+  narrow?: boolean;
+}
+
+const { label, headline, description, narrow = false } = Astro.props;
+---
+
+<section class={`mx-auto ${narrow ? 'max-w-3xl' : 'max-w-[1400px]'} px-6 pt-24 pb-8 sm:px-12 lg:px-16`}>
+  <div class={narrow ? '' : 'max-w-3xl'}>
+    {label && (
+      <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">{label}</p>
+    )}
+    <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8" set:html={headline.replace(/\n/g, '<br />')} />
+    {description && (
+      <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">{description}</p>
+    )}
+  </div>
+</section>

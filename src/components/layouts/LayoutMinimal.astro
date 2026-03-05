@@ -1,0 +1,29 @@
+---
+import HeroSection from '../sections/HeroSection.astro';
+import CtaSection from '../sections/CtaSection.astro';
+
+interface Props {
+  label?: string;
+  headline: string;
+  description?: string;
+  bodyHtml?: string;
+  ctaTitle?: string;
+  ctaDescription?: string;
+  ctaButtonLabel?: string;
+  ctaButtonUrl?: string;
+  ctaSecondaryLabel?: string;
+  ctaSecondaryUrl?: string;
+}
+
+const { label, headline, description, bodyHtml, ctaTitle, ctaDescription, ctaButtonLabel, ctaButtonUrl, ctaSecondaryLabel, ctaSecondaryUrl } = Astro.props;
+---
+
+<HeroSection label={label} headline={headline} description={description} narrow />
+
+{bodyHtml && (
+  <section class="mx-auto max-w-3xl px-6 pb-24 sm:px-12 lg:px-16">
+    <div class="prose prose-lg max-w-none prose-headings:font-light prose-headings:tracking-tight prose-p:text-black/50 prose-p:text-[15px] prose-p:leading-relaxed prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-strong:text-black prose-ul:text-black/50 prose-ol:text-black/50 prose-li:marker:text-black/30" set:html={bodyHtml} />
+  </section>
+)}
+
+<CtaSection title={ctaTitle} description={ctaDescription} buttonLabel={ctaButtonLabel} buttonUrl={ctaButtonUrl} secondaryLabel={ctaSecondaryLabel} secondaryUrl={ctaSecondaryUrl} />

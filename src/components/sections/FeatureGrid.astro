@@ -1,0 +1,37 @@
+---
+interface Props {
+  features: Array<{ title: string; desc: string }>;
+  label?: string;
+  heading?: string;
+  subtext?: string;
+}
+
+const { features, label, heading, subtext } = Astro.props;
+---
+
+{features && features.length > 0 && (
+  <section class="py-24 sm:py-32 bg-[#fafafa]">
+    <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+      {(label || heading) && (
+        <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start mb-20">
+          <div>
+            {label && <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">{label}</p>}
+            {heading && <h2 class="text-4xl sm:text-5xl font-light leading-[1.05] text-black tracking-tight" set:html={heading.replace(/\n/g, '<br />')} />}
+          </div>
+          {subtext && (
+            <p class="text-[16px] text-black/50 leading-relaxed max-w-lg self-end">{subtext}</p>
+          )}
+        </div>
+      )}
+      <div class={`grid sm:grid-cols-2 ${features.length >= 3 ? 'lg:grid-cols-3' : ''} gap-6`}>
+        {features.map((feature) => (
+          <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">
+            <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/10 via-black/5 to-transparent"></div>
+            <h3 class="text-[15px] font-bold text-black mb-3">{feature.title}</h3>
+            <p class="text-[13px] text-black/45 leading-relaxed">{feature.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

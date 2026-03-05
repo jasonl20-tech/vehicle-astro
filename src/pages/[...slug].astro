@@ -4,36 +4,143 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getEntries } from '../lib/contentful';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
+import { renderRichText, richTextToPlainText, buildAssetMap } from '../lib/contentful-rich-text';
+
+import LayoutHeroText from '../components/layouts/LayoutHeroText.astro';
+import LayoutHeroFeatures from '../components/layouts/LayoutHeroFeatures.astro';
+import LayoutHeroCards from '../components/layouts/LayoutHeroCards.astro';
+import LayoutDarkPremium from '../components/layouts/LayoutDarkPremium.astro';
+import LayoutMinimal from '../components/layouts/LayoutMinimal.astro';
 
 export async function getStaticPaths() {
+  const paths: Array<{ params: { slug: string }; props: Record<string, any> }> = [];
+
   try {
-    const res = await getEntries({ content_type: 'page' });
-    return res.items.map((item: { fields?: { slug?: string } }) => ({
-      params: { slug: item.fields?.slug ?? '' },
-      props: { entry: item },
-    }));
-  } catch {
-    return [];
-  }
+    const pageRes = await getEntries({ content_type: 'page' });
+    for (const item of pageRes.items as any[]) {
+      if (item.fields?.slug) {
+        paths.push({
+          params: { slug: item.fields.slug },
+          props: { entry: item, type: 'page' },
+        });
+      }
+    }
+  } catch {}
+
+  try {
+    const dpRes = await getEntries({ content_type: 'dynamicPage', limit: 500, include: 2 });
+    const assetMap = buildAssetMap(dpRes.includes as any);
+    for (const item of dpRes.items as any[]) {
+      if (item.fields?.slug) {
+        const slug = item.fields.slug as string;
+        const prefix = item.fields.urlPrefix as string | undefined;
+        const path = prefix ? `${prefix}/${slug}` : slug;
+        paths.push({
+          params: { slug: path },
+          props: { entry: item, type: 'dynamicPage', assetMap },
+        });
+      }
+    }
+  } catch {}
+
+  return paths;
 }
 
-const { entry } = Astro.props;
-const title = entry?.fields?.title ?? 'Seite';
-const body = entry?.fields?.body;
-const bodyHtml = body ? documentToHtmlString(body) : '';
+const { entry, type, assetMap } = Astro.props;
+
+if (type === 'page') {
+  var pageTitle = entry?.fields?.title ?? 'Seite';
+  var pageBody = entry?.fields?.body;
+  var pageBodyHtml = pageBody ? documentToHtmlString(pageBody) : '';
+}
+
+if (type === 'dynamicPage') {
+  const f = entry?.fields ?? {};
+  var dpLayout = (f.layout as string) || 'hero-text';
+  var dpLabel = f.label as string | undefined;
+  var dpHeadline = (f.headline as string) || (f.title as string) || '';
+  var dpDescription = f.description as string | undefined;
+  var dpBodyHtml = f.body ? renderRichText(f.body as any, assetMap) : '';
+
+  var dpStats: Array<{ value: string; label: string }> = [];
+  try { dpStats = typeof f.stats === 'string' ? JSON.parse(f.stats) : (f.stats as any) || []; } catch { dpStats = []; }
+
+  var dpFeatures: Array<{ title: string; desc: string }> = [];
+  try { dpFeatures = typeof f.features === 'string' ? JSON.parse(f.features) : (f.features as any) || []; } catch { dpFeatures = []; }
+
+  var dpCtaTitle = f.ctaTitle as string | undefined;
+  var dpCtaDescription = f.ctaDescription as string | undefined;
+  var dpCtaButtonLabel = f.ctaButtonLabel as string | undefined;
+  var dpCtaButtonUrl = f.ctaButtonUrl as string | undefined;
+  var dpCtaSecondaryLabel = f.ctaSecondaryLabel as string | undefined;
+  var dpCtaSecondaryUrl = f.ctaSecondaryUrl as string | undefined;
+
+  var dpTitle = (f.seoTitle as string) || `${f.title || dpHeadline} | Vehicle Imagery`;
+  var dpSeoDesc = (f.seoDescription as string) || dpDescription || richTextToPlainText(f.body as any, 160) || '';
+  const slug = f.slug as string;
+  const prefix = f.urlPrefix as string | undefined;
+  var dpCanonical = prefix ? `/${prefix}/${slug}` : `/${slug}`;
+  var dpNoIndex = (f.noIndex as boolean) || false;
+
+  var dpOgImage: string | undefined;
+  if (f.ogImage && typeof f.ogImage === 'object' && 'fields' in (f.ogImage as any)) {
+    const ogAsset = f.ogImage as any;
+    const url = ogAsset.fields?.file?.url;
+    if (url) dpOgImage = url.startsWith('//') ? `https:${url}` : url;
+  }
+
+  var dpLayoutProps = {
+    label: dpLabel, headline: dpHeadline, description: dpDescription,
+    stats: dpStats, features: dpFeatures, bodyHtml: dpBodyHtml,
+    ctaTitle: dpCtaTitle, ctaDescription: dpCtaDescription,
+    ctaButtonLabel: dpCtaButtonLabel, ctaButtonUrl: dpCtaButtonUrl,
+    ctaSecondaryLabel: dpCtaSecondaryLabel, ctaSecondaryUrl: dpCtaSecondaryUrl,
+  };
+
+  var dpJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: f.title || dpHeadline,
+    description: dpSeoDesc,
+    url: `${Astro.url.origin}${dpCanonical}`,
+  });
+}
 ---
 
-<BaseLayout title={title} description={title}>
-  <Header />
-  <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <article>
-      <h1 class="text-4xl font-bold">{title}</h1>
-      {bodyHtml ? (
-        <div class="prose prose-lg mt-8" set:html={bodyHtml} />
-      ) : (
-        <p class="mt-8 text-gray-600">Kein Inhalt.</p>
-      )}
-    </article>
-  </main>
-  <Footer />
-</BaseLayout>
+{type === 'page' && (
+  <BaseLayout title={pageTitle!} description={pageTitle!}>
+    <Header />
+    <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+      <article>
+        <h1 class="text-4xl font-bold">{pageTitle!}</h1>
+        {pageBodyHtml ? (
+          <div class="prose prose-lg mt-8" set:html={pageBodyHtml!} />
+        ) : (
+          <p class="mt-8 text-gray-600">Kein Inhalt.</p>
+        )}
+      </article>
+    </main>
+    <Footer />
+  </BaseLayout>
+)}
+
+{type === 'dynamicPage' && (
+  <BaseLayout
+    title={dpTitle!}
+    description={dpSeoDesc!}
+    canonicalUrl={dpCanonical!}
+    ogImage={dpOgImage}
+    noIndex={dpNoIndex!}
+  >
+    <Header />
+    <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+      {dpLayout! === 'hero-text' && <LayoutHeroText {...dpLayoutProps!} />}
+      {dpLayout! === 'hero-features' && <LayoutHeroFeatures {...dpLayoutProps!} />}
+      {dpLayout! === 'hero-cards' && <LayoutHeroCards {...dpLayoutProps!} />}
+      {dpLayout! === 'dark-premium' && <LayoutDarkPremium {...dpLayoutProps!} />}
+      {dpLayout! === 'minimal' && <LayoutMinimal {...dpLayoutProps!} />}
+    </main>
+    <Footer />
+    <script type="application/ld+json" set:html={dpJsonLd!} />
+  </BaseLayout>
+)}
