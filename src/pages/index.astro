@@ -2,6 +2,42 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getEntries } from '../lib/contentful';
+
+type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; category?: string; type: 'changelog' | 'blog' };
+let latestUpdates: UpdateItem[] = [];
+
+try {
+  const [changelogRes, blogRes] = await Promise.all([
+    getEntries({ content_type: 'api', order: '-sys.createdAt', limit: 4 }),
+    getEntries({ content_type: 'blogPost', order: '-sys.createdAt', limit: 4 }).catch(() => ({ items: [] })),
+  ]);
+  const changelogs: UpdateItem[] = (changelogRes.items || [])
+    .filter((i: { fields?: { slug?: string } }) => i.fields?.slug)
+    .map((i: { fields?: { slug?: string; title?: string; excerpt?: string; category?: string }; sys?: { createdAt?: string } }) => ({
+      slug: i.fields!.slug!,
+      title: i.fields?.title ?? 'Untitled',
+      date: i.sys?.createdAt ?? '',
+      excerpt: i.fields?.excerpt,
+      category: i.fields?.category,
+      type: 'changelog' as const,
+    }));
+  const blogs: UpdateItem[] = (blogRes.items || [])
+    .filter((i: { fields?: { slug?: string } }) => i.fields?.slug)
+    .map((i: { fields?: { slug?: string; title?: string; excerpt?: string }; sys?: { createdAt?: string } }) => ({
+      slug: i.fields!.slug!,
+      title: i.fields?.title ?? 'Untitled',
+      date: i.fields?.publishedAt ?? i.sys?.createdAt ?? '',
+      excerpt: i.fields?.excerpt,
+      category: 'Blog',
+      type: 'blog' as const,
+    }));
+  latestUpdates = [...changelogs, ...blogs]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 6);
+} catch {
+  latestUpdates = [];
+}
 ---
 
 <BaseLayout title="Vehicle Imagery API" description="The definitive car photography API. Studio-quality vehicle images for dealerships, leasing, and automotive platforms.">
@@ -387,6 +423,52 @@ import Footer from '../components/Footer.astro';
             ))}
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Updates (Changelog + Blog) -->
+  <section class="py-16 md:py-24 w-full border-t border-black/5 vi-font" style="background-color:rgb(255, 254, 252);">
+    <div class="w-full px-6 sm:px-12 md:px-16 lg:px-24 xl:px-64">
+      <div class="max-w-[1400px] mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-black tracking-tighter leading-none">LATEST UPDATES.</h2>
+          <div class="flex gap-6 shrink-0">
+            <a href="/changelog" class="text-sm font-bold uppercase tracking-widest text-black/60 hover:text-[rgb(200,90,70)] transition-colors">Changelog →</a>
+            <a href="/blog" class="text-sm font-bold uppercase tracking-widest text-black/60 hover:text-[rgb(200,90,70)] transition-colors">Blog →</a>
+          </div>
+        </div>
+        {latestUpdates.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {latestUpdates.map((item) => (
+              <a
+                href={item.type === 'changelog' ? `/changelog/${item.slug}` : `/blog/${item.slug}`}
+                class="group block p-6 sm:p-8 border border-black/5 bg-white hover:border-black/10 hover:shadow-lg transition-all duration-300"
+              >
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border border-black/20 text-black/70">
+                    {item.category ?? item.type === 'changelog' ? 'Changelog' : 'Blog'}
+                  </span>
+                  <time class="text-xs font-mono text-gray-500" datetime={item.date}>
+                    {item.date ? new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                  </time>
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-black group-hover:text-[rgb(200,90,70)] transition-colors">{item.title}</h3>
+                {item.excerpt && (
+                  <p class="mt-2 text-sm text-gray-600 leading-relaxed line-clamp-2">{item.excerpt}</p>
+                )}
+                <span class="inline-flex items-center mt-4 text-xs font-bold uppercase tracking-widest text-black/60 group-hover:text-[rgb(200,90,70)] transition-colors">
+                  Read Story
+                  <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="py-12 text-center text-gray-500">
+            <p>No updates yet. Add changelog entries or blog posts in Contentful.</p>
+          </div>
+        )}
       </div>
     </div>
   </section>
