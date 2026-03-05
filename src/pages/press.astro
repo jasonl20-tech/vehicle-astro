@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getEntries } from '../lib/contentful';
+import { richTextToPlainText } from '../lib/contentful-rich-text';
 
 const facts = [
   { label: 'Founded', value: '2024' },
@@ -17,20 +18,21 @@ const mediaAssets = [
   { title: 'Vehicle Fleet', desc: 'Fleet overview with multiple vehicles. Use for editorial and feature images.', file: '/images/footer_vehicles.webp', type: 'WebP', bg: 'light' },
 ];
 
-type PressRelease = { title: string; date: string; excerpt: string };
+type PressRelease = { title: string; shortText: string; date: string; excerpt: string; link: string };
 let pressReleases: PressRelease[] = [];
 try {
-  const res = await getEntries({ content_type: 'pressRelease', order: '-fields.date', limit: 20 });
-  pressReleases = (res.items || []).map((item: { fields?: { title?: string; date?: string; excerpt?: string } }) => ({
+  const res = await getEntries({ content_type: 'titleComponent', order: '-fields.date', limit: 20 });
+  pressReleases = (res.items || []).map((item: { fields?: { title?: string; shortText?: string; date?: string; excerpt?: unknown; link?: string } }) => ({
     title: item.fields?.title ?? '',
+    shortText: item.fields?.shortText ?? '',
     date: item.fields?.date ?? '',
-    excerpt: item.fields?.excerpt ?? '',
+    excerpt: item.fields?.excerpt
+      ? richTextToPlainText(item.fields.excerpt as import('@contentful/rich-text-types').Document, 300)
+      : '',
+    link: item.fields?.link ?? '',
   }));
 } catch {
-  pressReleases = [
-    { date: '2024', title: 'Vehicle Imagery Launches Studio-Quality API for the Automotive Industry', excerpt: 'Vehicle Imagery introduces its developer-first API, delivering studio-quality vehicle images via global CDN for dealerships, leasing platforms, and automotive marketplaces.' },
-    { date: '2024', title: 'Vehicle Imagery Reaches 50+ Brands Coverage', excerpt: 'The API now covers over 50 automotive brands with multiple model years, variants, trims, and camera angles — all in studio quality.' },
-  ];
+  pressReleases = [];
 }
 ---
 
@@ -208,8 +210,17 @@ try {
                 <div class="group flex flex-col sm:flex-row gap-6 sm:gap-12 py-10 border-b border-black/[0.06] first:border-t">
                   <span class="text-[12px] font-mono text-black/25 shrink-0 pt-1 min-w-[100px]">{d}</span>
                   <div>
-                    <h3 class="text-[17px] font-medium text-black mb-3 group-hover:text-[rgb(200,90,70)] transition-colors leading-snug">{pr.title}</h3>
-                    <p class="text-[13px] text-black/50 leading-relaxed max-w-2xl">{pr.excerpt}</p>
+                    <h3 class="text-[17px] font-medium text-black mb-2 group-hover:text-[rgb(200,90,70)] transition-colors leading-snug">
+                      {pr.link ? <a href={pr.link} target="_blank" rel="noopener noreferrer">{pr.title}</a> : pr.title}
+                    </h3>
+                    {pr.shortText && <p class="text-[14px] text-black/70 mb-2">{pr.shortText}</p>}
+                    {pr.excerpt && <p class="text-[13px] text-black/45 leading-relaxed max-w-2xl">{pr.excerpt}</p>}
+                    {pr.link && (
+                      <a href={pr.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-[12px] font-medium text-[rgb(200,90,70)] mt-3 hover:underline">
+                        Read more
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                      </a>
+                    )}
                   </div>
                 </div>
               );
