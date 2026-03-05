@@ -3,217 +3,227 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-const BASE_URL = 'https://api.vehicleimagery.com';
+const BASE = 'https://api.vehicleimagery.com';
 
-const endpoints = [
+const sections = [
+  {
+    id: 'auth',
+    label: 'Authentication',
+    title: 'Authenticate with your API key',
+    desc: `Every request requires an <code>x-api-key</code> header. Get your key from the dashboard or contact sales. Keep it server-side — never expose it in client code.`,
+    code: `curl -H "x-api-key: YOUR_API_KEY" \\
+  ${BASE}/api/brands`,
+    codeLang: 'bash',
+    response: null,
+  },
   {
     id: 'brands',
-    method: 'GET',
-    path: '/api/brands',
-    title: 'List Brands',
-    description: 'Returns all available vehicle brands in the database.',
-    params: [],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format filter (png, webp, etc.)' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Resolution filter (default, high, etc.)' },
-    ],
-    response: '{\n  "brands": [\n    "Audi",\n    "BMW",\n    "Mercedes-Benz",\n    "Volkswagen",\n    ...\n  ]\n}',
+    label: 'List Brands',
+    title: 'Get all available brands',
+    desc: 'Returns every vehicle brand in the database. Use the optional <code>format</code> and <code>resolution</code> query parameters to filter.',
+    code: `GET /api/brands`,
+    codeLang: 'http',
+    response: `{
+  "brands": [
+    "Audi",
+    "BMW",
+    "Mercedes-Benz",
+    "Volkswagen",
+    "Toyota",
+    ...
+  ]
+}`,
   },
   {
     id: 'models',
-    method: 'GET',
-    path: '/api/{brand}',
-    title: 'List Models',
-    description: 'Returns all available models for a given brand.',
-    params: [
-      { name: 'brand', type: 'string', description: 'Brand name (e.g. BMW, Audi)' },
-    ],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format filter' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Resolution filter' },
-    ],
-    response: '{\n  "brand": "BMW",\n  "resolution": "default",\n  "format": "png",\n  "models": [\n    "1 Series",\n    "3 Series",\n    "X5",\n    ...\n  ]\n}',
+    label: 'List Models',
+    title: 'Get models for a brand',
+    desc: 'Pass a brand name as a path parameter to retrieve all models available for that brand.',
+    code: `GET /api/{brand}
+GET /api/BMW`,
+    codeLang: 'http',
+    response: `{
+  "brand": "BMW",
+  "resolution": "default",
+  "format": "png",
+  "models": [
+    "1 Series",
+    "3 Series",
+    "X5",
+    "iX",
+    ...
+  ]
+}`,
   },
   {
     id: 'years',
-    method: 'GET',
-    path: '/api/{brand}/{model}',
-    title: 'List Years',
-    description: 'Returns all available model years for a specific brand and model combination.',
-    params: [
-      { name: 'brand', type: 'string', description: 'Brand name' },
-      { name: 'model', type: 'string', description: 'Model name (e.g. X5, A4)' },
-    ],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format filter' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Resolution filter' },
-    ],
-    response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "resolution": "default",\n  "format": "png",\n  "years": [2020, 2021, 2022, 2023, 2024]\n}]',
+    label: 'List Years',
+    title: 'Get available years',
+    desc: 'Returns every model year available for a specific brand and model combination.',
+    code: `GET /api/{brand}/{model}
+GET /api/BMW/X5`,
+    codeLang: 'http',
+    response: `[{
+  "brand": "BMW",
+  "model": "X5",
+  "years": [2020, 2021, 2022, 2023, 2024]
+}]`,
   },
   {
     id: 'variants',
-    method: 'GET',
-    path: '/api/{brand}/{model}/{year}',
-    title: 'List Variants',
-    description: 'Returns all body variants (e.g. Sedan, SUV, Wagon) available for a specific model year.',
-    params: [
-      { name: 'brand', type: 'string', description: 'Brand name' },
-      { name: 'model', type: 'string', description: 'Model name' },
-      { name: 'year', type: 'number', description: 'Model year (e.g. 2024)' },
-    ],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format filter' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Resolution filter' },
-    ],
-    response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "resolution": "default",\n  "format": "png",\n  "variants": ["SUV"]\n}]',
+    label: 'List Variants',
+    title: 'Get body variants',
+    desc: 'Returns all body variants (e.g. Sedan, SUV, Wagon) available for a specific model year.',
+    code: `GET /api/{brand}/{model}/{year}
+GET /api/BMW/X5/2024`,
+    codeLang: 'http',
+    response: `[{
+  "brand": "BMW",
+  "model": "X5",
+  "year": 2024,
+  "variants": ["SUV"]
+}]`,
   },
   {
     id: 'trims',
-    method: 'GET',
-    path: '/api/{brand}/{model}/{year}/{variant}',
-    title: 'List Trims',
-    description: 'Returns all trim levels available for a specific variant.',
-    params: [
-      { name: 'brand', type: 'string', description: 'Brand name' },
-      { name: 'model', type: 'string', description: 'Model name' },
-      { name: 'year', type: 'number', description: 'Model year' },
-      { name: 'variant', type: 'string', description: 'Body variant (e.g. SUV, Sedan)' },
-    ],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format filter' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Resolution filter' },
-    ],
-    response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "resolution": "default",\n  "format": "png",\n  "trims": ["xDrive40i", "M60i"]\n}]',
+    label: 'List Trims',
+    title: 'Get trim levels',
+    desc: 'Returns all available trims for a given variant. Trims represent specific equipment lines.',
+    code: `GET /api/{brand}/{model}/{year}/{variant}
+GET /api/BMW/X5/2024/SUV`,
+    codeLang: 'http',
+    response: `[{
+  "brand": "BMW",
+  "model": "X5",
+  "year": 2024,
+  "variant": "SUV",
+  "trims": ["xDrive40i", "M60i"]
+}]`,
   },
   {
     id: 'views',
-    method: 'GET',
-    path: '/api/{brand}/{model}/{year}/{variant}/{trim}',
-    title: 'List Views',
-    description: 'Returns all available camera angles/views for a specific vehicle configuration. Views marked as "not_allowed" are not included in your current plan.',
-    params: [
-      { name: 'brand', type: 'string', description: 'Brand name' },
-      { name: 'model', type: 'string', description: 'Model name' },
-      { name: 'year', type: 'number', description: 'Model year' },
-      { name: 'variant', type: 'string', description: 'Body variant' },
-      { name: 'trim', type: 'string', description: 'Trim level' },
-    ],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format filter' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Resolution filter' },
-    ],
-    response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "views": {\n    "front": true,\n    "front-left": true,\n    "side-left": true,\n    "rear-left": true,\n    "rear": true,\n    "cockpit": "not_allowed"\n  }\n}]',
+    label: 'List Views',
+    title: 'Get camera angles',
+    desc: 'Returns all available views (camera angles) for a configuration. Views marked <code>"not_allowed"</code> are restricted by your plan.',
+    code: `GET /api/{brand}/{model}/{year}/{variant}/{trim}
+GET /api/BMW/X5/2024/SUV/xDrive40i`,
+    codeLang: 'http',
+    response: `[{
+  "id": "a1b2c3d4e5f6",
+  "brand": "BMW",
+  "model": "X5",
+  "views": {
+    "front": true,
+    "front-left": true,
+    "side-left": true,
+    "rear": true,
+    "cockpit": "not_allowed"
+  }
+}]`,
   },
   {
     id: 'colors',
-    method: 'GET',
-    path: '/api/{brand}/{model}/{year}/{variant}/{trim}/colors',
-    title: 'List Colors',
-    description: 'Returns all available colors for a specific vehicle configuration. Only colors allowed by your plan are included.',
-    params: [
-      { name: 'brand', type: 'string', description: 'Brand name' },
-      { name: 'model', type: 'string', description: 'Model name' },
-      { name: 'year', type: 'number', description: 'Model year' },
-      { name: 'variant', type: 'string', description: 'Body variant' },
-      { name: 'trim', type: 'string', description: 'Trim level' },
-    ],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format filter' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Resolution filter' },
-    ],
-    response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "colors": ["default", "Blue", "Black", "White", "Silver"]\n}]',
+    label: 'List Colors',
+    title: 'Get available colors',
+    desc: 'Returns all colors for a specific vehicle. Only colors allowed by your plan are returned.',
+    code: `GET /api/{brand}/{model}/{year}/{variant}/{trim}/colors
+GET /api/BMW/X5/2024/SUV/xDrive40i/colors`,
+    codeLang: 'http',
+    response: `[{
+  "id": "a1b2c3d4e5f6",
+  "brand": "BMW",
+  "model": "X5",
+  "colors": [
+    "default", "Blue", "Black",
+    "White", "Silver"
+  ]
+}]`,
   },
   {
     id: 'features',
-    method: 'GET',
-    path: '/api/{brand}/{model}/{year}/{variant}/{trim}/features',
-    title: 'List Features',
-    description: 'Returns available image features (shadow, transparency) for a configuration. Features marked "not_allowed" are not included in your plan.',
-    params: [
-      { name: 'brand', type: 'string', description: 'Brand name' },
-      { name: 'model', type: 'string', description: 'Model name' },
-      { name: 'year', type: 'number', description: 'Model year' },
-      { name: 'variant', type: 'string', description: 'Body variant' },
-      { name: 'trim', type: 'string', description: 'Trim level' },
-    ],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format filter' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Resolution filter' },
-    ],
-    response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "features": {\n    "shadow": true,\n    "transparent": true,\n    "shadow_and_transparent": true\n  }\n}]',
+    label: 'List Features',
+    title: 'Check image features',
+    desc: 'Returns which image features (shadow, transparency) are available. Features marked <code>"not_allowed"</code> require a plan upgrade.',
+    code: `GET /api/{brand}/{model}/{year}/{variant}/{trim}/features
+GET /api/BMW/X5/2024/SUV/xDrive40i/features`,
+    codeLang: 'http',
+    response: `[{
+  "id": "a1b2c3d4e5f6",
+  "features": {
+    "shadow": true,
+    "transparent": true,
+    "shadow_and_transparent": true
+  }
+}]`,
   },
   {
     id: 'image',
-    method: 'GET',
-    path: '/api/{brand}/{model}/{year}/{variant}/{trim}/{view}',
-    title: 'Get Image',
-    description: 'Returns a signed CDN URL for a specific vehicle image. This is the main endpoint for retrieving vehicle imagery. The returned URL is valid for 7 days by default.',
-    params: [
-      { name: 'brand', type: 'string', description: 'Brand name' },
-      { name: 'model', type: 'string', description: 'Model name' },
-      { name: 'year', type: 'number', description: 'Model year' },
-      { name: 'variant', type: 'string', description: 'Body variant' },
-      { name: 'trim', type: 'string', description: 'Trim level' },
-      { name: 'view', type: 'string', description: 'Camera angle (e.g. front, front-left, side-left, rear, cockpit)' },
-    ],
-    query: [
-      { name: 'format', type: 'string', default: 'png', description: 'Image format (png, webp)' },
-      { name: 'resolution', type: 'string', default: 'default', description: 'Image resolution' },
-      { name: 'color', type: 'string', default: 'default', description: 'Vehicle color (e.g. Blue, Black, White)' },
-      { name: 'shadow', type: 'boolean', default: 'false', description: 'Include ground shadow (plan-dependent)' },
-      { name: 'transparency', type: 'boolean', default: 'false', description: 'Transparent background (plan-dependent)' },
-    ],
-    response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "view": "front-left",\n  "resolution": "default",\n  "format": "png",\n  "settings": {\n    "color": "Blue",\n    "shadow": true,\n    "transparency": false,\n    "watermark": false\n  },\n  "image_url": "https://cdn.vehicle.pics/v1/png/default/BMW/X5/...",\n  "errornotes": []\n}]',
+    label: 'Get Image',
+    title: 'Retrieve a vehicle image',
+    desc: `The main endpoint. Returns a signed CDN URL valid for 7 days. Use query parameters to control <code>color</code>, <code>shadow</code>, and <code>transparency</code>.`,
+    code: `GET /api/{brand}/{model}/{year}/{variant}/{trim}/{view}
+GET /api/BMW/X5/2024/SUV/xDrive40i/front-left
+    ?color=Blue&shadow=true&transparency=false`,
+    codeLang: 'http',
+    response: `[{
+  "id": "a1b2c3d4e5f6",
+  "brand": "BMW",
+  "model": "X5",
+  "year": 2024,
+  "view": "front-left",
+  "settings": {
+    "color": "Blue",
+    "shadow": true,
+    "transparency": false,
+    "watermark": false
+  },
+  "image_url": "https://cdn.vehicle.pics/v1/png/...",
+  "errornotes": []
+}]`,
   },
   {
     id: 'resolutions',
-    method: 'GET',
-    path: '/api/resolutions',
-    title: 'List Resolutions',
-    description: 'Returns all available image resolutions. Filtered by your plan permissions.',
-    params: [],
-    query: [],
-    response: '{\n  "resolutions": ["default", "high", "ultra"]\n}',
+    label: 'List Resolutions',
+    title: 'Available resolutions',
+    desc: 'Returns all image resolutions available. Higher resolutions may require a higher-tier plan.',
+    code: `GET /api/resolutions`,
+    codeLang: 'http',
+    response: `{
+  "resolutions": ["default", "high", "ultra"]
+}`,
   },
   {
     id: 'formats',
-    method: 'GET',
-    path: '/api/formats',
-    title: 'List Formats',
-    description: 'Returns all available image formats. Filtered by your plan permissions.',
-    params: [],
-    query: [],
-    response: '{\n  "formats": ["png", "webp"]\n}',
+    label: 'List Formats',
+    title: 'Available formats',
+    desc: 'Returns all image formats available. Filtered by your plan permissions.',
+    code: `GET /api/formats`,
+    codeLang: 'http',
+    response: `{
+  "formats": ["png", "webp"]
+}`,
   },
   {
     id: 'getall',
-    method: 'GET',
-    path: '/api/getall',
-    title: 'Get All Configurations',
-    description: 'Returns every vehicle configuration in the database, expanded by year. Requires special "getall" permission on your API key. Useful for building local caches or catalogs.',
-    params: [],
-    query: [],
-    response: '[\n  {\n    "brand": "BMW",\n    "model": "X5",\n    "variant": "SUV",\n    "trim": "xDrive40i",\n    "year": 2024,\n    "resolution": "default",\n    "format": "png",\n    "color": "default"\n  },\n  ...\n]',
+    label: 'Get All',
+    title: 'Export entire catalog',
+    desc: 'Returns every vehicle configuration expanded by year. Requires special <code>getall</code> permission. Useful for building local caches.',
+    code: `GET /api/getall`,
+    codeLang: 'http',
+    response: `[
+  {
+    "brand": "BMW",
+    "model": "X5",
+    "variant": "SUV",
+    "trim": "xDrive40i",
+    "year": 2024,
+    "resolution": "default",
+    "format": "png",
+    "color": "default"
   },
-];
-
-const errorCodes = [
-  { code: '401', description: 'Missing x-api-key header. Include your API key in the request.' },
-  { code: '403', description: 'Invalid API key, expired key, or the requested resource is not allowed by your plan.' },
-  { code: '404', description: 'The requested brand, model, year, variant, trim, view, or color was not found.' },
-  { code: '400', description: 'Invalid request parameter (e.g. non-numeric year).' },
-  { code: '500', description: 'Internal server error. Contact support if this persists.' },
-];
-
-const errornotes = [
-  { code: 'P11', description: 'Requested format or resolution not allowed by plan — automatically fell back to your plan default.' },
-  { code: 'F04', description: 'Requested color not found — fell back to default color.' },
-  { code: 'C09', description: 'Requested color blocked by plan — fell back to default color.' },
-  { code: 'R08', description: 'Requested resolution not available for this car — fell back to nearest allowed resolution.' },
-  { code: 'S05', description: 'Shadow requested but not available or not allowed — returned without shadow.' },
-  { code: 'S12', description: 'Non-shadow version not available — shadow version returned instead.' },
-  { code: 'T06', description: 'Transparency requested but not available or not allowed — returned without transparency.' },
-  { code: 'T13', description: 'Non-transparent version not available — transparent version returned instead.' },
+  ...
+]`,
+  },
 ];
 ---
 
@@ -223,341 +233,303 @@ const errornotes = [
   canonicalUrl="/documentation"
 >
   <Header />
-  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+  <main class="min-h-screen" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
 
-    <!-- Hero -->
-    <section class="px-4 pt-6 pb-10 sm:px-8 lg:px-12">
-      <div class="mx-auto max-w-[1400px]">
-        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]" style="background-color: rgb(10, 43, 49);">
-          <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
-          <div class="relative flex min-h-[320px] flex-col justify-end px-8 py-10 sm:min-h-[400px] sm:px-16 sm:py-16 lg:min-h-[440px]">
-            <p class="text-[11px] font-medium text-white/40 mb-4 uppercase tracking-widest">API Reference v1</p>
-            <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl">Documentation</h1>
-            <p class="mt-4 text-white/60 text-base sm:text-lg max-w-xl leading-relaxed">
-              Everything you need to integrate studio-quality vehicle imagery into your application.
-            </p>
-
-            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
-              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
-                <p class="text-[13px] tracking-wide text-black/80">
-                  <a href="/" class="transition-colors hover:text-black">Home</a>
-                  <span class="mx-2.5 text-black/20">/</span>
-                  <span class="font-medium text-black">Documentation</span>
-                </p>
-              </div>
+    <!-- Hero: split layout -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 min-h-[70vh]">
+      <div class="bg-white flex items-center px-8 sm:px-16 lg:px-20 xl:px-28 py-20">
+        <div class="max-w-lg">
+          <p class="text-[11px] font-medium text-black/40 uppercase tracking-[0.2em] mb-6">API Reference v1</p>
+          <h1 class="text-5xl sm:text-6xl lg:text-7xl font-light tracking-tight text-black leading-[1.05] mb-6">
+            Vehicle Imagery<br/>API Docs.
+          </h1>
+          <p class="text-[15px] text-black/50 leading-relaxed mb-10 max-w-md">
+            Integrate studio-quality vehicle photography into your product. RESTful, predictable, fast.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#auth" class="inline-flex items-center gap-2 rounded-full bg-black px-6 py-3 text-[13px] font-medium text-white hover:bg-[rgb(200,90,70)] transition-colors">
+              Get Started
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+            </a>
+            <a href="/contact" class="inline-flex items-center rounded-full border border-black/15 px-6 py-3 text-[13px] font-medium text-black hover:border-black/40 transition-colors">
+              Get API Key
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="hidden lg:flex items-center justify-center relative overflow-hidden" style="background-color: rgb(10, 43, 49);">
+        <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;" aria-hidden="true"></div>
+        <div class="relative z-10 w-full max-w-md px-8">
+          <div class="rounded-xl bg-black/30 backdrop-blur-sm border border-white/10 overflow-hidden shadow-2xl">
+            <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/5">
+              <div class="w-2 h-2 rounded-full bg-[#ff5f56]"></div>
+              <div class="w-2 h-2 rounded-full bg-[#ffbd2e]"></div>
+              <div class="w-2 h-2 rounded-full bg-[#27c93f]"></div>
+              <span class="ml-2 text-[10px] text-white/30 font-mono">quickstart.js</span>
             </div>
+            <pre class="p-5 text-[12px] sm:text-[13px] text-gray-300 font-mono leading-[1.8] overflow-x-auto"><code><span class="text-[#c586c0]">const</span> res <span class="text-white/40">=</span> <span class="text-[#c586c0]">await</span> <span class="text-[#dcdcaa]">fetch</span>(
+  <span class="text-[#ce9178]">'{BASE}/api/BMW/X5/2024/SUV/xDrive40i/front-left'</span>,
+  <span class="text-white/60">&#123;</span>
+    headers: <span class="text-white/60">&#123;</span>
+      <span class="text-[#ce9178]">'x-api-key'</span>: <span class="text-[#ce9178]">'YOUR_KEY'</span>
+    <span class="text-white/60">&#125;</span>
+  <span class="text-white/60">&#125;</span>
+);
 
-            <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[25%] -rotate-90 origin-center pointer-events-none select-none" aria-hidden="true">
-              <span class="text-[140px] sm:text-[180px] font-extralight tracking-tighter text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.08);">API</span>
-            </div>
+<span class="text-[#c586c0]">const</span> data <span class="text-white/40">=</span> <span class="text-[#c586c0]">await</span> res.<span class="text-[#dcdcaa]">json</span>();
+console.<span class="text-[#dcdcaa]">log</span>(data[<span class="text-[#b5cea8]">0</span>].image_url);
+<span class="text-[#6a9955]">// → https://cdn.vehicle.pics/v1/...</span></code></pre>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Navigation + Content -->
-    <section class="mx-auto max-w-[1400px] px-6 pb-24 pt-4 sm:px-12 lg:px-16">
-      <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
-
-        <!-- Sidebar Navigation -->
-        <nav class="lg:w-64 shrink-0 lg:sticky lg:top-24">
-          <div class="rounded-2xl bg-[#f4f4f5] p-6">
-            <h3 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-4">Quick Navigation</h3>
-            <ul class="space-y-1">
-              <li><a href="#authentication" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Authentication</a></li>
-              <li><a href="#base-url" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Base URL</a></li>
-              <li><a href="#query-params" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Global Parameters</a></li>
-              <li>
-                <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest mt-4">Endpoints</span>
-              </li>
-              {endpoints.map((ep) => (
-                <li>
-                  <a href={`#${ep.id}`} class="group flex items-center gap-2.5 py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">
-                    <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-mono">{ep.method}</span>
-                    <span class="truncate">{ep.title}</span>
-                  </a>
-                </li>
-              ))}
-              <li>
-                <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest mt-4">Reference</span>
-              </li>
-              <li><a href="#errors" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Error Codes</a></li>
-              <li><a href="#errornotes" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Error Notes</a></li>
-              <li><a href="#rate-limits" class="block py-2 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors">Rate Limits</a></li>
-            </ul>
-          </div>
-        </nav>
-
-        <!-- Main Content -->
-        <div class="flex-1 min-w-0 max-w-3xl">
-
-          <!-- Authentication -->
-          <section id="authentication" class="mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ authentication /</p>
-            <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              API Key Authentication
-            </h2>
-            <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              All API requests require an API key sent via the <code class="text-[13px] bg-[#f4f4f5] px-2 py-1 rounded text-black font-mono">x-api-key</code> header. You can obtain your key through our dashboard or by contacting sales.
-            </p>
-            <div class="rounded-xl bg-[#1e1e1e] overflow-hidden">
-              <div class="flex items-center px-5 py-3 bg-[#252526] border-b border-white/5">
-                <div class="flex space-x-1.5 mr-3">
-                  <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></div>
-                  <div class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></div>
-                  <div class="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></div>
-                </div>
-                <span class="text-[11px] text-white/40 font-mono">curl</span>
-              </div>
-              <pre class="p-5 text-[13px] text-gray-300 font-mono leading-relaxed overflow-x-auto"><code><span class="text-[#c586c0]">curl</span> -H <span class="text-[#ce9178]">"x-api-key: YOUR_API_KEY"</span> \
-  <span class="text-[#ce9178]">{BASE_URL}/api/brands</span></code></pre>
-            </div>
-            <div class="mt-6 p-4 border border-amber-200 bg-amber-50 rounded-xl">
-              <p class="text-[13px] text-amber-900 leading-relaxed">
-                <strong>Keep your API key secret.</strong> Never expose it in client-side code. Use server-side requests or a proxy to keep your key secure.
-              </p>
-            </div>
-          </section>
-
-          <!-- Base URL -->
-          <section id="base-url" class="mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ base url /</p>
-            <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              Base URL
-            </h2>
-            <p class="text-[14px] text-black/60 leading-relaxed mb-6">
-              All API endpoints are accessed relative to the following base URL:
-            </p>
-            <div class="rounded-xl bg-[#f4f4f5] p-5 flex items-center gap-3">
-              <code class="text-[15px] font-mono text-black font-medium">{BASE_URL}</code>
-            </div>
-            <p class="mt-4 text-[13px] text-black/50 leading-relaxed">
-              All responses are returned as JSON with <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">Content-Type: application/json</code>. CORS is enabled for all origins.
-            </p>
-          </section>
-
-          <!-- Global Query Parameters -->
-          <section id="query-params" class="mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ parameters /</p>
-            <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              Global Query Parameters
-            </h2>
-            <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              These parameters can be appended to most endpoints to filter results.
-            </p>
-            <div class="border border-black/10 rounded-xl overflow-hidden">
-              <table class="w-full text-left">
-                <thead>
-                  <tr class="bg-[#f4f4f5]">
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Parameter</th>
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Default</th>
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Description</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-black/5">
-                  <tr>
-                    <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">format</code></td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/50">png</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Image format. Available options depend on your plan.</td>
-                  </tr>
-                  <tr>
-                    <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">resolution</code></td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/50">default</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Image resolution. Higher resolutions may require a higher-tier plan.</td>
-                  </tr>
-                  <tr>
-                    <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">color</code></td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/50">default</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Vehicle color. Only used on the image endpoint.</td>
-                  </tr>
-                  <tr>
-                    <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">shadow</code></td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/50">false</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Add ground shadow to the image. Requires plan permission.</td>
-                  </tr>
-                  <tr>
-                    <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">transparency</code></td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/50">false</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Return image with transparent background. Requires plan permission.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <!-- API Hierarchy -->
-          <section class="mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ data model /</p>
-            <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              API Hierarchy
-            </h2>
-            <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              The Vehicle Imagery API follows a hierarchical structure. Navigate step-by-step from brand to image:
-            </p>
-            <div class="flex flex-wrap gap-2 items-center text-[13px] font-mono">
-              {['Brands', 'Models', 'Years', 'Variants', 'Trims', 'Views / Colors / Features', 'Image'].map((step, i) => (
-                <>
-                  <span class="bg-[#f4f4f5] text-black px-3 py-1.5 rounded-lg">{step}</span>
-                  {i < 6 && <span class="text-black/30">→</span>}
-                </>
-              ))}
-            </div>
-          </section>
-
-          <!-- Endpoints -->
-          {endpoints.map((ep) => (
-            <section id={ep.id} class="mb-16 scroll-mt-24 pb-16 border-b border-black/5 last:border-b-0">
-              <div class="flex flex-wrap items-center gap-3 mb-4">
-                <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md font-mono tracking-wider">{ep.method}</span>
-                <code class="text-[14px] font-mono text-black break-all">{ep.path}</code>
-              </div>
-              <h3 class="text-2xl font-normal text-black tracking-tight mb-3">{ep.title}</h3>
-              <p class="text-[14px] text-black/60 leading-relaxed mb-8">{ep.description}</p>
-
-              {ep.params.length > 0 && (
-                <div class="mb-8">
-                  <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Path Parameters</h4>
-                  <div class="space-y-2">
-                    {ep.params.map((p) => (
-                      <div class="flex items-start gap-3 py-2.5 px-4 bg-[#f4f4f5] rounded-lg">
-                        <code class="text-[12px] font-mono text-black shrink-0 mt-0.5">{p.name}</code>
-                        <span class="text-[11px] text-black/40 font-mono shrink-0 mt-0.5">{p.type}</span>
-                        <span class="text-[13px] text-black/60">{p.description}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {ep.query.length > 0 && (
-                <div class="mb-8">
-                  <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Query Parameters</h4>
-                  <div class="space-y-2">
-                    {ep.query.map((q) => (
-                      <div class="flex items-start gap-3 py-2.5 px-4 bg-[#f4f4f5] rounded-lg">
-                        <code class="text-[12px] font-mono text-black shrink-0 mt-0.5">{q.name}</code>
-                        <span class="text-[11px] text-black/30 font-mono shrink-0 mt-0.5">= {q.default}</span>
-                        <span class="text-[13px] text-black/60">{q.description}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Example Response</h4>
-                <div class="rounded-xl bg-[#1e1e1e] overflow-hidden">
-                  <div class="flex items-center px-5 py-3 bg-[#252526] border-b border-white/5">
-                    <div class="flex space-x-1.5 mr-3">
-                      <div class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></div>
-                      <div class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></div>
-                      <div class="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></div>
-                    </div>
-                    <span class="text-[11px] text-white/40 font-mono">response.json</span>
-                  </div>
-                  <pre class="p-5 text-[13px] text-gray-300 font-mono leading-relaxed overflow-x-auto"><code>{ep.response}</code></pre>
-                </div>
-              </div>
-            </section>
+    <!-- Sticky nav bar -->
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-lg border-b border-black/5">
+      <div class="overflow-x-auto scrollbar-hide">
+        <div class="flex items-center gap-0 px-4 min-w-max">
+          {sections.map((s) => (
+            <a href={`#${s.id}`} class="px-4 py-3.5 text-[11px] font-medium uppercase tracking-wider text-black/40 hover:text-black transition-colors whitespace-nowrap border-b-2 border-transparent hover:border-black">
+              {s.label}
+            </a>
           ))}
+          <a href="#errors" class="px-4 py-3.5 text-[11px] font-medium uppercase tracking-wider text-black/40 hover:text-black transition-colors whitespace-nowrap border-b-2 border-transparent hover:border-black">
+            Errors
+          </a>
+          <a href="#params" class="px-4 py-3.5 text-[11px] font-medium uppercase tracking-wider text-black/40 hover:text-black transition-colors whitespace-nowrap border-b-2 border-transparent hover:border-black">
+            Parameters
+          </a>
+        </div>
+      </div>
+    </nav>
 
-          <!-- Error Codes -->
-          <section id="errors" class="mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ reference /</p>
-            <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              HTTP Status Codes
-            </h2>
-            <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              The API uses standard HTTP status codes. Every error response includes a JSON body with an <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">error</code> field describing the issue.
-            </p>
-            <div class="border border-black/10 rounded-xl overflow-hidden">
-              <table class="w-full text-left">
-                <thead>
-                  <tr class="bg-[#f4f4f5]">
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider w-24">Code</th>
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Description</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-black/5">
-                  {errorCodes.map((ec) => (
-                    <tr>
-                      <td class="px-5 py-3.5"><code class="text-[13px] font-mono font-bold text-black">{ec.code}</code></td>
-                      <td class="px-5 py-3.5 text-[13px] text-black/60">{ec.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+    <!-- Base URL bar -->
+    <section class="bg-[#f8f8f8] border-b border-black/5">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-8 sm:px-16 lg:px-20 xl:px-28 py-5">
+        <div class="flex items-center gap-3">
+          <span class="text-[10px] font-medium text-black/40 uppercase tracking-widest">Base URL</span>
+          <code class="text-[14px] font-mono text-black font-medium">{BASE}</code>
+        </div>
+        <div class="flex items-center gap-3 text-[11px] text-black/40">
+          <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>All endpoints return JSON</span>
+          <span>·</span>
+          <span>CORS enabled</span>
+          <span>·</span>
+          <span>HTTPS only</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Endpoint sections (alternating split layout) -->
+    {sections.map((s, i) => (
+      <section id={s.id} class="scroll-mt-12 grid grid-cols-1 lg:grid-cols-2 border-b border-black/5">
+        <!-- Left: explanation -->
+        <div class={`px-8 sm:px-16 lg:px-20 xl:px-28 py-16 lg:py-20 ${i % 2 === 0 ? 'bg-white' : 'bg-[#fafafa]'}`}>
+          <div class="max-w-lg">
+            <div class="flex items-center gap-3 mb-5">
+              <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded font-mono tracking-wider">GET</span>
+              <code class="text-[13px] font-mono text-black/60 break-all">{s.code.split('\n')[0].replace('GET ', '')}</code>
             </div>
-          </section>
+            <h2 class="text-2xl sm:text-3xl font-normal text-black tracking-tight mb-4 leading-[1.2]">{s.title}</h2>
+            <p class="text-[14px] text-black/55 leading-relaxed" set:html={s.desc}></p>
 
-          <!-- Error Notes -->
-          <section id="errornotes" class="mb-20 scroll-mt-24">
-            <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              Error Notes (Fallback Codes)
-            </h2>
-            <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              When the API can't fulfill your exact request but finds a suitable fallback, it returns the image along with an <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">errornotes</code> array explaining what was changed. This only applies when fallbacks are enabled in your plan.
-            </p>
-            <div class="border border-black/10 rounded-xl overflow-hidden">
-              <table class="w-full text-left">
-                <thead>
-                  <tr class="bg-[#f4f4f5]">
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider w-24">Code</th>
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Description</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-black/5">
-                  {errornotes.map((en) => (
-                    <tr>
-                      <td class="px-5 py-3.5"><code class="text-[13px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">{en.code}</code></td>
-                      <td class="px-5 py-3.5 text-[13px] text-black/60">{en.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <!-- Rate Limits -->
-          <section id="rate-limits" class="mb-20 scroll-mt-24">
-            <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              Rate Limits & Caching
-            </h2>
-            <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              Rate limits depend on your plan. All image URLs are served through a global CDN and signed with a time-limited token (default 7 days). Cache these URLs on your end for optimal performance.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div class="p-6 bg-[#f4f4f5] rounded-xl">
-                <p class="text-2xl font-normal text-black mb-1">50ms</p>
-                <p class="text-[12px] text-black/50 uppercase tracking-wider">Avg. Latency</p>
+            {s.id === 'image' && (
+              <div class="mt-8 space-y-3">
+                <h4 class="text-[10px] font-medium text-black/40 uppercase tracking-widest">Image-specific parameters</h4>
+                {[
+                  { p: 'color', d: 'Vehicle color (e.g. Blue, Black)', def: 'default' },
+                  { p: 'shadow', d: 'Ground shadow under the car', def: 'false' },
+                  { p: 'transparency', d: 'Transparent PNG background', def: 'false' },
+                ].map((param) => (
+                  <div class="flex items-start gap-3 py-2 px-3 bg-black/[0.03] rounded-lg">
+                    <code class="text-[11px] font-mono text-black shrink-0 mt-0.5">{param.p}</code>
+                    <span class="text-[12px] text-black/40 shrink-0 mt-0.5">= {param.def}</span>
+                    <span class="text-[12px] text-black/55">{param.d}</span>
+                  </div>
+                ))}
               </div>
-              <div class="p-6 bg-[#f4f4f5] rounded-xl">
-                <p class="text-2xl font-normal text-black mb-1">99.9%</p>
-                <p class="text-[12px] text-black/50 uppercase tracking-wider">Uptime SLA</p>
+            )}
+          </div>
+        </div>
+        <!-- Right: code -->
+        <div class="px-8 sm:px-12 lg:px-16 py-16 lg:py-20 flex flex-col justify-center" style="background-color: rgb(24, 24, 27);">
+          <div class="max-w-lg mx-auto w-full">
+            {s.code.split('\n').length > 1 && s.id !== 'auth' && (
+              <div class="mb-6">
+                <p class="text-[10px] font-medium text-white/30 uppercase tracking-widest mb-2">Request</p>
+                <pre class="text-[13px] font-mono text-white/80 leading-relaxed"><code>{s.code}</code></pre>
               </div>
-              <div class="p-6 bg-[#f4f4f5] rounded-xl">
-                <p class="text-2xl font-normal text-black mb-1">7 days</p>
-                <p class="text-[12px] text-black/50 uppercase tracking-wider">URL Expiry</p>
+            )}
+            {s.id === 'auth' && (
+              <div class="mb-6">
+                <p class="text-[10px] font-medium text-white/30 uppercase tracking-widest mb-2">Request</p>
+                <pre class="text-[13px] font-mono text-white/80 leading-relaxed"><code>{s.code}</code></pre>
               </div>
-            </div>
-          </section>
+            )}
+            {s.response && (
+              <div>
+                <p class="text-[10px] font-medium text-white/30 uppercase tracking-widest mb-2">Response</p>
+                <div class="rounded-lg bg-white/[0.04] border border-white/[0.06] p-5 overflow-x-auto">
+                  <pre class="text-[12px] sm:text-[13px] font-mono text-emerald-300/90 leading-relaxed"><code>{s.response}</code></pre>
+                </div>
+              </div>
+            )}
+            {s.id === 'auth' && (
+              <div class="mt-6 p-4 rounded-lg border border-amber-400/20 bg-amber-400/5">
+                <p class="text-[12px] text-amber-200/80 leading-relaxed">
+                  <strong class="text-amber-200">Keep your key secret.</strong> Never expose it in client-side JavaScript. Use a server-side proxy.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    ))}
 
-          <!-- CTA -->
-          <section class="rounded-2xl p-8 sm:p-12 text-center" style="background-color: rgb(10, 43, 49);">
-            <h2 class="text-2xl sm:text-3xl font-normal text-white tracking-tight mb-3">Ready to get started?</h2>
-            <p class="text-[14px] text-white/60 mb-8 max-w-md mx-auto leading-relaxed">
-              Get your API key and start integrating studio-quality vehicle imagery today.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/contact" class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-[13px] font-medium text-black transition-colors hover:bg-[rgb(200,90,70)] hover:text-white">
-                Get API Key
-              </a>
-              <a href="/contact" class="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-white/10">
-                Contact Sales
-              </a>
-            </div>
-          </section>
+    <!-- Global Parameters -->
+    <section id="params" class="scroll-mt-12 grid grid-cols-1 lg:grid-cols-2 border-b border-black/5">
+      <div class="px-8 sm:px-16 lg:px-20 xl:px-28 py-16 lg:py-20 bg-white">
+        <div class="max-w-lg">
+          <h2 class="text-2xl sm:text-3xl font-normal text-black tracking-tight mb-4 leading-[1.2]">Global Query Parameters</h2>
+          <p class="text-[14px] text-black/55 leading-relaxed mb-8">
+            These parameters can be appended to most endpoints. They filter results based on your plan permissions.
+          </p>
+          <div class="space-y-4">
+            {[
+              { name: 'format', default: 'png', desc: 'Image format. Depends on plan.' },
+              { name: 'resolution', default: 'default', desc: 'Image resolution. Higher tiers unlock more.' },
+              { name: 'color', default: 'default', desc: 'Vehicle color. Image endpoint only.' },
+              { name: 'shadow', default: 'false', desc: 'Ground shadow. Plan-dependent.' },
+              { name: 'transparency', default: 'false', desc: 'Transparent background. Plan-dependent.' },
+              { name: 'debug', default: 'false', desc: 'Debug mode. Requires plan permission.' },
+            ].map((p) => (
+              <div class="flex items-start gap-4 py-3 border-b border-black/5 last:border-b-0">
+                <code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-2 py-0.5 rounded shrink-0">{p.name}</code>
+                <div class="flex-1">
+                  <span class="text-[13px] text-black/60">{p.desc}</span>
+                  <span class="ml-2 text-[11px] text-black/30 font-mono">default: {p.default}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="px-8 sm:px-12 lg:px-16 py-16 lg:py-20 flex flex-col justify-center" style="background-color: rgb(24, 24, 27);">
+        <div class="max-w-lg mx-auto w-full">
+          <p class="text-[10px] font-medium text-white/30 uppercase tracking-widest mb-4">API Hierarchy</p>
+          <p class="text-[13px] text-white/50 leading-relaxed mb-6">Navigate step by step from brand to image:</p>
+          <div class="space-y-2">
+            {[
+              { step: '1', path: '/api/brands', label: 'Brands' },
+              { step: '2', path: '/api/{brand}', label: 'Models' },
+              { step: '3', path: '/api/{brand}/{model}', label: 'Years' },
+              { step: '4', path: '/api/{brand}/{model}/{year}', label: 'Variants' },
+              { step: '5', path: '/api/{brand}/{model}/{year}/{variant}', label: 'Trims' },
+              { step: '6', path: '/api/.../{trim}', label: 'Views' },
+              { step: '7', path: '/api/.../{trim}/{view}', label: 'Image URL' },
+            ].map((h) => (
+              <div class="flex items-center gap-3 py-2 px-3 rounded-lg bg-white/[0.03] border border-white/[0.04]">
+                <span class="text-[10px] font-mono text-white/25 w-4">{h.step}</span>
+                <code class="text-[11px] font-mono text-emerald-300/70 flex-1 truncate">{h.path}</code>
+                <span class="text-[11px] text-white/40">{h.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- Errors & Fallbacks -->
+    <section id="errors" class="scroll-mt-12 grid grid-cols-1 lg:grid-cols-2 border-b border-black/5">
+      <div class="px-8 sm:px-16 lg:px-20 xl:px-28 py-16 lg:py-20 bg-[#fafafa]">
+        <div class="max-w-lg">
+          <h2 class="text-2xl sm:text-3xl font-normal text-black tracking-tight mb-4 leading-[1.2]">Error Handling</h2>
+          <p class="text-[14px] text-black/55 leading-relaxed mb-8">
+            Standard HTTP status codes. Every error includes a JSON body with a descriptive <code class="text-[12px] bg-white px-1.5 py-0.5 rounded text-black font-mono">error</code> field.
+          </p>
+          <div class="space-y-0">
+            {[
+              { code: '200', color: 'text-emerald-700 bg-emerald-50', desc: 'Success. Data returned.' },
+              { code: '400', color: 'text-amber-700 bg-amber-50', desc: 'Bad request (e.g. invalid year).' },
+              { code: '401', color: 'text-red-700 bg-red-50', desc: 'Missing API key header.' },
+              { code: '403', color: 'text-red-700 bg-red-50', desc: 'Invalid key or restricted resource.' },
+              { code: '404', color: 'text-orange-700 bg-orange-50', desc: 'Resource not found.' },
+              { code: '500', color: 'text-red-700 bg-red-50', desc: 'Server error. Contact support.' },
+            ].map((e) => (
+              <div class="flex items-center gap-4 py-3.5 border-b border-black/5 last:border-b-0">
+                <code class={`text-[12px] font-mono font-bold px-2.5 py-1 rounded ${e.color}`}>{e.code}</code>
+                <span class="text-[13px] text-black/60">{e.desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="px-8 sm:px-12 lg:px-16 py-16 lg:py-20 flex flex-col justify-center" style="background-color: rgb(24, 24, 27);">
+        <div class="max-w-lg mx-auto w-full">
+          <p class="text-[10px] font-medium text-white/30 uppercase tracking-widest mb-4">Fallback Codes (errornotes)</p>
+          <p class="text-[13px] text-white/40 leading-relaxed mb-6">When the API falls back to an alternative, it tells you why:</p>
+          <div class="space-y-2">
+            {[
+              { code: 'P11', desc: 'Format/resolution fell back to plan default' },
+              { code: 'F04', desc: 'Requested color not found — using default' },
+              { code: 'C09', desc: 'Color blocked by plan — using default' },
+              { code: 'R08', desc: 'Resolution unavailable — nearest used' },
+              { code: 'S05', desc: 'Shadow unavailable — returned without' },
+              { code: 'S12', desc: 'Only shadow version exists — shadow applied' },
+              { code: 'T06', desc: 'Transparency unavailable — returned opaque' },
+              { code: 'T13', desc: 'Only transparent version — transparency applied' },
+            ].map((n) => (
+              <div class="flex items-start gap-3 py-2.5 px-3 rounded-lg bg-white/[0.03] border border-white/[0.04]">
+                <code class="text-[11px] font-mono text-amber-300/80 shrink-0 mt-0.5">{n.code}</code>
+                <span class="text-[12px] text-white/50">{n.desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Performance stats -->
+    <section class="bg-white">
+      <div class="grid grid-cols-2 sm:grid-cols-4 border-b border-black/5">
+        {[
+          { value: '50ms', label: 'Avg. Response' },
+          { value: '99.9%', label: 'Uptime SLA' },
+          { value: '7 days', label: 'URL Validity' },
+          { value: '40k+', label: 'Vehicle Assets' },
+        ].map((stat) => (
+          <div class="px-8 sm:px-12 py-10 text-center border-r border-black/5 last:border-r-0">
+            <p class="text-2xl sm:text-3xl font-light text-black tracking-tight mb-1">{stat.value}</p>
+            <p class="text-[10px] font-medium text-black/40 uppercase tracking-widest">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="grid grid-cols-1 lg:grid-cols-2">
+      <div class="bg-white px-8 sm:px-16 lg:px-20 xl:px-28 py-20 flex items-center">
+        <div class="max-w-lg">
+          <h2 class="text-3xl sm:text-4xl font-normal text-black tracking-tight mb-4 leading-[1.15]">
+            Ready to integrate?
+          </h2>
+          <p class="text-[14px] text-black/50 leading-relaxed mb-8">
+            Get your API key and go live. Most teams integrate within a single sprint. No credit card required for the free trial.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="/contact" class="inline-flex items-center rounded-full bg-black px-7 py-3.5 text-[13px] font-medium text-white hover:bg-[rgb(200,90,70)] transition-colors">
+              Start Free Trial
+            </a>
+            <a href="/contact" class="inline-flex items-center rounded-full border border-black/15 px-7 py-3.5 text-[13px] font-medium text-black hover:border-black/40 transition-colors">
+              Contact Sales
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="hidden lg:flex items-center justify-center py-20" style="background-color: rgb(10, 43, 49);">
+        <div class="text-center px-8">
+          <p class="text-[80px] font-light text-white/10 tracking-tighter leading-none mb-4" aria-hidden="true">{ }</p>
+          <p class="text-[13px] text-white/40">JSON in. Images out.</p>
         </div>
       </div>
     </section>
