@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getEntries } from '../../lib/contentful';
+import { renderRichText, buildAssetMap } from '../../lib/contentful-rich-text';
+import type { Document } from '@contentful/rich-text-types';
+
+export async function getStaticPaths() {
+  let categories: string[] = [];
+  try {
+    const res = await getEntries({ content_type: 'faq', limit: 1000 });
+    const items = res.items || [];
+    const catSet = new Set<string>();
+    for (const item of items) {
+      const cat = (item as { fields?: { category?: string } }).fields?.category;
+      if (cat) {
+        catSet.add(cat.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''));
+      }
+    }
+    categories = Array.from(catSet);
+  } catch {
+    categories = ['general', 'api', 'billing', 'support'];
+  }
+
+  if (categories.length === 0) {
+    categories = ['general', 'api', 'billing', 'support'];
+  }
+
+  return categories.map((cat) => ({ params: { category: cat } }));
+}
+
+const { category } = Astro.params;
+
+interface FaqItem {
+  question: string;
+  answerHtml: string;
+  order: number;
+}
+
+let faqs: FaqItem[] = [];
+let categoryLabel = category ? category.charAt(0).toUpperCase() + category.slice(1) : '';
+
+try {
+  const res = await getEntries({ content_type: 'faq', limit: 1000, include: 2 });
+  const assetMap = buildAssetMap(res?.includes);
+  const items = res.items || [];
+
+  for (const item of items) {
+    const fields = (item as { fields?: { category?: string; question?: string; answer?: Document; order?: number } }).fields;
+    if (!fields?.category || !fields?.question) continue;
+
+    const slug = fields.category.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    if (slug !== category) continue;
+
+    categoryLabel = fields.category.charAt(0).toUpperCase() + fields.category.slice(1);
+
+    faqs.push({
+      question: fields.question,
+      answerHtml: fields.answer ? renderRichText(fields.answer, assetMap) : '',
+      order: fields.order ?? 999,
+    });
+  }
+
+  faqs.sort((a, b) => a.order - b.order);
+} catch {
+  faqs = [];
+}
+---
+
+<BaseLayout
+  title={`${categoryLabel} FAQ | Vehicle Imagery API`}
+  description={`Frequently asked questions about ${categoryLabel} – Vehicle Imagery API.`}
+  canonicalUrl={`/faq/${category}`}
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    <!-- Hero -->
+    <section class="px-4 pt-6 pb-10 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-[#1C2B32]">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#1C2B32] via-[#25363F] to-[#1C2B32]" aria-hidden="true" />
+          <div class="relative flex min-h-[200px] flex-col justify-end px-8 py-10 sm:min-h-[260px] sm:px-16 sm:py-14">
+            <h1 class="text-4xl font-light tracking-tight text-white sm:text-6xl">{categoryLabel}</h1>
+            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
+              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
+                <p class="text-[13px] tracking-wide text-black/80">
+                  <a href="/" class="transition-colors hover:text-black">Home</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <a href="/faq" class="transition-colors hover:text-black">FAQ</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <span class="font-medium text-black">{categoryLabel}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="mx-auto max-w-3xl px-6 pb-24 pt-8 sm:px-12">
+      {faqs.length > 0 ? (
+        <div class="divide-y divide-black/10">
+          {faqs.map((faq, i) => (
+            <details class="group py-6" open={i === 0}>
+              <summary class="flex cursor-pointer items-center justify-between text-left">
+                <span class="text-[15px] font-semibold text-black pr-8 leading-relaxed">{faq.question}</span>
+                <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center text-black/40 group-open:rotate-45 transition-transform duration-200">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 1v12M1 7h12" /></svg>
+                </span>
+              </summary>
+              <div class="pt-4 text-[14px] leading-relaxed text-black/70 prose prose-sm max-w-none" set:html={faq.answerHtml} />
+            </details>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <p class="text-black/50 text-sm">No FAQs in this category yet. Add FAQ entries in Contentful with the category "{categoryLabel}".</p>
+          <a href="/faq" class="inline-block mt-6 text-[11px] font-bold uppercase tracking-widest text-black hover:text-[rgb(200,90,70)] transition-colors">← Back to FAQ</a>
+        </div>
+      )}
+
+      {faqs.length > 0 && (
+        <div class="mt-12 pt-8 border-t border-black/10">
+          <a href="/faq" class="text-[11px] font-bold uppercase tracking-widest text-black hover:text-[rgb(200,90,70)] transition-colors">← All categories</a>
+        </div>
+      )}
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
