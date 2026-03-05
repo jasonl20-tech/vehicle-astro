@@ -3,9 +3,22 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getEntries } from '../../lib/contentful';
-import { richTextToPlainText } from '../../lib/contentful-rich-text';
+import { richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
 
-type PostItem = { slug: string; title: string; date?: string; excerpt?: string; category?: string };
+type PostItem = {
+  slug: string;
+  title: string;
+  date?: string;
+  excerpt?: string;
+  category?: string;
+  categorySlug?: string;
+  featuredImageUrl?: string;
+  featuredImageAlt?: string;
+  authorName?: string;
+  authorAvatarUrl?: string;
+  readingTimeMinutes?: number;
+  tags?: string[];
+};
 
 let posts: PostItem[] = [];
 
@@ -14,7 +27,24 @@ try {
     content_type: 'blogPost',
     order: '-fields.publishedAt',
     limit: 100,
+    include: 2,
   });
+  const assetMap = buildAssetMap(res.includes as { Asset?: Array<{ sys: { id: string }; fields?: { file?: { url?: string }; title?: string } }> });
+
+  function assetUrl(linkOrAsset: { sys?: { id?: string }; fields?: { file?: { url?: string } } } | null | undefined): string {
+    if (!linkOrAsset) return '';
+    if (linkOrAsset.fields?.file?.url) {
+      const u = linkOrAsset.fields.file.url;
+      return u.startsWith('//') ? `https:${u}` : u;
+    }
+    const id = linkOrAsset.sys?.id;
+    if (!id) return '';
+    const asset = assetMap[id];
+    if (!asset?.fields?.file?.url) return '';
+    const u = asset.fields.file.url;
+    return u.startsWith('//') ? `https:${u}` : u;
+  }
+
   posts = res.items
     .filter((item: { fields?: { slug?: string } }) => item.fields?.slug)
     .map((item: {
@@ -24,6 +54,13 @@ try {
         publishedAt?: string;
         excerpt?: import('@contentful/rich-text-types').Document;
         category?: string;
+        categorySlug?: string;
+        featuredImage?: { sys?: { id?: string }; fields?: { file?: { url?: string } } };
+        featuredImageAlt?: string;
+        authorName?: string;
+        authorAvatar?: { sys?: { id?: string }; fields?: { file?: { url?: string } } };
+        readingTimeMinutes?: number;
+        tags?: string[];
       };
     }) => ({
       slug: item.fields!.slug!,
@@ -31,39 +68,124 @@ try {
       date: item.fields?.publishedAt,
       excerpt: item.fields?.excerpt ? richTextToPlainText(item.fields.excerpt, 160) : undefined,
       category: item.fields?.category,
+      categorySlug: item.fields?.categorySlug,
+      featuredImageUrl: assetUrl(item.fields?.featuredImage) || undefined,
+      featuredImageAlt: item.fields?.featuredImageAlt,
+      authorName: item.fields?.authorName,
+      authorAvatarUrl: assetUrl(item.fields?.authorAvatar) || undefined,
+      readingTimeMinutes: item.fields?.readingTimeMinutes,
+      tags: item.fields?.tags,
     }));
 } catch {
   // Contentful nicht konfiguriert oder keine Einträge
 }
 ---
 
-<BaseLayout title="Blog" description="Blog-Übersicht Vehicle Imagery">
+<BaseLayout title="Blog" description="Updates, API-Tipps und Einblicke – Vehicle Imagery Blog.">
   <Header />
-  <main class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-    <h1 class="text-4xl font-bold text-gray-900">Blog</h1>
-    <p class="mt-2 text-gray-600">Updates, API-Tipps und Einblicke.</p>
-    <ul class="mt-10 space-y-8">
+  <main class="min-h-screen bg-cream">
+    <!-- Hero -->
+    <section class="border-b border-[#1C2B32]/10 bg-[#1C2B32] px-6 py-20 sm:px-12 lg:px-16">
+      <div class="mx-auto max-w-6xl">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Vehicle Imagery</p>
+        <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">Blog</h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
+          Updates, API-Tipps und Einblicke. Studio Quality Standards für Entwickler und Produktteams.
+        </p>
+      </div>
+    </section>
+
+    <!-- Posts -->
+    <section class="mx-auto max-w-6xl px-6 py-16 sm:px-12 lg:px-16">
       {posts.length > 0 ? (
-        posts.map((post) => (
-          <li class="border-b border-gray-100 pb-8 last:border-0">
-            <a href={`/blog/${post.slug}`} class="group block">
-              {post.category && (
-                <span class="text-sm font-semibold uppercase tracking-wider text-[#FF8844]">{post.category}</span>
-              )}
-              <h2 class="mt-1 text-2xl font-bold text-gray-900 group-hover:text-[#FF8844] transition-colors">{post.title}</h2>
-              {post.excerpt && <p class="mt-2 text-gray-600 line-clamp-2">{post.excerpt}</p>}
-              {post.date && (
-                <time class="mt-2 block text-sm text-gray-500" datetime={post.date}>
-                  {new Date(post.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
-                </time>
-              )}
-            </a>
-          </li>
-        ))
+        <ul class="grid gap-12 sm:gap-16 md:grid-cols-2 lg:gap-20">
+          {posts.map((post) => (
+            <li>
+              <a href={`/blog/${post.slug}`} class="blog-card group block">
+                <div class="overflow-hidden rounded-none border border-[#1C2B32]/10 bg-white shadow-[0_4px_24px_-4px_rgba(28,43,50,0.08)] transition-all duration-300 hover:border-[#1C2B32]/20 hover:shadow-[0_12px_40px_-8px_rgba(28,43,50,0.15)]">
+                  {post.featuredImageUrl ? (
+                    <div class="aspect-[16/10] overflow-hidden bg-[#1C2B32]/5">
+                      <img
+                        src={post.featuredImageUrl.startsWith('http') ? post.featuredImageUrl : `https:${post.featuredImageUrl}`}
+                        alt={post.featuredImageAlt || post.title}
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        width={640}
+                        height={400}
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : (
+                    <div class="aspect-[16/10] flex items-center justify-center bg-[#1C2B32]/[0.06]">
+                      <span class="text-6xl font-black text-[#1C2B32]/10">VI</span>
+                    </div>
+                  )}
+                  <div class="p-6 sm:p-8">
+                    {post.category && (
+                      <span class="inline-block text-xs font-bold uppercase tracking-[0.15em] text-accent">
+                        {post.category}
+                      </span>
+                    )}
+                    <h2 class="mt-3 text-xl font-bold leading-tight text-[#1C2B32] transition-colors group-hover:text-accent sm:text-2xl">
+                      {post.title}
+                    </h2>
+                    {post.excerpt && (
+                      <p class="mt-3 line-clamp-3 text-[15px] leading-relaxed text-[#1C2B32]/70">
+                        {post.excerpt}
+                      </p>
+                    )}
+                    <div class="mt-6 flex flex-wrap items-center gap-4 border-t border-[#1C2B32]/10 pt-5">
+                      {post.authorAvatarUrl && (
+                        <img
+                          src={post.authorAvatarUrl.startsWith('http') ? post.authorAvatarUrl : `https:${post.authorAvatarUrl}`}
+                          alt=""
+                          class="h-9 w-9 rounded-full object-cover ring-2 ring-white"
+                          width="36"
+                          height="36"
+                        />
+                      )}
+                      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#1C2B32]/60">
+                        {post.authorName && <span class="font-medium text-[#1C2B32]/80">{post.authorName}</span>}
+                        {post.date && (
+                          <time datetime={post.date}>
+                            {new Date(post.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </time>
+                        )}
+                        {post.readingTimeMinutes != null && (
+                          <span>{post.readingTimeMinutes} min</span>
+                        )}
+                      </div>
+                    </div>
+                    {post.tags && post.tags.length > 0 && (
+                      <div class="mt-4 flex flex-wrap gap-2">
+                        {post.tags.slice(0, 4).map((tag: string) => (
+                          <span class="rounded-none border border-[#1C2B32]/15 bg-[#1C2B32]/[0.04] px-2.5 py-1 text-xs font-medium text-[#1C2B32]/70">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
       ) : (
-        <li class="text-gray-500">Keine Blog-Posts. Contentful mit Content-Type „blogPost“ konfigurieren.</li>
+        <div class="rounded-none border border-[#1C2B32]/10 bg-white p-16 text-center">
+          <p class="text-[#1C2B32]/60">Keine Blog-Posts vorhanden. Contentful mit Content-Type „blogPost“ befüllen.</p>
+          <a href="/" class="mt-6 inline-block border border-[#1C2B32] px-6 py-3 text-sm font-bold uppercase tracking-widest text-[#1C2B32] transition-colors hover:bg-[#1C2B32] hover:text-cream">
+            Zur Startseite
+          </a>
+        </div>
       )}
-    </ul>
+    </section>
   </main>
   <Footer />
 </BaseLayout>
+
+<style>
+  .blog-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+</style>

@@ -9,33 +9,42 @@ export async function getStaticPaths() {
   try {
     const res = await getEntries({ content_type: 'blogPost', include: 2, limit: 200 });
     const includes = res.includes ?? {};
+    const slugToTitle = Object.fromEntries(
+      (res.items as Array<{ fields?: { slug?: string; title?: string } }>)
+        .filter((i) => i.fields?.slug && i.fields?.title)
+        .map((i) => [i.fields!.slug!, i.fields!.title!])
+    );
     return res.items
       .filter((item: { fields?: { slug?: string } }) => item.fields?.slug)
-      .map((item: { fields?: { slug?: string } }) => ({
-        params: { slug: item.fields!.slug! },
-        props: { entry: item, includes },
-      }));
+      .map((item: { fields?: { slug?: string; relatedPostSlugs?: string[] } }) => {
+        const slugs = item.fields?.relatedPostSlugs ?? [];
+        const relatedPosts = slugs.map((s: string) => ({ slug: s, title: slugToTitle[s] ?? s }));
+        return {
+          params: { slug: item.fields!.slug! },
+          props: { entry: item, includes, relatedPosts },
+        };
+      });
   } catch {
     return [];
   }
 }
 
-const { entry, includes } = Astro.props;
+const { entry, includes, relatedPosts: relatedPostsFromProps } = Astro.props;
 const fields = entry?.fields ?? {};
-const sys = entry?.sys;
 
 const title = (fields.title as string) ?? 'Post';
 const subtitle = (fields.subtitle as string) ?? '';
 const excerpt = fields.excerpt as import('@contentful/rich-text-types').Document | undefined;
 const body = fields.body as import('@contentful/rich-text-types').Document | undefined;
-const featuredImage = fields.featuredImage as { fields?: { file?: { url?: string }; title?: string } } | undefined;
+const featuredImage = fields.featuredImage as { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } | undefined;
 const featuredImageAlt = (fields.featuredImageAlt as string) ?? '';
 const publishedAt = fields.publishedAt as string | undefined;
 const category = (fields.category as string) ?? '';
+const categorySlug = (fields.categorySlug as string) ?? '';
 const tags = (fields.tags as string[] | undefined) ?? [];
 const authorName = (fields.authorName as string) ?? '';
 const authorSlug = (fields.authorSlug as string) ?? '';
-const authorAvatar = fields.authorAvatar as { fields?: { file?: { url?: string }; title?: string } } | undefined;
+const authorAvatar = fields.authorAvatar as { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } | undefined;
 const authorBio = fields.authorBio as import('@contentful/rich-text-types').Document | undefined;
 const authorWebsite = (fields.authorWebsite as string) ?? '';
 const authorTwitter = (fields.authorTwitter as string) ?? '';
@@ -44,14 +53,13 @@ const readingTimeMinutes = fields.readingTimeMinutes as number | undefined;
 const relatedPostSlugs = (fields.relatedPostSlugs as string[] | undefined) ?? [];
 const seoTitle = (fields.seoTitle as string) ?? '';
 const seoDescription = fields.seoDescription as import('@contentful/rich-text-types').Document | undefined;
-const ogImageField = fields.ogImage as { fields?: { file?: { url?: string }; title?: string } } | undefined;
+const ogImageField = fields.ogImage as { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } | undefined;
 const ogImageAlt = (fields.ogImageAlt as string) ?? '';
 const canonicalUrl = (fields.canonicalUrl as string) ?? '';
 const noIndex = (fields.noIndex as boolean) ?? false;
 
 const assetMapResolved = buildAssetMap(includes as { Asset?: Array<{ sys: { id: string }; fields?: { file?: { url?: string }; title?: string } }> });
 
-/** URL aus Asset-Link (sys.id) oder bereits aufgelöstem Asset (fields.file.url). */
 function assetUrl(linkOrAsset: { sys?: { id?: string }; fields?: { file?: { url?: string } } } | null | undefined): string {
   if (!linkOrAsset) return '';
   if (linkOrAsset.fields?.file?.url) {
@@ -78,6 +86,8 @@ const excerptHtml = excerpt ? renderRichText(excerpt, assetMapResolved) : '';
 const authorBioHtml = authorBio ? renderRichText(authorBio, assetMapResolved) : '';
 const featuredImageUrl = assetUrl(featuredImage);
 const authorAvatarUrl = assetUrl(authorAvatar);
+
+const relatedPosts = relatedPostsFromProps ?? [];
 ---
 
 <BaseLayout
@@ -89,82 +99,308 @@ const authorAvatarUrl = assetUrl(authorAvatar);
   noIndex={noIndex}
 >
   <Header />
-  <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <article class="blog-article">
-      <header class="mb-10">
-        {category && (
-          <a href={`/blog?category=${encodeURIComponent((fields.categorySlug as string) || category)}`} class="text-sm font-semibold uppercase tracking-wider text-[#FF8844] hover:underline">
-            {category}
-          </a>
-        )}
-        <h1 class="mt-2 text-4xl font-bold tracking-tight text-gray-900">{title}</h1>
-        {subtitle && <p class="mt-2 text-xl text-gray-600">{subtitle}</p>}
-        <div class="mt-6 flex flex-wrap items-center gap-4 text-sm text-gray-500">
-          {publishedAt && <time datetime={publishedAt}>{new Date(publishedAt).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}</time>}
-          {readingTimeMinutes != null && <span>{readingTimeMinutes} min read</span>}
-          {authorName && (
-            <span class="flex items-center gap-2">
-              {authorAvatarUrl && <img src={authorAvatarUrl.startsWith('http') ? authorAvatarUrl : `https:${authorAvatarUrl}`} alt="" class="h-8 w-8 rounded-full object-cover" width="32" height="32" />}
-              <span>{authorName}</span>
-            </span>
-          )}
-        </div>
-      </header>
-
+  <main class="min-h-screen bg-cream">
+    <!-- Article header: full-bleed optional image + title block -->
+    <header class="relative">
       {featuredImageUrl && (
-        <figure class="mb-10 overflow-hidden rounded-lg">
-          <img src={featuredImageUrl.startsWith('http') ? featuredImageUrl : `https:${featuredImageUrl}`} alt={featuredImageAlt} class="w-full object-cover" width="1200" height="630" />
-          {featuredImageAlt && <figcaption class="mt-2 text-center text-sm text-gray-500">{featuredImageAlt}</figcaption>}
-        </figure>
+        <div class="relative h-[50vh] min-h-[320px] max-h-[560px] w-full overflow-hidden bg-[#1C2B32]">
+          <img
+            src={featuredImageUrl.startsWith('http') ? featuredImageUrl : `https:${featuredImageUrl}`}
+            alt={featuredImageAlt}
+            class="h-full w-full object-cover"
+            width="1600"
+            height="900"
+            fetchpriority="high"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1C2B32]/95 via-[#1C2B32]/40 to-transparent" aria-hidden="true" />
+        </div>
       )}
+      <div class={`mx-auto max-w-3xl px-6 sm:px-12 lg:px-16 ${featuredImageUrl ? '-mt-32 relative z-10 pb-16' : 'pt-16 pb-12'}`}>
+        <div class="rounded-none border border-white/10 bg-white p-8 shadow-xl sm:p-10 md:p-12">
+          {category && (
+            <a
+              href={`/blog?category=${encodeURIComponent(categorySlug || category)}`}
+              class="inline-block text-xs font-bold uppercase tracking-[0.2em] text-accent hover:underline"
+            >
+              {category}
+            </a>
+          )}
+          <h1 class="mt-3 text-3xl font-black leading-tight tracking-tight text-[#1C2B32] sm:text-4xl md:text-5xl">
+            {title}
+          </h1>
+          {subtitle && (
+            <p class="mt-4 text-xl leading-relaxed text-[#1C2B32]/75">
+              {subtitle}
+            </p>
+          )}
+          <div class="mt-8 flex flex-wrap items-center gap-6 border-t border-[#1C2B32]/10 pt-8">
+            {authorAvatarUrl && (
+              <img
+                src={authorAvatarUrl.startsWith('http') ? authorAvatarUrl : `https:${authorAvatarUrl}`}
+                alt=""
+                class="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-md"
+                width="48"
+                height="48"
+              />
+            )}
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm">
+              {authorName && <span class="font-semibold text-[#1C2B32]">{authorName}</span>}
+              {publishedAt && (
+                <time datetime={publishedAt} class="text-[#1C2B32]/60">
+                  {new Date(publishedAt).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </time>
+              )}
+              {readingTimeMinutes != null && (
+                <span class="text-[#1C2B32]/60">{readingTimeMinutes} min Lesezeit</span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
 
-      {excerptHtml && (
-        <div class="prose prose-lg mb-10 border-l-4 border-[#FF8844] pl-6 text-gray-600" set:html={excerptHtml} />
-      )}
+    <!-- Excerpt (lead) -->
+    {excerptHtml && (
+      <div class="mx-auto max-w-3xl px-6 sm:px-12 lg:px-16">
+        <div class="border-l-4 border-accent bg-[#1C2B32]/[0.03] py-4 pl-6 pr-6">
+          <div class="blog-prose blog-prose--lead text-lg leading-relaxed text-[#1C2B32]/85" set:html={excerptHtml} />
+        </div>
+      </div>
+    )}
 
+    <!-- Body -->
+    <article class="mx-auto max-w-3xl px-6 pb-16 pt-12 sm:px-12 lg:px-16">
+      <a href="/blog" class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-[#1C2B32]/60 transition-colors hover:text-accent">
+        <span aria-hidden="true">←</span> Zurück zum Blog
+      </a>
       {bodyHtml ? (
-        <div class="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-[#FF8844] prose-img:rounded-lg" set:html={bodyHtml} />
+        <div class="blog-prose blog-article-body" set:html={bodyHtml} />
       ) : (
-        <p class="text-gray-600">Kein Inhalt.</p>
+        <p class="text-[#1C2B32]/60">Kein Inhalt.</p>
       )}
 
+      <!-- Tags -->
       {tags.length > 0 && (
-        <div class="mt-10 flex flex-wrap gap-2">
+        <div class="mt-12 flex flex-wrap items-center gap-2 border-t border-[#1C2B32]/10 pt-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#1C2B32]/50">Tags</span>
           {tags.map((tag: string) => (
-            <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="rounded bg-gray-100 px-3 py-1 text-sm text-gray-700 hover:bg-gray-200">{tag}</a>
+            <a
+              href={`/blog?tag=${encodeURIComponent(tag)}`}
+              class="rounded-none border border-[#1C2B32]/15 bg-white px-3 py-1.5 text-sm font-medium text-[#1C2B32]/80 transition-colors hover:border-accent hover:bg-accent/5 hover:text-accent"
+            >
+              {tag}
+            </a>
           ))}
         </div>
       )}
 
+      <!-- Author card -->
       {(authorName || authorBioHtml) && (
-        <aside class="mt-12 border-t border-gray-200 pt-10">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-500">Author</h2>
-          <div class="mt-4 flex gap-4">
-            {authorAvatarUrl && <img src={authorAvatarUrl.startsWith('http') ? authorAvatarUrl : `https:${authorAvatarUrl}`} alt="" class="h-14 w-14 shrink-0 rounded-full object-cover" width="56" height="56" />}
-            <div>
-              <p class="font-semibold text-gray-900">{authorName}</p>
-              {authorBioHtml && <div class="mt-2 prose prose-sm max-w-none text-gray-600" set:html={authorBioHtml} />}
-              <div class="mt-2 flex gap-3 text-sm">
-                {authorWebsite && <a href={authorWebsite.startsWith('http') ? authorWebsite : `https://${authorWebsite}`} class="text-[#FF8844] hover:underline">Website</a>}
-                {authorTwitter && <a href={`https://twitter.com/${authorTwitter.replace(/^@/, '')}`} class="text-[#FF8844] hover:underline">Twitter</a>}
-                {authorLinkedIn && <a href={authorLinkedIn.startsWith('http') ? authorLinkedIn : `https://${authorLinkedIn}`} class="text-[#FF8844] hover:underline">LinkedIn</a>}
+        <aside class="mt-16 rounded-none border border-[#1C2B32]/10 bg-white p-8 shadow-[0_4px_24px_-4px_rgba(28,43,50,0.08)] sm:p-10">
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#1C2B32]/50">Autor</p>
+          <div class="mt-6 flex flex-col gap-6 sm:flex-row sm:items-start">
+            {authorAvatarUrl && (
+              <img
+                src={authorAvatarUrl.startsWith('http') ? authorAvatarUrl : `https:${authorAvatarUrl}`}
+                alt=""
+                class="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-[#1C2B32]/10"
+                width="80"
+                height="80"
+              />
+            )}
+            <div class="min-w-0 flex-1">
+              <p class="text-xl font-bold text-[#1C2B32]">{authorName || 'Autor'}</p>
+              {authorBioHtml && (
+                <div class="blog-prose blog-prose--sm mt-3 text-[#1C2B32]/75" set:html={authorBioHtml} />
+              )}
+              <div class="mt-4 flex flex-wrap gap-4">
+                {authorWebsite && (
+                  <a
+                    href={authorWebsite.startsWith('http') ? authorWebsite : `https://${authorWebsite}`}
+                    class="text-sm font-semibold uppercase tracking-wider text-accent hover:underline"
+                  >
+                    Website
+                  </a>
+                )}
+                {authorTwitter && (
+                  <a
+                    href={`https://twitter.com/${authorTwitter.replace(/^@/, '')}`}
+                    class="text-sm font-semibold uppercase tracking-wider text-accent hover:underline"
+                  >
+                    Twitter
+                  </a>
+                )}
+                {authorLinkedIn && (
+                  <a
+                    href={authorLinkedIn.startsWith('http') ? authorLinkedIn : `https://${authorLinkedIn}`}
+                    class="text-sm font-semibold uppercase tracking-wider text-accent hover:underline"
+                  >
+                    LinkedIn
+                  </a>
+                )}
               </div>
             </div>
           </div>
         </aside>
       )}
 
-      {relatedPostSlugs.length > 0 && (
-        <div class="mt-12 border-t border-gray-200 pt-10">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-500">Related</h2>
-          <ul class="mt-4 space-y-2">
-            {relatedPostSlugs.map((s: string) => (
-              <li><a href={`/blog/${s}`} class="text-[#FF8844] hover:underline">/{s}</a></li>
+      <!-- Related posts -->
+      {relatedPosts.length > 0 && (
+        <section class="mt-16 border-t border-[#1C2B32]/10 pt-12">
+          <h2 class="text-xs font-bold uppercase tracking-[0.2em] text-[#1C2B32]/50">Weitere Artikel</h2>
+          <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+            {relatedPosts.map((r) => (
+              <li>
+                <a
+                  href={`/blog/${r.slug}`}
+                  class="flex items-center gap-4 rounded-none border border-[#1C2B32]/10 bg-white p-4 transition-colors hover:border-accent/30 hover:bg-accent/5"
+                >
+                  <span class="flex h-12 w-12 shrink-0 items-center justify-center bg-[#1C2B32]/10 text-lg font-bold text-[#1C2B32]/60">
+                    →
+                  </span>
+                  <span class="font-semibold text-[#1C2B32] line-clamp-2">{r.title}</span>
+                </a>
+              </li>
             ))}
           </ul>
-        </div>
+        </section>
       )}
     </article>
   </main>
   <Footer />
 </BaseLayout>
+
+<style is:global>
+  /* Blog prose: article body + excerpt + author bio */
+  .blog-prose :global(p) {
+    margin-top: 0;
+    margin-bottom: 1em;
+  }
+  .blog-prose :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .blog-prose :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .blog-prose :global(a:hover) {
+    color: var(--color-accent-hover);
+  }
+  .blog-prose :global(strong) {
+    font-weight: 700;
+    color: #1C2B32;
+  }
+  .blog-prose :global(em) {
+    font-style: italic;
+  }
+  .blog-prose :global(ul) {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.5em;
+    list-style-type: disc;
+  }
+  .blog-prose :global(ol) {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.5em;
+    list-style-type: decimal;
+  }
+  .blog-prose :global(li) {
+    margin-bottom: 0.5em;
+    padding-left: 0.25em;
+  }
+  .blog-prose :global(li::marker) {
+    color: var(--color-accent);
+  }
+  .blog-prose :global(blockquote) {
+    margin: 2em 0;
+    padding: 1em 0 1em 1.25em;
+    border-left: 4px solid var(--color-accent);
+    background: rgba(28, 43, 50, 0.04);
+    font-style: italic;
+    color: #1C2B32;
+  }
+  .blog-prose :global(blockquote p:last-child) {
+    margin-bottom: 0;
+  }
+  .blog-prose :global(h2) {
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #1C2B32;
+  }
+  .blog-prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .blog-prose :global(h3) {
+    margin-top: 1.75em;
+    margin-bottom: 0.5em;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1C2B32;
+  }
+  .blog-prose :global(h4) {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1C2B32;
+  }
+  .blog-prose :global(hr) {
+    margin: 2.5em 0;
+    border: none;
+    border-top: 1px solid rgba(28, 43, 50, 0.12);
+  }
+  .blog-prose :global(figure) {
+    margin: 2em 0;
+  }
+  .blog-prose :global(figure img) {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    border: 1px solid rgba(28, 43, 50, 0.08);
+  }
+  .blog-prose :global(figcaption) {
+    margin-top: 0.75em;
+    font-size: 0.875rem;
+    color: #1C2B32;
+    opacity: 0.7;
+  }
+  .blog-prose :global(code) {
+    font-size: 0.9em;
+    padding: 0.15em 0.4em;
+    background: rgba(28, 43, 50, 0.08);
+    border: 1px solid rgba(28, 43, 50, 0.1);
+    font-family: ui-monospace, monospace;
+  }
+  .blog-prose :global(pre) {
+    margin: 1.5em 0;
+    padding: 1.25em;
+    overflow-x: auto;
+    background: #1C2B32;
+    color: #FBFBF7;
+    border: none;
+  }
+  .blog-prose :global(pre code) {
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .blog-article-body {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: #1C2B32;
+  }
+  .blog-prose--lead {
+    font-size: 1.125rem;
+  }
+  .blog-prose--sm {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+</style>
