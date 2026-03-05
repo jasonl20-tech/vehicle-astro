@@ -35,11 +35,27 @@ const benefits = [
     <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-24 sm:px-12 lg:px-16">
       <div class="grid gap-16 lg:grid-cols-[1.2fr_1fr] lg:gap-24 items-start">
 
-        <!-- Left: Calendly inline widget -->
-        <div class="rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white min-w-0">
+        <!-- Left: Calendly inline widget mit Ladeplatzhalter -->
+        <div class="rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white min-w-0 relative" style="min-height: 700px;">
+          <!-- Ladeplatzhalter (wird ausgeblendet, sobald Calendly geladen ist) -->
+          <div id="calendly-loading" class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 bg-[#f4f4f5] transition-opacity duration-500" aria-hidden="false">
+            <div class="flex flex-col items-center gap-4">
+              <div class="relative w-12 h-12">
+                <span class="absolute inset-0 rounded-full border-2 border-black/10"></span>
+                <span class="absolute inset-0 rounded-full border-2 border-transparent border-t-[rgb(200,90,70)] animate-spin"></span>
+              </div>
+              <p class="text-[13px] font-medium text-black/60">Loading calendar…</p>
+            </div>
+            <div class="flex gap-2">
+              <span class="w-2 h-2 rounded-full bg-black/15 animate-bounce" style="animation-delay: 0ms;"></span>
+              <span class="w-2 h-2 rounded-full bg-black/20 animate-bounce" style="animation-delay: 150ms;"></span>
+              <span class="w-2 h-2 rounded-full bg-black/25 animate-bounce" style="animation-delay: 300ms;"></span>
+            </div>
+          </div>
           <div
             class="calendly-inline-widget"
-            data-url="https://calendly.com/lohrejason5?hide_gdpr_banner=1"
+            id="calendly-widget"
+            data-url="https://calendly.com/lohrejason5/30min?hide_gdpr_banner=1"
             style="min-width:320px;height:700px;"
           ></div>
         </div>
@@ -116,4 +132,29 @@ const benefits = [
   </main>
   <Footer />
   <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  <script>
+    (function() {
+      var loader = document.getElementById('calendly-loading');
+      var widget = document.getElementById('calendly-widget');
+      if (!loader || !widget) return;
+      var observer = new MutationObserver(function(mutations) {
+        if (widget.querySelector('iframe')) {
+          loader.style.opacity = '0';
+          loader.style.pointerEvents = 'none';
+          loader.setAttribute('aria-hidden', 'true');
+          observer.disconnect();
+        }
+      });
+      observer.observe(widget, { childList: true, subtree: true });
+      // Fallback: nach 8 Sekunden Platzhalter ausblenden
+      setTimeout(function() {
+        if (loader.getAttribute('aria-hidden') !== 'true') {
+          loader.style.opacity = '0';
+          loader.style.pointerEvents = 'none';
+          loader.setAttribute('aria-hidden', 'true');
+          observer.disconnect();
+        }
+      }, 4000);
+    })();
+  </script>
 </BaseLayout>
