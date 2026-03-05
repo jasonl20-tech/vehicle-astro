@@ -1,0 +1,8 @@
+---
+description: Nach Änderungen am Ende immer git push ausführen
+alwaysApply: true
+---
+
+# Git Push am Ende
+
+Wenn Änderungen am Projekt vorgenommen wurden (commits erstellt), am Ende immer `git push` ausführen, damit die Änderungen zu origin übertragen werden.
