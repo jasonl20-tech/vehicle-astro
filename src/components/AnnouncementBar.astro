@@ -1,0 +1,62 @@
+---
+import { renderRichText, buildAssetMap } from '../lib/contentful-rich-text';
+import type { Document } from '@contentful/rich-text-types';
+
+interface Props {
+  message: Document | null | undefined;
+  link?: string | null;
+  linkColor?: string | null;
+  backgroundColor?: string | null;
+  assetMap?: import('../lib/contentful-rich-text').AssetMap;
+}
+
+const { message, link, linkColor, backgroundColor, assetMap } = Astro.props;
+
+function normalizeHex(color: string | null | undefined): string | null {
+  if (!color || typeof color !== 'string') return null;
+  const s = color.trim();
+  if (!s) return null;
+  return s.startsWith('#') ? s : `#${s}`;
+}
+
+const bgHex = normalizeHex(backgroundColor) ?? '#1C2B32';
+const textHex = normalizeHex(linkColor) ?? '#ffffff';
+const hasMessage = message && typeof message === 'object';
+const html = hasMessage ? renderRichText(message, assetMap) : '';
+---
+
+{hasMessage && html && (
+  <div
+    class="announcement-bar relative z-[60] w-full border-b border-black/10"
+    style={`background-color: ${bgHex}; color: ${textHex};`}
+  >
+    <div class="mx-auto flex w-full max-w-[90rem] items-center justify-center px-4 py-2.5 text-center text-sm md:px-6">
+      {link ? (
+        <a
+          href={link}
+          class="announcement-bar__link block w-full hover:opacity-90 transition-opacity no-underline"
+          style={`color: ${textHex};`}
+          set:html={html}
+        ></a>
+      ) : (
+        <div class="announcement-bar__message w-full [&_a]:underline [&_a]:underline-offset-2 [&_a]:opacity-90 hover:[&_a]:opacity-100" set:html={html} />
+      )}
+    </div>
+  </div>
+)}
+
+<style>
+  .announcement-bar :global(p) {
+    margin: 0;
+    display: inline;
+  }
+  .announcement-bar :global(p + p) {
+    margin-left: 0.5em;
+  }
+  .announcement-bar :global(strong) {
+    font-weight: 700;
+  }
+  .announcement-bar :global(a) {
+    color: inherit;
+  }
+</style>

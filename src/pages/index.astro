@@ -2,16 +2,36 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import AnnouncementBar from '../components/AnnouncementBar.astro';
 import { getEntries } from '../lib/contentful';
+import { buildAssetMap } from '../lib/contentful-rich-text';
 
 type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; category?: string; type: 'changelog' | 'blog' };
 let latestUpdates: UpdateItem[] = [];
+let announcementBar: {
+  message: import('@contentful/rich-text-types').Document | null;
+  link: string | null;
+  linkColor: string | null;
+  backgroundColor: string | null;
+  assetMap?: import('../lib/contentful-rich-text').AssetMap;
+} | null = null;
 
 try {
-  const [changelogRes, blogRes] = await Promise.all([
+  const [changelogRes, blogRes, announcementRes] = await Promise.all([
     getEntries({ content_type: 'api', order: '-sys.createdAt', limit: 4 }),
     getEntries({ content_type: 'blogPost', order: '-sys.createdAt', limit: 4 }).catch(() => ({ items: [] })),
+    getEntries({ content_type: 'announcementBar', limit: 1, order: '-sys.updatedAt', include: 2 }).catch(() => ({ items: [], includes: {} })),
   ]);
+  const firstAnnouncement = announcementRes?.items?.[0] as { fields?: { message?: unknown; link?: string; linkColor?: string; backgroundColor?: string } } | undefined;
+  if (firstAnnouncement?.fields?.message) {
+    announcementBar = {
+      message: firstAnnouncement.fields.message as import('@contentful/rich-text-types').Document,
+      link: firstAnnouncement.fields.link ?? null,
+      linkColor: firstAnnouncement.fields.linkColor ?? null,
+      backgroundColor: firstAnnouncement.fields.backgroundColor ?? null,
+      assetMap: buildAssetMap(announcementRes?.includes),
+    };
+  }
   const changelogs: UpdateItem[] = (changelogRes.items || [])
     .filter((i: { fields?: { slug?: string } }) => i.fields?.slug)
     .map((i: { fields?: { slug?: string; title?: string; excerpt?: string; category?: string }; sys?: { createdAt?: string } }) => ({
@@ -37,10 +57,20 @@ try {
     .slice(0, 6);
 } catch {
   latestUpdates = [];
+  announcementBar = null;
 }
 ---
 
 <BaseLayout title="Vehicle Imagery API" description="The definitive car photography API. Studio-quality vehicle images for dealerships, leasing, and automotive platforms.">
+  {announcementBar && (
+    <AnnouncementBar
+      message={announcementBar.message}
+      link={announcementBar.link}
+      linkColor={announcementBar.linkColor}
+      backgroundColor={announcementBar.backgroundColor}
+      assetMap={announcementBar.assetMap}
+    />
+  )}
   <Header />
 
   <style>
