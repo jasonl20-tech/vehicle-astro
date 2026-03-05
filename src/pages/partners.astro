@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const partners = [
+  { name: 'AutoScout24', category: 'Marketplace', desc: 'Europe\'s largest online car marketplace with over 2 million listings.' },
+  { name: 'mobile.de', category: 'Marketplace', desc: 'Germany\'s leading vehicle marketplace for new and used cars.' },
+  { name: 'LeasePlan', category: 'Leasing', desc: 'Global fleet management and driver mobility company.' },
+  { name: 'ALD Automotive', category: 'Leasing', desc: 'International leader in full-service vehicle leasing and fleet management.' },
+  { name: 'Sixt', category: 'Mobility', desc: 'Premium mobility provider for rental, leasing, and ride services.' },
+  { name: 'CHECK24', category: 'Comparison', desc: 'Germany\'s leading comparison portal including automotive services.' },
+];
+
+const benefits = [
+  { num: '01', title: 'Revenue Share', desc: 'Earn commissions on every customer you bring. Transparent tracking, monthly payouts.' },
+  { num: '02', title: 'Co-Marketing', desc: 'Joint campaigns, case studies, and featured placement on our website and materials.' },
+  { num: '03', title: 'Priority Access', desc: 'Early access to new features, dedicated API endpoints, and beta programs.' },
+  { num: '04', title: 'Technical Support', desc: 'Dedicated integration engineer and priority support channel for your team.' },
+];
+---
+
+<BaseLayout
+  title="Partners | Vehicle Imagery API"
+  description="Vehicle Imagery partner program. Join leading automotive companies using our API. Partnership inquiries welcome."
+  canonicalUrl="/partners"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+
+    <!-- Hero -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
+      <div class="max-w-3xl">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Partner Program</p>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
+          Partners
+        </h1>
+        <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
+          We work with leading automotive companies across Europe. Become a partner and grow with us.
+        </p>
+      </div>
+    </section>
+
+    <!-- Partner Logos / List -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-32 sm:px-12 lg:px-16">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-16">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Trusted By</p>
+          <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight">
+            Our partners
+          </h2>
+        </div>
+        <p class="text-[13px] text-black/40 max-w-sm leading-relaxed">
+          From marketplaces to leasing companies — the automotive industry trusts Vehicle Imagery.
+        </p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {partners.map((p) => (
+          <div class="group relative rounded-lg border border-black/[0.06] bg-white p-8 transition-all duration-500 hover:border-black/10 hover:shadow-xl hover:shadow-black/5">
+            <div class="flex items-start justify-between mb-6">
+              <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-black/25 px-2.5 py-1 rounded border border-black/[0.06]">{p.category}</span>
+            </div>
+            <h3 class="text-2xl font-light text-black tracking-tight mb-3 group-hover:text-[rgb(200,90,70)] transition-colors">{p.name}</h3>
+            <p class="text-[13px] text-black/45 leading-relaxed">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Why Partner -->
+    <section class="py-24 sm:py-32 bg-[#fafafa]">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Benefits</p>
+            <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-6">
+              Why partner<br/>with us
+            </h2>
+            <p class="text-[14px] text-black/50 leading-relaxed max-w-sm">
+              More than just an API integration. A real partnership with shared growth.
+            </p>
+          </div>
+
+          <div class="space-y-0">
+            {benefits.map((b) => (
+              <div class="group flex gap-6 py-8 border-b border-black/[0.06] first:border-t">
+                <span class="text-[11px] font-mono text-black/20 pt-1 shrink-0">{b.num}</span>
+                <div>
+                  <h3 class="text-[16px] font-medium text-black mb-2 group-hover:text-[rgb(200,90,70)] transition-colors">{b.title}</h3>
+                  <p class="text-[13px] text-black/50 leading-relaxed max-w-md">{b.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="py-24 sm:py-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+          {[
+            { value: '50+', label: 'Brands Covered' },
+            { value: '50ms', label: 'Avg. Latency' },
+            { value: '99.9%', label: 'Uptime SLA' },
+            { value: '24h', label: 'Response Time' },
+          ].map((stat) => (
+            <div class="text-center">
+              <p class="text-5xl sm:text-6xl lg:text-7xl font-extralight text-black tracking-tight mb-3">{stat.value}</p>
+              <p class="text-[11px] text-black/40 uppercase tracking-[0.15em]">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Partner Contact Form -->
+    <section class="pb-24 sm:pb-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] px-8 py-20 sm:px-16 sm:py-24" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+          <div class="absolute -bottom-32 -left-16 w-64 h-64 rounded-full opacity-[0.03] pointer-events-none" style="background: radial-gradient(circle, rgba(200,90,70,1) 0%, transparent 60%);" aria-hidden="true"></div>
+
+          <div class="relative z-10 grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20 items-start">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Become a Partner</p>
+              <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
+                Let's grow<br/>together
+              </h2>
+              <p class="text-[14px] text-white/40 leading-relaxed mb-10 max-w-sm">
+                Tell us about your company and how we can work together. We respond to every inquiry within 24 hours.
+              </p>
+              <div class="space-y-4">
+                <div>
+                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Partnerships</p>
+                  <a href="mailto:partners@vehicleimagery.com" class="text-[14px] text-white/70 hover:text-white transition-colors">partners@vehicleimagery.com</a>
+                </div>
+                <div>
+                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">General</p>
+                  <a href="mailto:info@vehicleimagery.com" class="text-[14px] text-white/70 hover:text-white transition-colors">info@vehicleimagery.com</a>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <form class="space-y-5" action="https://submit-form.com/v6dFS1FAS" method="POST">
+                <input type="hidden" name="subject" value="Partner Inquiry – Vehicle Imagery" />
+                <input type="hidden" name="_redirect" value="/partners?sent=1" />
+
+                <div>
+                  <input type="text" name="name" required placeholder="Your name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <input type="email" name="email" required placeholder="Work email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <input type="text" name="company" required placeholder="Company name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <input type="text" name="website" placeholder="Website (optional)" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <textarea name="message" rows="2" placeholder="Tell us about the partnership you have in mind" class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
+                </div>
+
+                <div class="pt-4">
+                  <button type="submit" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white">
+                    <span>Submit Inquiry</span>
+                    <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
