@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import AnnouncementBar from '../components/AnnouncementBar.astro';
 import { getEntries } from '../lib/contentful';
-import { buildAssetMap } from '../lib/contentful-rich-text';
+import { buildAssetMap, richTextToPlainText } from '../lib/contentful-rich-text';
 
 type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; category?: string; type: 'changelog' | 'blog' };
 let latestUpdates: UpdateItem[] = [];
@@ -44,12 +44,12 @@ try {
     }));
   const blogs: UpdateItem[] = (blogRes.items || [])
     .filter((i: { fields?: { slug?: string } }) => i.fields?.slug)
-    .map((i: { fields?: { slug?: string; title?: string; excerpt?: string }; sys?: { createdAt?: string } }) => ({
+    .map((i: { fields?: { slug?: string; title?: string; excerpt?: unknown; publishedAt?: string; category?: string }; sys?: { createdAt?: string } }) => ({
       slug: i.fields!.slug!,
       title: i.fields?.title ?? 'Untitled',
       date: i.fields?.publishedAt ?? i.sys?.createdAt ?? '',
-      excerpt: i.fields?.excerpt,
-      category: 'Blog',
+      excerpt: i.fields?.excerpt ? richTextToPlainText(i.fields.excerpt as import('@contentful/rich-text-types').Document, 120) : undefined,
+      category: i.fields?.category ?? 'Blog',
       type: 'blog' as const,
     }));
   latestUpdates = [...changelogs, ...blogs]

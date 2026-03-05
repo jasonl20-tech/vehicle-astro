@@ -1,6 +1,20 @@
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 import type { Document } from '@contentful/rich-text-types';
 
+/** Rich-Text-Document zu reinem Text (z.B. für meta description). Max. maxLength Zeichen. */
+export function richTextToPlainText(doc: Document | null | undefined, maxLength = 160): string {
+  if (!doc?.content) return '';
+  const parts: string[] = [];
+  function visit(n: { nodeType?: string; value?: string; content?: Array<{ value?: string; content?: unknown[] }> }) {
+    if (n.value) parts.push(n.value);
+    if (Array.isArray(n.content)) n.content.forEach(visit);
+  }
+  doc.content.forEach(visit);
+  const text = parts.join(' ').replace(/\s+/g, ' ').trim();
+  if (maxLength > 0 && text.length > maxLength) return text.slice(0, maxLength - 1).trim() + '…';
+  return text;
+}
+
 export type AssetMap = Record<string, { fields?: { file?: { url?: string }; title?: string } }>;
 
 function getAssetUrl(asset: { fields?: { file?: { url?: string } } } | null | undefined): string | null {

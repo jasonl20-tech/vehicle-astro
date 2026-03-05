@@ -7,9 +7,10 @@ interface Props {
   ogImage?: string;
   ogImageAlt?: string;
   canonicalUrl?: string;
+  noIndex?: boolean;
 }
 
-const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl } = Astro.props;
+const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl, noIndex = false } = Astro.props;
 const siteUrl = Astro.url.origin;
 const ogImageUrl = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`) : null;
 ---
@@ -22,6 +23,7 @@ const ogImageUrl = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex" />}
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     {canonicalUrl && <link rel="canonical" href={`${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}`} />}

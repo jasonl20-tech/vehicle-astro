@@ -3,35 +3,166 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getEntries } from '../../lib/contentful';
-import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
+import { renderRichText, richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
 
 export async function getStaticPaths() {
   try {
-    const res = await getEntries({ content_type: 'blogPost' });
-    return res.items.map((item: { fields?: { slug?: string } }) => ({
-      params: { slug: item.fields?.slug ?? '' },
-      props: { entry: item },
-    }));
+    const res = await getEntries({ content_type: 'blogPost', include: 2, limit: 200 });
+    const includes = res.includes ?? {};
+    return res.items
+      .filter((item: { fields?: { slug?: string } }) => item.fields?.slug)
+      .map((item: { fields?: { slug?: string } }) => ({
+        params: { slug: item.fields!.slug! },
+        props: { entry: item, includes },
+      }));
   } catch {
     return [];
   }
 }
 
-const { entry } = Astro.props;
-const title = entry?.fields?.title ?? 'Post';
-const body = entry?.fields?.body;
-const bodyHtml = body ? documentToHtmlString(body) : '';
+const { entry, includes } = Astro.props;
+const fields = entry?.fields ?? {};
+const sys = entry?.sys;
+
+const title = (fields.title as string) ?? 'Post';
+const subtitle = (fields.subtitle as string) ?? '';
+const excerpt = fields.excerpt as import('@contentful/rich-text-types').Document | undefined;
+const body = fields.body as import('@contentful/rich-text-types').Document | undefined;
+const featuredImage = fields.featuredImage as { fields?: { file?: { url?: string }; title?: string } } | undefined;
+const featuredImageAlt = (fields.featuredImageAlt as string) ?? '';
+const publishedAt = fields.publishedAt as string | undefined;
+const category = (fields.category as string) ?? '';
+const tags = (fields.tags as string[] | undefined) ?? [];
+const authorName = (fields.authorName as string) ?? '';
+const authorSlug = (fields.authorSlug as string) ?? '';
+const authorAvatar = fields.authorAvatar as { fields?: { file?: { url?: string }; title?: string } } | undefined;
+const authorBio = fields.authorBio as import('@contentful/rich-text-types').Document | undefined;
+const authorWebsite = (fields.authorWebsite as string) ?? '';
+const authorTwitter = (fields.authorTwitter as string) ?? '';
+const authorLinkedIn = (fields.authorLinkedIn as string) ?? '';
+const readingTimeMinutes = fields.readingTimeMinutes as number | undefined;
+const relatedPostSlugs = (fields.relatedPostSlugs as string[] | undefined) ?? [];
+const seoTitle = (fields.seoTitle as string) ?? '';
+const seoDescription = fields.seoDescription as import('@contentful/rich-text-types').Document | undefined;
+const ogImageField = fields.ogImage as { fields?: { file?: { url?: string }; title?: string } } | undefined;
+const ogImageAlt = (fields.ogImageAlt as string) ?? '';
+const canonicalUrl = (fields.canonicalUrl as string) ?? '';
+const noIndex = (fields.noIndex as boolean) ?? false;
+
+const assetMapResolved = buildAssetMap(includes as { Asset?: Array<{ sys: { id: string }; fields?: { file?: { url?: string }; title?: string } }> });
+
+/** URL aus Asset-Link (sys.id) oder bereits aufgelöstem Asset (fields.file.url). */
+function assetUrl(linkOrAsset: { sys?: { id?: string }; fields?: { file?: { url?: string } } } | null | undefined): string {
+  if (!linkOrAsset) return '';
+  if (linkOrAsset.fields?.file?.url) {
+    const u = linkOrAsset.fields.file.url;
+    return u.startsWith('//') ? `https:${u}` : u;
+  }
+  const id = linkOrAsset.sys?.id;
+  if (!id) return '';
+  const asset = assetMapResolved[id];
+  if (!asset?.fields?.file?.url) return '';
+  const u = asset.fields.file.url;
+  return u.startsWith('//') ? `https:${u}` : u;
+}
+
+const pageTitle = seoTitle || title;
+const metaDescription = seoDescription ? richTextToPlainText(seoDescription, 160) : richTextToPlainText(excerpt, 160) || undefined;
+const ogImageAsset = ogImageField ?? featuredImage;
+const ogImageUrl = assetUrl(ogImageAsset);
+const siteUrl = Astro.url.origin;
+const ogImageFull = ogImageUrl ? (ogImageUrl.startsWith('http') ? ogImageUrl : `${siteUrl}${ogImageUrl.startsWith('/') ? '' : '/'}${ogImageUrl}`) : undefined;
+
+const bodyHtml = body ? renderRichText(body, assetMapResolved) : '';
+const excerptHtml = excerpt ? renderRichText(excerpt, assetMapResolved) : '';
+const authorBioHtml = authorBio ? renderRichText(authorBio, assetMapResolved) : '';
+const featuredImageUrl = assetUrl(featuredImage);
+const authorAvatarUrl = assetUrl(authorAvatar);
 ---
 
-<BaseLayout title={title} description={title}>
+<BaseLayout
+  title={pageTitle}
+  description={metaDescription}
+  ogImage={ogImageFull}
+  ogImageAlt={ogImageAlt || featuredImageAlt}
+  canonicalUrl={canonicalUrl || `/blog/${fields.slug}`}
+  noIndex={noIndex}
+>
   <Header />
   <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-    <article>
-      <h1 class="text-4xl font-bold">{title}</h1>
+    <article class="blog-article">
+      <header class="mb-10">
+        {category && (
+          <a href={`/blog?category=${encodeURIComponent((fields.categorySlug as string) || category)}`} class="text-sm font-semibold uppercase tracking-wider text-[#FF8844] hover:underline">
+            {category}
+          </a>
+        )}
+        <h1 class="mt-2 text-4xl font-bold tracking-tight text-gray-900">{title}</h1>
+        {subtitle && <p class="mt-2 text-xl text-gray-600">{subtitle}</p>}
+        <div class="mt-6 flex flex-wrap items-center gap-4 text-sm text-gray-500">
+          {publishedAt && <time datetime={publishedAt}>{new Date(publishedAt).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}</time>}
+          {readingTimeMinutes != null && <span>{readingTimeMinutes} min read</span>}
+          {authorName && (
+            <span class="flex items-center gap-2">
+              {authorAvatarUrl && <img src={authorAvatarUrl.startsWith('http') ? authorAvatarUrl : `https:${authorAvatarUrl}`} alt="" class="h-8 w-8 rounded-full object-cover" width="32" height="32" />}
+              <span>{authorName}</span>
+            </span>
+          )}
+        </div>
+      </header>
+
+      {featuredImageUrl && (
+        <figure class="mb-10 overflow-hidden rounded-lg">
+          <img src={featuredImageUrl.startsWith('http') ? featuredImageUrl : `https:${featuredImageUrl}`} alt={featuredImageAlt} class="w-full object-cover" width="1200" height="630" />
+          {featuredImageAlt && <figcaption class="mt-2 text-center text-sm text-gray-500">{featuredImageAlt}</figcaption>}
+        </figure>
+      )}
+
+      {excerptHtml && (
+        <div class="prose prose-lg mb-10 border-l-4 border-[#FF8844] pl-6 text-gray-600" set:html={excerptHtml} />
+      )}
+
       {bodyHtml ? (
-        <div class="prose prose-lg mt-8" set:html={bodyHtml} />
+        <div class="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-[#FF8844] prose-img:rounded-lg" set:html={bodyHtml} />
       ) : (
-        <p class="mt-8 text-gray-600">Kein Inhalt.</p>
+        <p class="text-gray-600">Kein Inhalt.</p>
+      )}
+
+      {tags.length > 0 && (
+        <div class="mt-10 flex flex-wrap gap-2">
+          {tags.map((tag: string) => (
+            <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="rounded bg-gray-100 px-3 py-1 text-sm text-gray-700 hover:bg-gray-200">{tag}</a>
+          ))}
+        </div>
+      )}
+
+      {(authorName || authorBioHtml) && (
+        <aside class="mt-12 border-t border-gray-200 pt-10">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-500">Author</h2>
+          <div class="mt-4 flex gap-4">
+            {authorAvatarUrl && <img src={authorAvatarUrl.startsWith('http') ? authorAvatarUrl : `https:${authorAvatarUrl}`} alt="" class="h-14 w-14 shrink-0 rounded-full object-cover" width="56" height="56" />}
+            <div>
+              <p class="font-semibold text-gray-900">{authorName}</p>
+              {authorBioHtml && <div class="mt-2 prose prose-sm max-w-none text-gray-600" set:html={authorBioHtml} />}
+              <div class="mt-2 flex gap-3 text-sm">
+                {authorWebsite && <a href={authorWebsite.startsWith('http') ? authorWebsite : `https://${authorWebsite}`} class="text-[#FF8844] hover:underline">Website</a>}
+                {authorTwitter && <a href={`https://twitter.com/${authorTwitter.replace(/^@/, '')}`} class="text-[#FF8844] hover:underline">Twitter</a>}
+                {authorLinkedIn && <a href={authorLinkedIn.startsWith('http') ? authorLinkedIn : `https://${authorLinkedIn}`} class="text-[#FF8844] hover:underline">LinkedIn</a>}
+              </div>
+            </div>
+          </div>
+        </aside>
+      )}
+
+      {relatedPostSlugs.length > 0 && (
+        <div class="mt-12 border-t border-gray-200 pt-10">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-500">Related</h2>
+          <ul class="mt-4 space-y-2">
+            {relatedPostSlugs.map((s: string) => (
+              <li><a href={`/blog/${s}`} class="text-[#FF8844] hover:underline">/{s}</a></li>
+            ))}
+          </ul>
+        </div>
       )}
     </article>
   </main>
