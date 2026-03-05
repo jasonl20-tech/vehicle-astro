@@ -15,7 +15,7 @@ interface DynamicCategory {
 let dynamicCategories: DynamicCategory[] = [];
 
 try {
-  const res = await getEntries({ content_type: 'dynamicPage', limit: 500 });
+  const res = await getEntries({ content_type: 'dynamicPage-2', limit: 500 });
   const footerItems = (res.items as any[]).filter((item) => item.fields?.footer === true);
 
   const catMap = new Map<string, DynamicLink[]>();

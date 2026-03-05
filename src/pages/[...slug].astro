@@ -28,7 +28,7 @@ export async function getStaticPaths() {
   } catch {}
 
   try {
-    const dpRes = await getEntries({ content_type: 'dynamicPage', limit: 500, include: 2 });
+    const dpRes = await getEntries({ content_type: 'dynamicPage-2', limit: 500, include: 2 });
     const assetMap = buildAssetMap(dpRes.includes as any);
     for (const item of dpRes.items as any[]) {
       if (item.fields?.slug) {
@@ -56,10 +56,11 @@ if (type === 'page') {
 
 if (type === 'dynamicPage') {
   const f = entry?.fields ?? {};
+  const toPlain = (v: unknown, max = 500) => (typeof v === 'string' ? v : richTextToPlainText(v as any, max));
   var dpLayout = (f.layout as string) || 'hero-text';
   var dpLabel = f.label as string | undefined;
   var dpHeadline = (f.headline as string) || (f.title as string) || '';
-  var dpDescription = f.description as string | undefined;
+  var dpDescription = toPlain(f.description);
   var dpBodyHtml = f.body ? renderRichText(f.body as any, assetMap) : '';
 
   var dpStats: Array<{ value: string; label: string }> = [];
@@ -69,14 +70,14 @@ if (type === 'dynamicPage') {
   try { dpFeatures = typeof f.features === 'string' ? JSON.parse(f.features) : (f.features as any) || []; } catch { dpFeatures = []; }
 
   var dpCtaTitle = f.ctaTitle as string | undefined;
-  var dpCtaDescription = f.ctaDescription as string | undefined;
+  var dpCtaDescription = toPlain(f.ctaDescription);
   var dpCtaButtonLabel = f.ctaButtonLabel as string | undefined;
   var dpCtaButtonUrl = f.ctaButtonUrl as string | undefined;
   var dpCtaSecondaryLabel = f.ctaSecondaryLabel as string | undefined;
   var dpCtaSecondaryUrl = f.ctaSecondaryUrl as string | undefined;
 
   var dpTitle = (f.seoTitle as string) || `${f.title || dpHeadline} | Vehicle Imagery`;
-  var dpSeoDesc = (f.seoDescription as string) || dpDescription || richTextToPlainText(f.body as any, 160) || '';
+  var dpSeoDesc = toPlain(f.seoDescription, 160) || dpDescription || richTextToPlainText(f.body as any, 160) || '';
   const slug = f.slug as string;
   const prefix = f.urlPrefix as string | undefined;
   var dpCanonical = prefix ? `/${prefix}/${slug}` : `/${slug}`;
