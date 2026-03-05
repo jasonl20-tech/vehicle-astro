@@ -24,13 +24,13 @@ let changelogs: Array<{
 
 try {
   const res = await getEntries({
-    content_type: 'changelog',
+    content_type: 'api',
     order: '-sys.createdAt',
     include: 2,
     limit: 100,
   });
   if (res.items.length === 0) {
-    console.warn('[Changelog] Contentful lieferte 0 Einträge. Prüfe: Content Type API ID = "changelog", Einträge sind PUBLISHED, Slug ist ausgefüllt.');
+    console.warn('[Changelog] Contentful lieferte 0 Einträge. Prüfe: Content Type API ID = "api", Einträge sind PUBLISHED, Slug ist ausgefüllt.');
   } else {
     console.log('[Changelog] Contentful:', res.items.length, 'Einträge geladen');
   }
@@ -112,7 +112,7 @@ try {
         ))
       ) : (
         <li class="py-16 text-center">
-          <p class="text-gray-500">No changelog entries yet. Add entries in Contentful with content type &quot;changelog&quot;.</p>
+          <p class="text-gray-500">No changelog entries yet. Add entries in Contentful with content type &quot;api&quot; (Changelog).</p>
           {contentfulError && (
             <p class="mt-4 text-sm text-amber-700 bg-amber-50 px-4 py-2 rounded max-w-xl mx-auto">
               Contentful-Fehler: {contentfulError}

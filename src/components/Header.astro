@@ -4,7 +4,7 @@ import { getEntries } from '../lib/contentful';
 // Fetch latest changelogs from Contentful
 let changelogs = [];
 try {
-  const response = await getEntries({ content_type: 'changelog', limit: 2, order: '-sys.createdAt' });
+  const response = await getEntries({ content_type: 'api', limit: 2, order: '-sys.createdAt' });
   if (response && response.items) {
     changelogs = response.items;
   }

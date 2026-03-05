@@ -19,7 +19,7 @@ const client = createClient({ space, accessToken: token });
 async function main() {
   console.log('Contentful-Verbindung wird getestet...\n');
   try {
-    const res = await client.getEntries({ content_type: 'changelog', order: '-sys.createdAt', include: 2 });
+    const res = await client.getEntries({ content_type: 'api', order: '-sys.createdAt', include: 2 });
     console.log('Erfolg! Gefundene Changelog-Einträge:', res.items.length);
     if (res.items.length === 0) {
       console.log('\nMögliche Ursachen:');

@@ -30,7 +30,7 @@ function parseChangesText(text: string | unknown): Array<{ type: string; title: 
 
 export async function getStaticPaths() {
   try {
-    const res = await getEntries({ content_type: 'changelog', order: '-sys.createdAt', include: 2 });
+    const res = await getEntries({ content_type: 'api', order: '-sys.createdAt', include: 2 });
     const assetMap = buildAssetMap(res.includes);
     return res.items
       .filter((item: { fields?: { slug?: string } }) => item.fields?.slug)
