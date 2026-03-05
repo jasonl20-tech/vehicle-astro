@@ -30,9 +30,7 @@ import Footer from '../../components/Footer.astro';
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
           { value: '36', label: 'Camera Angles' },
-          { value: '4K+', label: 'Max Resolution' },
-          { value: '9,000+', label: 'OEM Colors' },
-          { value: '<1%', label: 'Color Deviation' },
+          { value: '2K', label: 'Max Resolution' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -88,8 +86,8 @@ import Footer from '../../components/Footer.astro';
               {[
                 { step: '01', title: '3D Model Acquisition', desc: 'High-fidelity 3D models sourced from OEM data with accurate geometry, materials, and proportions.' },
                 { step: '02', title: 'Studio Lighting Setup', desc: 'Standardized HDRI lighting environment ensures consistent highlights, reflections, and shadow behavior across all vehicles.' },
-                { step: '03', title: 'OEM Color Calibration', desc: 'Each paint color is matched to the manufacturer\'s official color code with < 1% Delta-E deviation.' },
-                { step: '04', title: 'Multi-Angle Rendering', desc: 'Up to 36 camera positions per configuration — exterior, interior, and detail views rendered at up to 4K resolution.' },
+                { step: '03', title: 'Color Calibration', desc: 'Each paint color is carefully matched to the manufacturer\'s official color specification.' },
+                { step: '04', title: 'Multi-Angle Rendering', desc: 'Up to 36 camera positions per configuration — exterior, interior, and detail views rendered at up to 2K resolution.' },
                 { step: '05', title: 'Post-Processing & QA', desc: 'Automated and manual quality checks for artifacts, color consistency, transparency, and shadow accuracy.' },
                 { step: '06', title: 'CDN Delivery', desc: 'Signed URLs served via global CDN with ~50ms average latency. PNG and WebP formats with optional transparency.' },
               ].map((item) => (
@@ -126,10 +124,10 @@ import Footer from '../../components/Footer.astro';
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { title: 'Consistent Lighting', desc: 'Standardized studio HDRI ensures every vehicle looks like it was shot in the same professional studio environment.' },
-            { title: 'Accurate Colors', desc: 'OEM color codes matched with < 1% Delta-E. Metallic, matte, pearl, and special edition finishes rendered faithfully.' },
+            { title: 'Accurate Colors', desc: 'Colors matched to manufacturer specifications. Metallic, matte, pearl, and special edition finishes rendered faithfully.' },
             { title: 'Transparent Backgrounds', desc: 'Clean cutouts with no artifacts. Perfect for configurators, listings, and marketing materials.' },
             { title: 'Ground Shadows', desc: 'Natural, soft ground shadows that anchor the vehicle. Available separately or composited.' },
-            { title: 'High Resolution', desc: 'From standard web resolution to 4K+. Crisp details at any zoom level — wheel textures, badges, and reflections.' },
+            { title: 'High Resolution', desc: 'From standard web resolution to 2K. Crisp details at any zoom level — wheel textures, badges, and reflections.' },
             { title: 'Interior Coverage', desc: '360° cockpit panoramas, dashboard close-ups, and rear-seat views with material-accurate rendering.' },
           ].map((feature) => (
             <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">
@@ -155,7 +153,7 @@ import Footer from '../../components/Footer.astro';
           <div class="space-y-0">
             {[
               { aspect: 'Lighting', stock: 'Varies by photographer, location, and time of day. Inconsistent across listings.', api: 'Standardized HDRI studio environment. Every vehicle rendered under identical conditions.' },
-              { aspect: 'Color Accuracy', stock: 'Subject to white balance, editing styles, and camera sensor differences.', api: 'OEM color codes with < 1% Delta-E. Consistent across every brand and model.' },
+              { aspect: 'Color Accuracy', stock: 'Subject to white balance, editing styles, and camera sensor differences.', api: 'Colors matched to manufacturer specifications. Consistent across every brand and model.' },
               { aspect: 'Angles', stock: 'Random angles, often missing key views. No guarantee of front, rear, or interior.', api: 'Up to 36 standardized camera positions per configuration. Every angle, every time.' },
               { aspect: 'Background', stock: 'Parking lots, streets, showrooms. Distracting and inconsistent.', api: 'Clean white or transparent backgrounds. Ready for any layout or configurator.' },
               { aspect: 'Availability', stock: 'New models delayed weeks or months. Special editions often missing.', api: 'New models available within weeks of launch. Facelifts and special editions included.' },
