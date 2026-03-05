@@ -107,48 +107,122 @@ const categories = [
     ],
   },
 ];
-
-const totalBrands = categories.reduce((sum, cat) => sum + cat.brands.length, 0);
 ---
 
 <BaseLayout
-  title="Vehicle Coverage | 140+ Brands | Vehicle Imagery API"
+  title="Vehicle Coverage | 140+ Brands & 65,000+ Models | Vehicle Imagery API"
   description="Comprehensive vehicle imagery database covering 140+ automotive brands and 65,000+ models. Sports cars, luxury, mainstream, European, American, and electric vehicles."
   canonicalUrl="/coverage"
 >
   <Header />
-  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+  <main class="min-h-screen flex-1" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; background-color: rgb(255, 254, 252);">
 
     <!-- Hero -->
-    <section class="px-4 pt-6 pb-0 sm:px-8 lg:px-12">
-      <div class="mx-auto max-w-[1400px]">
-        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-[#1C2B32]">
-          <div class="absolute inset-0 bg-gradient-to-br from-[#1C2B32] via-[#25363F] to-[#1C2B32]" aria-hidden="true" />
-          <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 70% 30%, rgba(200,90,70,0.3) 0%, transparent 60%);" aria-hidden="true" />
-          <div class="relative flex min-h-[280px] flex-col justify-end px-8 py-10 sm:min-h-[340px] sm:px-16 sm:py-16">
-            <div class="flex items-end justify-between">
-              <div>
-                <p class="text-[11px] font-bold uppercase tracking-widest text-white/30 mb-4">Coverage</p>
-                <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl leading-[0.95]">Global Vehicle<br />Coverage</h1>
-              </div>
-              <div class="hidden sm:flex gap-8 mb-2">
-                <div class="text-right">
-                  <p class="text-2xl font-black text-white">140+</p>
-                  <p class="text-[11px] text-white/40 uppercase tracking-widest">Brands</p>
-                </div>
-                <div class="text-right">
-                  <p class="text-2xl font-black text-white">65K+</p>
-                  <p class="text-[11px] text-white/40 uppercase tracking-widest">Models</p>
-                </div>
-              </div>
+    <section class="w-full py-20 md:py-28">
+      <div class="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-28 2xl:px-32">
+        <div class="max-w-[1920px] mx-auto">
+          <div class="mb-6">
+            <div class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-4">Coverage</div>
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-black leading-[1.1] tracking-tighter mb-6">Global Vehicle Coverage &amp; Model Database</h1>
+            <div class="space-y-4 text-lg text-gray-600 max-w-3xl leading-relaxed mb-10">
+              <p>Our comprehensive vehicle imagery database covers over 140 automotive brands and more than 65,000 vehicle models worldwide. From luxury supercars to mainstream family vehicles, we provide studio-quality images for every major manufacturer.</p>
+              <p>Whether you're building a car configurator, developing a marketplace, or creating a dealer management system, our API delivers consistent, high-quality vehicle imagery with accurate specifications, trim levels, and paint colors.</p>
             </div>
-            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
-              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
-                <p class="text-[13px] tracking-wide text-black/80">
-                  <a href="/" class="transition-colors hover:text-black">Home</a>
-                  <span class="mx-2.5 text-black/20">/</span>
-                  <span class="font-medium text-black">Coverage</span>
-                </p>
+          </div>
+          <div class="max-w-2xl">
+            <div class="relative">
+              <input type="text" placeholder="Find your car..." class="w-full px-6 py-4 pl-14 pr-4 text-base rounded-lg border-2 border-gray-200 bg-white text-black placeholder-gray-400 focus:outline-none focus:border-black transition-all" />
+              <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Supported Brands by Category -->
+    <section class="w-full py-20 md:py-28">
+      <div class="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-28 2xl:px-32">
+        <div class="max-w-[1920px] mx-auto">
+          <div class="mb-16">
+            <h2 class="text-4xl md:text-5xl font-black text-black mb-4">Supported Brands by Category</h2>
+            <div class="space-y-4 text-gray-600 text-lg max-w-3xl leading-relaxed">
+              <p>Our vehicle imagery database is organized by market segment and vehicle type, making it easy to find the brands relevant to your platform. Each category includes comprehensive coverage of all models, trims, and configurations.</p>
+              <p>We continuously update our database with new model releases, facelifts, and special editions, ensuring your platform always has access to the latest vehicle imagery and specifications.</p>
+            </div>
+          </div>
+          <div class="space-y-20">
+            {categories.map((cat) => (
+              <div class="space-y-6">
+                <div>
+                  <h3 class="text-2xl md:text-3xl font-black text-black mb-2">Vehicle Images for {cat.title}</h3>
+                  <p class="text-gray-600 text-base">{cat.desc}</p>
+                </div>
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6 md:gap-8">
+                  {cat.brands.map((brand) => (
+                    <div class="flex items-center justify-center p-6 bg-white rounded-lg hover:bg-gray-50 transition-colors group">
+                      <div class="w-full h-16 flex items-center justify-center">
+                        <img
+                          src={`/manufactures/${brand.slug}_logo.svg`}
+                          alt={`${brand.name} vehicle images and specifications - Vehicle Imagery API`}
+                          width="120"
+                          height="48"
+                          class="object-contain max-w-full max-h-full opacity-75 group-hover:opacity-100 transition-opacity"
+                          loading="lazy"
+                          decoding="async"
+                          draggable="false"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- New Arrivals -->
+    <section class="w-full py-20 md:py-28 bg-white border-y border-gray-200">
+      <div class="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-28 2xl:px-32">
+        <div class="max-w-[1920px] mx-auto">
+          <h2 class="text-3xl md:text-4xl font-black text-black mb-4">New Arrivals</h2>
+          <div class="space-y-4 text-gray-600 text-lg max-w-3xl mb-8 leading-relaxed">
+            <p>We continuously expand our database with the latest vehicle models as they're released to the market. Our team works closely with manufacturers to ensure new models are available within weeks of their official launch.</p>
+            <p>Recent additions to our database include the 2025 BMW i5 Touring, 2025 Mercedes-Benz EQS SUV, 2025 Audi Q6 e-tron, 2025 Porsche Macan Electric, 2025 Volkswagen ID.7, 2025 Tesla Model 3 Highland, 2025 Ford Mustang Mach-E, 2025 Volvo EX90, 2025 Polestar 3, and 2025 Rivian R1S, along with many other new electric vehicles, updated model years, and new vehicle configurations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive Vehicle Data Coverage -->
+    <section class="w-full py-20 md:py-28">
+      <div class="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-28 2xl:px-32">
+        <div class="max-w-[1920px] mx-auto">
+          <div class="max-w-[800px]">
+            <h2 class="text-3xl md:text-4xl font-black text-black mb-12">Comprehensive Vehicle Data Coverage</h2>
+            <div class="space-y-10 text-gray-700 leading-relaxed">
+              <div>
+                <h3 class="text-xl font-bold text-black mb-3">Trim Levels &amp; Equipment Packages</h3>
+                <p>Our database includes detailed coverage of all trim levels and equipment packages for each vehicle model. From base models to top-tier luxury configurations, we provide accurate visual representations of every available trim. Whether it's AMG-Line, S-Line, M-Package, or other manufacturer-specific packages, our API delivers the correct images based on the exact vehicle specification.</p>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-black mb-3">Paint Colors &amp; OEM Color Codes</h3>
+                <p>With over 9,000 paint colors mapped to official OEM color codes, we ensure 100% color accuracy for every vehicle in our database. Our system automatically matches VIN-decoded paint codes to the correct vehicle images, ensuring that the displayed vehicle matches the exact color specification. We cover standard colors, metallic finishes, matte options, and special edition colors from all major manufacturers.</p>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-black mb-3">Interior Configurations</h3>
+                <p>Beyond exterior views, our database includes comprehensive interior coverage with multiple seat configurations, dashboard variants, and material options. We provide 360° interior panoramas showing cockpit views, front row, and rear row perspectives. Interior materials, color combinations, and equipment levels are accurately represented, giving users a complete view of the vehicle's interior space.</p>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-black mb-3">Regional Specifications</h3>
+                <p>Our coverage includes region-specific vehicle specifications, correctly representing US-Specs, EU-Specs, and other market variations. We account for differences in lighting (US side markers, EU turn signals), safety equipment, and other region-specific features. Right-hand drive (RHD) variants for UK, Australia, and Asian markets are also available in our database.</p>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-black mb-3">Model Year Updates &amp; Facelifts</h3>
+                <p>We continuously update our database with new model years, facelifts, and mid-cycle updates. Images of newly released models are typically available within weeks of official market launch. Our system tracks model year changes, ensuring that the correct visual representation is delivered for each specific model year.</p>
               </div>
             </div>
           </div>
@@ -156,55 +230,20 @@ const totalBrands = categories.reduce((sum, cat) => sum + cat.brands.length, 0);
       </div>
     </section>
 
-    <!-- Brand Categories -->
-    {categories.map((cat, catIdx) => (
-      <section class={`w-full px-4 sm:px-8 lg:px-12 ${catIdx === 0 ? 'pt-16' : 'pt-4'} pb-4`}>
-        <div class="mx-auto max-w-[1400px]">
-          <div class={`rounded-2xl p-8 sm:p-12 ${catIdx % 2 === 0 ? 'bg-[#f5f5f5]' : 'bg-white border border-black/[0.06]'}`}>
-            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10">
-              <div>
-                <h2 class="text-2xl sm:text-3xl font-black text-black tracking-tight">{cat.title}</h2>
-                <p class="text-[14px] text-black/45 mt-2 max-w-lg">{cat.desc}</p>
-              </div>
-              <span class="text-[11px] font-medium text-black/25 mt-3 sm:mt-0 shrink-0">{cat.brands.length} brands</span>
-            </div>
-            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
-              {cat.brands.map((brand) => (
-                <div class="group flex flex-col items-center justify-center rounded-xl bg-white p-5 sm:p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-default"
-                  style={catIdx % 2 !== 0 ? 'background-color: #fafafa;' : ''}
-                >
-                  <div class="w-full h-12 sm:h-14 flex items-center justify-center mb-3">
-                    <img
-                      src={`/manufactures/${brand.slug}_logo.svg`}
-                      alt={`${brand.name} logo`}
-                      width="96"
-                      height="48"
-                      class="object-contain max-w-full max-h-full opacity-60 group-hover:opacity-100 transition-opacity"
-                      loading="lazy"
-                      decoding="async"
-                      draggable="false"
-                    />
-                  </div>
-                  <span class="text-[11px] font-medium text-black/40 group-hover:text-black/70 transition-colors text-center">{brand.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    ))}
-
     <!-- CTA -->
-    <section class="w-full px-4 sm:px-8 lg:px-12 pt-8 pb-24">
-      <div class="mx-auto max-w-[1400px]">
-        <div class="rounded-2xl bg-[#1C2B32] p-10 sm:p-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-          <div>
-            <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">Need a specific brand?</h2>
-            <p class="text-[14px] text-white/50 max-w-md">Can't find a brand or model? We're constantly expanding our coverage and welcome requests.</p>
-          </div>
-          <div class="flex gap-3">
-            <a href="/contact" class="inline-flex items-center px-6 py-3.5 rounded-lg bg-white text-[13px] font-bold text-[#1C2B32] hover:bg-white/90 transition-colors">Request Coverage</a>
-            <a href="/documentation" class="inline-flex items-center px-6 py-3.5 rounded-lg border border-white/20 text-[13px] font-bold text-white hover:bg-white/10 transition-colors">View Docs</a>
+    <section class="w-full py-20 md:py-28">
+      <div class="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-28 2xl:px-32">
+        <div class="max-w-[1920px] mx-auto">
+          <div class="max-w-[800px] mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-black text-black mb-4">Need a specific brand or model?</h2>
+            <div class="space-y-4 text-gray-600 mb-10 text-lg leading-relaxed">
+              <p>Can't find a specific brand or model in our database? We're constantly expanding our coverage and welcome requests for additional vehicle makes and models.</p>
+              <p>Contact our team to discuss your specific requirements, or explore our API documentation to see how easy it is to integrate vehicle imagery into your platform.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/contact" class="inline-block bg-black text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] transition-colors text-sm">Request Coverage</a>
+              <a href="/documentation" class="inline-block border-2 border-black text-black px-8 py-4 font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors text-sm">View Documentation</a>
+            </div>
           </div>
         </div>
       </div>
