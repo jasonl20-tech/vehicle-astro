@@ -86,7 +86,7 @@ try {
   <main class="min-h-screen bg-cream">
     <!-- Hero -->
     <section class="border-b border-[#1C2B32]/10 bg-[#1C2B32] px-6 py-20 sm:px-12 lg:px-16">
-      <div class="mx-auto max-w-6xl">
+      <div class="mx-auto max-w-7xl">
         <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Vehicle Imagery</p>
         <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">Blog</h1>
         <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
@@ -96,9 +96,9 @@ try {
     </section>
 
     <!-- Posts -->
-    <section class="mx-auto max-w-6xl px-6 py-16 sm:px-12 lg:px-16">
+    <section class="mx-auto max-w-7xl px-6 py-16 sm:px-12 lg:px-16">
       {posts.length > 0 ? (
-        <ul class="grid gap-12 sm:gap-16 md:grid-cols-2 lg:gap-20">
+        <ul class="grid gap-12 sm:gap-16 md:grid-cols-2 xl:grid-cols-2 lg:gap-20">
           {posts.map((post) => (
             <li>
               <a href={`/blog/${post.slug}`} class="blog-card group block">
