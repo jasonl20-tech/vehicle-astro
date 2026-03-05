@@ -41,7 +41,7 @@ try {
   dynamicCategories = [];
 }
 
-const totalCols = 5 + dynamicCategories.length;
+const totalCols = 4 + dynamicCategories.length;
 ---
 
 <footer class="text-white pt-24 pb-12 w-full border-t border-white/10" style="background-color:rgb(10, 43, 49); font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
@@ -125,21 +125,20 @@ const totalCols = 5 + dynamicCategories.length;
             <li><a class="hover:text-white transition-colors" href="/press">Press</a></li>
           </ul>
         </div>
-        <div>
-          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">Legal</h4>
-          <ul class="space-y-4 text-sm text-gray-400">
-            <li><a class="hover:text-white transition-colors" href="/impressum">Imprint</a></li>
-            <li><a class="hover:text-white transition-colors" href="/legal">Legal Notice</a></li>
-            <li><a class="hover:text-white transition-colors" href="/privacy">Privacy Policy</a></li>
-            <li><a class="hover:text-white transition-colors" href="/terms">Terms of Service</a></li>
-            <li><a class="hover:text-white transition-colors" href="/cookies">Cookie Settings</a></li>
-          </ul>
-        </div>
       </div>
 
-      <!-- Bottom bar -->
+      <!-- Bottom bar: Copyright, 4 Legal-Links, Social -->
       <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
         <p class="text-sm text-gray-500">© {new Date().getFullYear()} Vehicle Imagery. Made with German engineering.</p>
+        <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500">
+          <a class="hover:text-white transition-colors" href="/impressum">Imprint</a>
+          <span class="text-white/30" aria-hidden="true">·</span>
+          <a class="hover:text-white transition-colors" href="/privacy">Privacy Policy</a>
+          <span class="text-white/30" aria-hidden="true">·</span>
+          <a class="hover:text-white transition-colors" href="/terms">Terms of Service</a>
+          <span class="text-white/30" aria-hidden="true">·</span>
+          <a class="hover:text-white transition-colors" href="/cookies">Cookie Settings</a>
+        </div>
         <div class="flex items-center gap-4">
           <a class="text-gray-500 hover:text-white transition-colors" href="https://twitter.com" aria-label="X (Twitter)">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
