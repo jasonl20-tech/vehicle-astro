@@ -30,7 +30,7 @@ try {
     limit: 100,
   });
   if (res.items.length === 0) {
-    console.warn('[Changelog] Contentful lieferte 0 Einträge. Prüfe: Content Type API ID = "api", Einträge sind PUBLISHED, Slug ist ausgefüllt.');
+    console.warn('[Changelog] Contentful lieferte 0 Einträge.');
   } else {
     console.log('[Changelog] Contentful:', res.items.length, 'Einträge geladen');
   }
@@ -60,7 +60,7 @@ try {
     };
   }).filter((log) => log.slug);
   if (res.items.length > 0 && changelogs.length < res.items.length) {
-    console.warn('[Changelog]', res.items.length - changelogs.length, 'Einträge ohne Slug wurden ausgefiltert');
+    console.warn('[Changelog]', res.items.length - changelogs.length, 'Einträge ohne Slug ausgefiltert');
   }
 } catch (e) {
   contentfulError = e instanceof Error ? e.message : String(e);
@@ -70,57 +70,90 @@ try {
 
 <BaseLayout
   title="Changelog | Vehicle Imagery API"
-  description="Latest updates, new features, and improvements to the Vehicle Imagery API. Stay informed about new vehicle coverage, API enhancements, and platform updates."
+  description="Latest updates, new features, and improvements to the Vehicle Imagery API."
   ogImage="/images/hero-car.png"
   canonicalUrl="/changelog"
 >
   <Header />
-  <main class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 vi-font" style="background-color:rgb(255, 254, 252);">
-    <div class="mb-16">
-      <h1 class="text-4xl sm:text-5xl font-black text-black tracking-tighter leading-none">CHANGELOG.</h1>
-      <p class="mt-4 text-lg text-gray-600 max-w-2xl">Latest updates, new features, and improvements to the Vehicle Imagery API.</p>
-    </div>
-    <ul class="space-y-0 border-t border-black/10">
+  <main class="vi-font min-h-screen" style="background-color:rgb(255, 254, 252);">
+    <!-- Hero -->
+    <section class="relative overflow-hidden" style="background-color:rgb(10, 43, 49);">
+      <div class="absolute inset-0 opacity-10" style="background-image:radial-gradient(#fff 1px, transparent 1px); background-size:24px 24px;"></div>
+      <div class="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 py-20 md:py-28">
+        <span class="text-xs font-mono text-white/60 uppercase tracking-[0.2em]">Updates & Releases</span>
+        <h1 class="mt-4 text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tighter leading-[0.95]">CHANGELOG.</h1>
+        <p class="mt-6 text-lg text-white/80 max-w-xl font-light leading-relaxed">Latest updates, new features, and improvements to the Vehicle Imagery API. Stay informed.</p>
+      </div>
+    </section>
+
+    <!-- Entries -->
+    <section class="max-w-4xl mx-auto px-6 sm:px-8 py-16 md:py-24">
       {changelogs.length > 0 ? (
-        changelogs.map((log) => (
-          <li class="border-b border-black/10">
-            <a href={`/changelog/${log.slug}`} class="group flex flex-col sm:flex-row gap-4 py-8 hover:bg-black/[0.02] transition-colors -mx-4 px-4 sm:px-6">
-              <div class="flex-1 min-w-0">
-                <div class="flex flex-wrap items-center gap-2 mb-1">
-                  {log.version && <span class="text-xs font-mono text-[rgb(200,90,70)]">{log.version}</span>}
-                  {log.category && <span class="text-xs uppercase tracking-wider text-gray-500">{log.category}</span>}
-                </div>
-                <h2 class="text-lg sm:text-xl font-bold text-black group-hover:text-[rgb(200,90,70)] transition-colors">{log.title}</h2>
-                {log.excerpt && <p class="mt-1 text-sm text-gray-600 line-clamp-2">{log.excerpt}</p>}
-                <time class="mt-2 block text-sm font-mono text-gray-500" datetime={log.date}>
-                  {log.date ? new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
-                </time>
-              </div>
-              {log.featuredImageUrl && (
-                <div class="sm:w-32 shrink-0 aspect-video overflow-hidden rounded-lg bg-black/5">
-                  <img
-                    src={log.featuredImageUrl}
-                    alt={log.featuredImageAlt}
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              )}
-            </a>
-          </li>
-        ))
+        <div class="relative">
+          <!-- Timeline line -->
+          <div class="absolute left-[11px] sm:left-4 top-0 bottom-0 w-px bg-black/10" aria-hidden="true"></div>
+
+          <ul class="space-y-0">
+            {changelogs.map((log, i) => (
+              <li class="relative pl-10 sm:pl-12 pb-16 last:pb-0">
+                <!-- Timeline dot -->
+                <div class="absolute left-0 top-1.5 w-3 h-3 rounded-full border-2 border-[rgb(200,90,70)] bg-white" aria-hidden="true"></div>
+
+                <a href={`/changelog/${log.slug}`} class="group block">
+                  <article class="p-6 sm:p-8 rounded-lg border border-black/5 bg-white shadow-sm hover:shadow-lg hover:border-black/10 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-start gap-6">
+                      <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center gap-2 mb-3">
+                          <time class="text-xs font-mono text-[rgb(200,90,70)] uppercase tracking-widest" datetime={log.date}>
+                            {log.date ? new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                          </time>
+                          {log.version && (
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded" style="background-color:rgb(10, 43, 49); color:white;">{log.version}</span>
+                          )}
+                          {log.category && (
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 border border-gray-200 px-2.5 py-1 rounded">{log.category}</span>
+                          )}
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-black text-black tracking-tight group-hover:text-[rgb(200,90,70)] transition-colors">{log.title}</h2>
+                        {log.excerpt && (
+                          <p class="mt-3 text-gray-600 leading-relaxed line-clamp-2">{log.excerpt}</p>
+                        )}
+                        <span class="inline-flex items-center mt-4 text-sm font-bold uppercase tracking-widest text-black/60 group-hover:text-[rgb(200,90,70)] transition-colors">
+                          Read more
+                          <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </span>
+                      </div>
+                      {log.featuredImageUrl && (
+                        <div class="sm:w-40 shrink-0 aspect-video overflow-hidden rounded-lg bg-black/5">
+                          <img
+                            src={log.featuredImageUrl}
+                            alt={log.featuredImageAlt}
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : (
-        <li class="py-16 text-center">
-          <p class="text-gray-500">No changelog entries yet. Add entries in Contentful with content type &quot;api&quot; (Changelog).</p>
+        <div class="text-center py-20 px-6">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-black/5 mb-6">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <p class="text-gray-500 text-lg">No changelog entries yet.</p>
+          <p class="mt-2 text-sm text-gray-400">Add entries in Contentful with content type &quot;api&quot; (Changelog).</p>
           {contentfulError && (
-            <p class="mt-4 text-sm text-amber-700 bg-amber-50 px-4 py-2 rounded max-w-xl mx-auto">
-              Contentful-Fehler: {contentfulError}
-            </p>
+            <p class="mt-6 text-sm text-amber-700 bg-amber-50 px-4 py-3 rounded-lg max-w-xl mx-auto">{contentfulError}</p>
           )}
-        </li>
+        </div>
       )}
-    </ul>
+    </section>
   </main>
   <Footer />
 </BaseLayout>

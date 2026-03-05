@@ -66,6 +66,13 @@ const featuredImageUrl = getAssetUrl(featuredImage);
 const featuredImageAlt = fields.featuredImageAlt ?? title;
 const gallery = Array.isArray(fields.gallery) ? fields.gallery : (fields.gallery ? [fields.gallery] : []);
 
+const changeTypeStyles: Record<string, string> = {
+  added: 'bg-emerald-500/10 text-emerald-800 border-emerald-200',
+  fixed: 'bg-amber-500/10 text-amber-800 border-amber-200',
+  changed: 'bg-blue-500/10 text-blue-800 border-blue-200',
+  deprecated: 'bg-gray-500/10 text-gray-700 border-gray-200',
+  removed: 'bg-red-500/10 text-red-800 border-red-200',
+};
 const changeTypeLabels: Record<string, string> = {
   added: 'Added',
   fixed: 'Fixed',
@@ -83,29 +90,43 @@ const changeTypeLabels: Record<string, string> = {
   canonicalUrl={`/changelog/${slug}`}
 >
   <Header />
-  <main class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 vi-font" style="background-color:rgb(255, 254, 252);">
-    <article>
+  <main class="vi-font min-h-screen" style="background-color:rgb(255, 254, 252);">
+    <!-- Back link -->
+    <div class="max-w-4xl mx-auto px-6 sm:px-8 pt-8">
+      <a href="/changelog" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-gray-500 hover:text-[rgb(200,90,70)] transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        All Changelog Entries
+      </a>
+    </div>
+
+    <article class="max-w-4xl mx-auto px-6 sm:px-8 py-12 md:py-16">
+      <!-- Header -->
       <header class="mb-12">
-        <div class="flex flex-wrap items-center gap-3 text-sm">
-          <time class="font-mono text-[rgb(200,90,70)] uppercase tracking-widest" datetime={createdAt}>
+        <div class="flex flex-wrap items-center gap-3 text-sm mb-4">
+          <time class="font-mono text-[rgb(200,90,70)] uppercase tracking-widest font-semibold" datetime={createdAt}>
             {createdAt ? new Date(createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
           </time>
-          {version && <span class="px-2 py-0.5 bg-black/5 font-mono text-black/70">{version}</span>}
-          {category && <span class="px-2 py-0.5 border border-black/20 text-black/70 uppercase tracking-wider">{category}</span>}
+          {version && (
+            <span class="px-3 py-1 rounded text-xs font-bold uppercase tracking-wider text-white" style="background-color:rgb(10, 43, 49);">{version}</span>
+          )}
+          {category && (
+            <span class="px-3 py-1 rounded text-xs font-bold uppercase tracking-wider border border-black/20 text-black/70">{category}</span>
+          )}
           {author && <span class="text-gray-500">by {author}</span>}
         </div>
-        <h1 class="mt-4 text-4xl sm:text-5xl font-black text-black tracking-tighter leading-tight">{title}</h1>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-black tracking-tighter leading-[1.05]">{title}</h1>
         {tags.length > 0 && (
-          <div class="mt-4 flex flex-wrap gap-2">
+          <div class="mt-6 flex flex-wrap gap-2">
             {tags.map((tag: string) => (
-              <span class="text-xs font-mono text-gray-500">#{tag}</span>
+              <span class="text-xs font-mono text-gray-500 bg-black/5 px-2.5 py-1 rounded">#{tag}</span>
             ))}
           </div>
         )}
       </header>
 
+      <!-- Featured Image -->
       {featuredImageUrl && (
-        <figure class="mb-12 -mx-4 sm:mx-0">
+        <figure class="mb-14 -mx-6 sm:mx-0 sm:rounded-xl overflow-hidden shadow-xl">
           <img
             src={featuredImageUrl}
             alt={featuredImageAlt}
@@ -118,21 +139,23 @@ const changeTypeLabels: Record<string, string> = {
         </figure>
       )}
 
+      <!-- Changes -->
       {changes.length > 0 && (
-        <div class="mb-12 p-6 bg-black/[0.02] border border-black/5">
-          <h2 class="text-sm font-bold uppercase tracking-widest text-black/60 mb-4">Changes</h2>
-          <ul class="space-y-3">
+        <div class="mb-14 p-8 rounded-xl border border-black/10 bg-white shadow-sm">
+          <h2 class="text-xs font-bold uppercase tracking-[0.2em] text-black/50 mb-6">Changes in this release</h2>
+          <ul class="space-y-4">
             {changes.map((change) => {
               const label = changeTypeLabels[change.type] ?? change.type;
+              const style = changeTypeStyles[change.type] ?? changeTypeStyles.added;
               return (
-                <li class="flex gap-3">
-                  <span class="shrink-0 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded bg-black/5 text-black/70 w-20">
+                <li class="flex gap-4 items-start">
+                  <span class={`shrink-0 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded border ${style}`}>
                     {label}
                   </span>
-                  <div>
+                  <div class="min-w-0">
                     <span class="font-semibold text-black">{change.title}</span>
                     {change.description && (
-                      <p class="text-sm text-gray-600 mt-0.5">{change.description}</p>
+                      <p class="text-gray-600 text-sm mt-1 leading-relaxed">{change.description}</p>
                     )}
                   </div>
                 </li>
@@ -142,19 +165,31 @@ const changeTypeLabels: Record<string, string> = {
         </div>
       )}
 
+      <!-- Body -->
       {bodyHtml ? (
-        <div class="prose prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg" set:html={bodyHtml} />
+        <div
+          class="prose prose-lg max-w-none
+            prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-black
+            prose-p:text-gray-700 prose-p:leading-relaxed
+            prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-a:font-medium
+            prose-strong:text-black prose-strong:font-bold
+            prose-ul:my-6 prose-ol:my-6 prose-li:my-1
+            prose-img:rounded-lg prose-img:shadow-md
+            prose-blockquote:border-l-4 prose-blockquote:border-[rgb(200,90,70)] prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-gray-600"
+          set:html={bodyHtml}
+        />
       ) : (
-        <p class="text-gray-600">No content.</p>
+        <p class="text-gray-500 py-8">No content.</p>
       )}
 
+      <!-- Gallery -->
       {gallery.length > 0 && (
-        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {gallery.map((asset: { fields?: { file?: { url?: string }; title?: string } }) => {
             const url = getAssetUrl(asset);
             if (!url) return null;
             return (
-              <figure class="overflow-hidden rounded-lg">
+              <figure class="overflow-hidden rounded-xl shadow-lg">
                 <img src={url} alt={asset.fields?.title ?? ''} class="w-full h-auto object-cover" loading="lazy" decoding="async" />
               </figure>
             );
@@ -162,8 +197,13 @@ const changeTypeLabels: Record<string, string> = {
         </div>
       )}
     </article>
-    <div class="mt-16 pt-8 border-t border-black/10">
-      <a href="/changelog" class="text-sm font-bold uppercase tracking-widest text-black hover:text-[rgb(200,90,70)] transition-colors">← All Changelog Entries</a>
+
+    <!-- Footer CTA -->
+    <div class="max-w-4xl mx-auto px-6 sm:px-8 pb-20 pt-8 border-t border-black/10">
+      <a href="/changelog" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-black hover:text-[rgb(200,90,70)] transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Changelog
+      </a>
     </div>
   </main>
   <Footer />
