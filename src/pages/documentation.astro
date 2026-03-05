@@ -80,22 +80,23 @@ const errornotes = [
 
     <!-- Navigation + Content -->
     <section class="mx-auto max-w-[1400px] px-6 pb-24 pt-4 sm:px-12 lg:px-16">
-      <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
+      <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-stretch">
 
         <!-- Sidebar Navigation -->
         <aside class="w-full lg:w-64 shrink-0 order-2 lg:order-1">
-          <nav class="lg:sticky lg:top-20 rounded-2xl bg-[#f4f4f5] p-6 border border-black/[0.06]">
+          <nav class="lg:sticky lg:top-24 rounded-2xl bg-[#f4f4f5] p-6 border border-black/[0.06] h-fit">
             <h3 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-4">Quick Navigation</h3>
-            <ul class="space-y-0.5">
-              <li><a href="#authentication" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Authentication</a></li>
-              <li><a href="#base-url" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Base URL</a></li>
-              <li><a href="#query-params" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Global Parameters</a></li>
+            <ul class="space-y-0.5" id="doc-nav">
+              <li><a href="#authentication" data-doc-link="authentication" class="doc-nav-link active block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Authentication</a></li>
+              <li><a href="#base-url" data-doc-link="base-url" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Base URL</a></li>
+              <li><a href="#query-params" data-doc-link="query-params" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Global Parameters</a></li>
+              <li><a href="#hierarchy" data-doc-link="hierarchy" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">API Hierarchy</a></li>
               <li class="pt-4 mt-2 border-t border-black/5">
                 <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest">Endpoints</span>
               </li>
               {endpoints.map((ep) => (
                 <li>
-                  <a href={`#${ep.id}`} class="group flex items-center gap-2.5 py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">
+                  <a href={`#${ep.id}`} data-doc-link={ep.id} class="doc-nav-link group flex items-center gap-2.5 py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">
                     <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-mono shrink-0">{ep.method}</span>
                     <span class="truncate">{ep.title}</span>
                   </a>
@@ -104,18 +105,23 @@ const errornotes = [
               <li class="pt-4 mt-2 border-t border-black/5">
                 <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest">Reference</span>
               </li>
-              <li><a href="#errors" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Error Codes</a></li>
-              <li><a href="#errornotes" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Error Notes</a></li>
-              <li><a href="#rate-limits" class="block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Rate Limits</a></li>
+              <li><a href="#errors" data-doc-link="errors" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Error Codes</a></li>
+              <li><a href="#errornotes" data-doc-link="errornotes" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Error Notes</a></li>
+              <li><a href="#rate-limits" data-doc-link="rate-limits" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Rate Limits</a></li>
             </ul>
           </nav>
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 min-w-0 max-w-3xl order-1 lg:order-2">
+        <div id="doc-content" class="flex-1 min-w-0 max-w-3xl order-1 lg:order-2">
+          <style is:global>
+            #doc-content .doc-section { display: none; }
+            #doc-content .doc-section.active { display: block; }
+            .doc-nav-link.active { background: white !important; border-color: rgba(0,0,0,0.1) !important; color: black !important; font-weight: 500; }
+          </style>
 
           <!-- Authentication -->
-          <section id="authentication" class="mb-20 scroll-mt-24">
+          <section id="authentication" data-doc-section="authentication" class="doc-section active mb-20 scroll-mt-24">
             <p class="text-[11px] font-medium text-black/50 mb-4">/ authentication /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
               API Key Authentication
@@ -143,7 +149,7 @@ const errornotes = [
           </section>
 
           <!-- Base URL -->
-          <section id="base-url" class="mb-20 scroll-mt-24">
+          <section id="base-url" data-doc-section="base-url" class="doc-section mb-20 scroll-mt-24">
             <p class="text-[11px] font-medium text-black/50 mb-4">/ base url /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
               Base URL
@@ -160,7 +166,7 @@ const errornotes = [
           </section>
 
           <!-- Global Query Parameters -->
-          <section id="query-params" class="mb-20 scroll-mt-24">
+          <section id="query-params" data-doc-section="query-params" class="doc-section mb-20 scroll-mt-24">
             <p class="text-[11px] font-medium text-black/50 mb-4">/ parameters /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
               Global Query Parameters
@@ -209,7 +215,7 @@ const errornotes = [
           </section>
 
           <!-- API Hierarchy -->
-          <section class="mb-20 scroll-mt-24">
+          <section id="hierarchy" data-doc-section="hierarchy" class="doc-section mb-20 scroll-mt-24">
             <p class="text-[11px] font-medium text-black/50 mb-4">/ data model /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
               API Hierarchy
@@ -229,7 +235,7 @@ const errornotes = [
 
           <!-- Endpoints -->
           {endpoints.map((ep) => (
-            <section id={ep.id} class="mb-16 scroll-mt-24 pb-16 border-b border-black/5 last:border-b-0">
+            <section id={ep.id} data-doc-section={ep.id} class="doc-section mb-16 scroll-mt-24 pb-16 border-b border-black/5 last:border-b-0">
               <div class="flex flex-wrap items-center gap-3 mb-4">
                 <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md font-mono tracking-wider">{ep.method}</span>
                 <code class="text-[14px] font-mono text-black break-all">{ep.path}</code>
@@ -285,7 +291,7 @@ const errornotes = [
           ))}
 
           <!-- Error Codes -->
-          <section id="errors" class="mb-20 scroll-mt-24">
+          <section id="errors" data-doc-section="errors" class="doc-section mb-20 scroll-mt-24">
             <p class="text-[11px] font-medium text-black/50 mb-4">/ reference /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
               HTTP Status Codes
@@ -314,7 +320,7 @@ const errornotes = [
           </section>
 
           <!-- Error Notes -->
-          <section id="errornotes" class="mb-20 scroll-mt-24">
+          <section id="errornotes" data-doc-section="errornotes" class="doc-section mb-20 scroll-mt-24">
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
               Error Notes (Fallback Codes)
             </h2>
@@ -342,7 +348,7 @@ const errornotes = [
           </section>
 
           <!-- Rate Limits -->
-          <section id="rate-limits" class="mb-20 scroll-mt-24">
+          <section id="rate-limits" data-doc-section="rate-limits" class="doc-section mb-20 scroll-mt-24">
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
               Rate Limits & Caching
             </h2>
@@ -385,6 +391,45 @@ const errornotes = [
       </div>
     </section>
 
+    <script>
+      function showDocSection(id) {
+        const sections = document.querySelectorAll('.doc-section');
+        const links = document.querySelectorAll('.doc-nav-link');
+        sections.forEach((el) => {
+          el.classList.toggle('active', el.dataset.docSection === id);
+        });
+        links.forEach((a) => {
+          a.classList.toggle('active', a.dataset.docLink === id);
+        });
+        history.replaceState(null, '', '#' + id);
+      }
+
+      function initDocNav() {
+        const hash = (location.hash || '#authentication').slice(1);
+        const validIds = ['authentication', 'base-url', 'query-params', 'hierarchy', 'errors', 'errornotes', 'rate-limits', ...['brands','models','years','variants','trims','views','colors','features','image','resolutions','formats','getall']];
+        const id = validIds.includes(hash) ? hash : 'authentication';
+        showDocSection(id);
+
+        document.querySelectorAll('.doc-nav-link').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = a.dataset.docLink;
+            if (targetId) showDocSection(targetId);
+          });
+        });
+
+        window.addEventListener('hashchange', () => {
+          const h = (location.hash || '#authentication').slice(1);
+          if (validIds.includes(h)) showDocSection(h);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDocNav);
+      } else {
+        initDocNav();
+      }
+    </script>
   </main>
   <Footer />
 </BaseLayout>
