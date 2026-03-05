@@ -157,12 +157,12 @@ try {
           { name: "Cockpit", img: "cupra_cockpit", num: "09", span: "", bg: "#e5e5e5", interior: true, ext: "jpeg" },
           { name: "Steering Wheel", img: "cupra_front_row", num: "10", span: "", bg: "#eeeeee", interior: true, ext: "jpeg" },
           { name: "Center Console", img: "cupra_rear_row", num: "11", span: "", bg: "#e8e8e8", interior: true, ext: "jpeg" },
-          { name: "—", img: null, num: "", span: "", bg: "#f2f2f2", placeholder: true }
+          { name: "—", img: null, num: "", span: "", bg: "rgb(10, 43, 49)", placeholder: true }
         ].map((a, i) => (
           <article class={`group relative flex items-center justify-center min-h-[180px] ${a.span || ""}`} style={`background-color:${a.bg}`}>
             {a.placeholder ? (
               <div class="w-full h-full flex items-center justify-center">
-                <span class="text-[10px] font-mono text-black/30 uppercase tracking-widest">—</span>
+                <span class="text-[10px] font-mono text-white/30 uppercase tracking-widest">—</span>
               </div>
             ) : a.interior ? (
               <div class="interior-cell absolute inset-0">
@@ -389,7 +389,7 @@ try {
                     <div>
                       <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Office</h3>
                       <p class="text-white font-bold">Vehicle Imagery HQ</p>
-                      <p class="text-gray-400">Berlin, Germany</p>
+                      <p class="text-gray-400">Germany</p>
                     </div>
                   </div>
                 </div>
@@ -416,12 +416,12 @@ try {
                 </div>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Company Website</label>
-                <input type="url" name="company" placeholder="https://company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Domain (optional)</label>
+                <input type="text" name="company" placeholder="company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Message</label>
-                <textarea rows="4" name="message" required placeholder="Tell us about your project..." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all resize-none"></textarea>
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Message (optional)</label>
+                <textarea rows="4" name="message" placeholder="Tell us about your project..." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all resize-none"></textarea>
               </div>
               <div class="pt-2">
                 <button type="submit" class="w-full px-8 py-4 rounded-[2px] text-sm font-bold uppercase tracking-widest transition-colors shadow-lg bg-black text-white hover:bg-[rgb(200,90,70)] hover:shadow-xl transform hover:-translate-y-0.5 duration-200">Send Message</button>

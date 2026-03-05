@@ -70,7 +70,7 @@ const ogImageUrl = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}
               preferences: { title: 'Cookie preferences', description: '<p>Choose which cookies you want to accept.</p>', saveButtonText: 'Save and close', creditLinkText: 'Free cookie banner by Silktide' },
             },
             prompt: { position: 'bottomRight' },
-            icon: { position: 'bottomRight' },
+            icon: { position: 'bottomLeft' },
           });
           return;
         }
@@ -93,10 +93,10 @@ const ogImageUrl = ogImage ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}
         left: auto !important;
         right: 16px !important;
       }
-      #stcm-icon.stcm-pos-bottom-right,
+      #stcm-icon.stcm-pos-bottom-left,
       #stcm-icon {
-        left: auto !important;
-        right: 10px !important;
+        left: 10px !important;
+        right: auto !important;
       }
     </style>
   </body>

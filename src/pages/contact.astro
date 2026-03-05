@@ -10,127 +10,114 @@ import Footer from '../components/Footer.astro';
   canonicalUrl="/contact"
 >
   <Header />
-  <main class="min-h-screen bg-cream">
-    <!-- Hero: floating card style -->
-    <section class="px-6 pt-8 pb-12 sm:px-12 lg:px-16">
-      <div class="mx-auto max-w-7xl">
-        <div class="relative overflow-hidden rounded-2xl bg-[#1C2B32] shadow-[0_24px_80px_-24px_rgba(28,43,50,0.5)]">
-          <div class="absolute inset-0 bg-gradient-to-br from-[#1C2B32] via-[#25363F] to-[#1C2B32]" aria-hidden="true" />
-          <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 20% 50%, rgba(255,136,68,0.15) 0%, transparent 50%);" aria-hidden="true" />
-          <div class="relative flex min-h-[220px] flex-col justify-between px-8 py-10 sm:min-h-[260px] sm:px-12 sm:py-14">
-            <h1 class="text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">
-              Contact
-            </h1>
-            <p class="absolute bottom-8 right-8 text-sm text-white/50">
-              <a href="/" class="hover:text-white/80 transition-colors">Home</a>
-              <span class="mx-2">–</span>
-              <span>Contact</span>
-            </p>
-            <p class="absolute right-8 top-1/2 -translate-y-1/2 -rotate-90 origin-center text-2xl font-bold tracking-widest text-white/10 sm:text-3xl" aria-hidden="true">
-              Contact
-            </p>
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    <!-- Hero: großes Bild mit runden Ecken -->
+    <section class="px-4 pt-6 pb-10 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]">
+          <!-- Background image -->
+          <img
+            src="/images/showroom.webp"
+            alt=""
+            class="absolute inset-0 h-full w-full object-cover"
+            aria-hidden="true"
+          />
+          <!-- Dark overlay for readability -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" aria-hidden="true" />
+          <!-- Accent color overlay -->
+          <div class="absolute inset-0 opacity-30 mix-blend-multiply" style="background: linear-gradient(135deg, #0a0a0a 0%, transparent 40%, rgba(200,40,20,0.4) 100%);" aria-hidden="true" />
+
+          <div class="relative flex min-h-[360px] flex-col justify-end px-8 py-10 sm:min-h-[460px] sm:px-16 sm:py-16 lg:min-h-[500px]">
+            <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl">Contact</h1>
+
+            <!-- Breadcrumb: smooth floating island -->
+            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
+              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
+                <p class="text-[13px] tracking-wide text-black/80">
+                  <a href="/" class="transition-colors hover:text-black">Home</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <span class="font-medium text-black">Contact</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Large ghost text -->
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[25%] -rotate-90 origin-center pointer-events-none select-none" aria-hidden="true">
+              <span class="text-[140px] sm:text-[180px] font-extralight tracking-tighter text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.12);">Contact</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Two columns: info + form -->
-    <section class="mx-auto max-w-7xl px-6 pb-24 pt-6 sm:px-12 lg:px-16">
-      <div class="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
-        <!-- Left: Contact info -->
-        <div>
-          <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#1C2B32]/50">/ get in touch /</p>
-          <h2 class="mt-4 text-3xl font-black leading-tight tracking-tight text-[#1C2B32] sm:text-4xl">
-            We are always ready to help you
+    <!-- Two-column content: 1. Text, 2. Form -->
+    <section class="mx-auto max-w-7xl px-6 pb-24 pt-8 sm:px-12 lg:px-16">
+      <div class="grid gap-16 lg:grid-cols-[1fr_1fr] lg:gap-24 items-start">
+        <!-- Left: Text & Info -->
+        <div class="pt-4">
+          <p class="text-[11px] font-medium text-black/50 mb-6">/ get in touch /</p>
+          <h2 class="text-4xl sm:text-5xl font-normal leading-[1.1] text-black tracking-tight mb-8">
+            We are always ready to help you and answer your questions
           </h2>
-          <p class="mt-6 max-w-lg text-lg leading-relaxed text-[#1C2B32]/75">
+          <p class="text-sm leading-relaxed text-black/60 mb-12 max-w-md">
             Questions about the API, pricing, or integration? Our team is here for you. Get your API key, request a demo, or reach out for enterprise solutions.
           </p>
-          <div class="mt-10 space-y-8">
+
+          <div class="grid grid-cols-2 gap-y-10 gap-x-8">
             <div>
-              <h3 class="text-sm font-bold uppercase tracking-wider text-[#1C2B32]/70">Call &amp; Support</h3>
-              <p class="mt-2 text-[#1C2B32]"><a href="tel:+18005291337" class="hover:text-accent transition-colors">+1 800 529 1337</a></p>
-              <p class="mt-1 text-[#1C2B32]/80">Mon–Fri, 9:00 – 18:00 CET</p>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Office</h3>
+              <p class="text-[13px] text-black/70 mb-1">Vehicle Imagery HQ</p>
+              <p class="text-[13px] text-black/70">Germany</p>
             </div>
             <div>
-              <h3 class="text-sm font-bold uppercase tracking-wider text-[#1C2B32]/70">Email</h3>
-              <p class="mt-2"><a href="mailto:hello@vehicleimagery.com" class="text-[#1C2B32] hover:text-accent transition-colors">hello@vehicleimagery.com</a></p>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Email</h3>
+              <p class="text-[13px] text-black/70"><a href="mailto:info@vehicleimagery.com" class="hover:text-black transition-colors">info@vehicleimagery.com</a></p>
             </div>
             <div>
-              <h3 class="text-sm font-bold uppercase tracking-wider text-[#1C2B32]/70">Social</h3>
-              <div class="mt-3 flex gap-4">
-                <a href="https://twitter.com/vehicleimagery" target="_blank" rel="noopener noreferrer" class="flex h-10 w-10 items-center justify-center rounded-lg border border-[#1C2B32]/15 bg-white text-[#1C2B32] transition-colors hover:border-accent hover:bg-accent/10 hover:text-accent" aria-label="Twitter">𝕏</a>
-                <a href="https://linkedin.com/company/vehicleimagery" target="_blank" rel="noopener noreferrer" class="flex h-10 w-10 items-center justify-center rounded-lg border border-[#1C2B32]/15 bg-white text-[#1C2B32] transition-colors hover:border-accent hover:bg-accent/10 hover:text-accent" aria-label="LinkedIn">in</a>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Social network</h3>
+              <div class="flex gap-4">
+                <a href="https://twitter.com/vehicleimagery" target="_blank" rel="noopener noreferrer" class="text-[13px] text-black hover:text-black/70 transition-colors font-medium" aria-label="X">X</a>
+                <a href="https://linkedin.com/company/vehicleimagery" target="_blank" rel="noopener noreferrer" class="text-[13px] text-black hover:text-black/70 transition-colors font-medium" aria-label="LinkedIn">in</a>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Right: Get in Touch form card -->
-        <div class="rounded-2xl border border-[#1C2B32]/10 bg-[#1C2B32]/[0.03] p-8 shadow-sm sm:p-10">
-          <h2 class="text-2xl font-bold text-[#1C2B32]">Get in Touch</h2>
-          <p class="mt-3 text-[#1C2B32]/70">
-            Tell us about your use case. We’ll get back to you within one business day.
+        <!-- Right: Form -->
+        <div class="rounded-[2rem] bg-[#f4f4f5] p-8 sm:p-12">
+          <h3 class="text-2xl font-normal text-black mb-4">Get in Touch</h3>
+          <p class="text-[13px] text-black/60 mb-10 max-w-sm leading-relaxed">
+            Define your goals and identify areas where we can add value to your business
           </p>
-          <form
-            class="mt-8 space-y-5"
-            action="https://submit-form.com/v6dFS1FAS"
-            method="POST"
-          >
+
+          <form class="space-y-6" action="https://submit-form.com/v6dFS1FAS" method="POST">
             <input type="hidden" name="subject" value="Contact Form – Vehicle Imagery" />
             <input type="hidden" name="_redirect" value="/contact?sent=1" />
-            <div>
-              <label for="name" class="sr-only">Full name</label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                placeholder="Full name"
-                class="w-full rounded-lg border border-[#1C2B32]/15 bg-white px-4 py-3.5 text-[#1C2B32] placeholder-[#1C2B32]/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-              />
+            
+            <div class="relative">
+              <input type="text" name="name" required placeholder="Full name" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
             </div>
-            <div>
-              <label for="email" class="sr-only">Email</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                placeholder="Email"
-                class="w-full rounded-lg border border-[#1C2B32]/15 bg-white px-4 py-3.5 text-[#1C2B32] placeholder-[#1C2B32]/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-              />
+            
+            <div class="relative">
+              <input type="email" name="email" required placeholder="Email" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
             </div>
-            <div>
-              <label for="subject" class="sr-only">Subject</label>
-              <input
-                id="subject"
-                name="subject_line"
-                type="text"
-                placeholder="Subject"
-                class="w-full rounded-lg border border-[#1C2B32]/15 bg-white px-4 py-3.5 text-[#1C2B32] placeholder-[#1C2B32]/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-              />
+            
+            <div class="relative">
+              <input type="text" name="subject_line" placeholder="Subject" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
             </div>
-            <div>
-              <label for="message" class="sr-only">Message</label>
-              <textarea
-                id="message"
-                name="message"
-                rows={5}
-                required
-                placeholder="Message"
-                class="w-full resize-y rounded-lg border border-[#1C2B32]/15 bg-white px-4 py-3.5 text-[#1C2B32] placeholder-[#1C2B32]/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-              />
+            
+            <div class="relative">
+              <textarea name="message" rows={1} placeholder="Message" class="w-full resize-none border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors"></textarea>
             </div>
-            <button
-              type="submit"
-              class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#1C2B32] px-6 py-4 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-[#25363F] sm:w-auto"
-            >
-              Send message
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
+            
+            <div class="pt-6">
+              <button type="submit" class="inline-flex items-center justify-center gap-3 rounded-full bg-[#2d2d2d] px-6 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-black">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="rotate-[-45deg]">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Send a message
+              </button>
+            </div>
           </form>
         </div>
       </div>
