@@ -39,12 +39,7 @@ const faqs = [
   { q: 'Do you offer on-premise deployment?', a: 'Yes, on-premise and white-label options are available on our custom plans. Contact us for details.' },
 ];
 
-const statusItems = [
-  { name: 'API', status: 'Operational' },
-  { name: 'CDN', status: 'Operational' },
-  { name: 'Dashboard', status: 'Operational' },
-  { name: 'Webhooks', status: 'Operational' },
-];
+
 ---
 
 <BaseLayout
@@ -84,37 +79,6 @@ const statusItems = [
             </div>
           </a>
         ))}
-      </div>
-    </section>
-
-    <!-- System Status -->
-    <section class="py-24 sm:py-32 bg-[#fafafa]">
-      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
-        <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Status</p>
-            <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-6">
-              System status
-            </h2>
-            <p class="text-[14px] text-black/50 leading-relaxed">
-              All systems monitored 24/7. Current status of our infrastructure at a glance.
-            </p>
-          </div>
-          <div>
-            <div class="rounded-lg border border-black/[0.06] bg-white overflow-hidden">
-              {statusItems.map((s, i) => (
-                <div class={`flex items-center justify-between px-6 py-4 ${i > 0 ? 'border-t border-black/[0.04]' : ''}`}>
-                  <span class="text-[14px] text-black">{s.name}</span>
-                  <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span class="text-[12px] text-emerald-600 font-medium">{s.status}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p class="text-[11px] text-black/30 mt-4">Last updated: just now</p>
-          </div>
-        </div>
       </div>
     </section>
 

@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const team = [
+  {
+    name: 'Jason Lohre',
+    role: 'Founder & CEO',
+    desc: 'Building the infrastructure for automotive imagery. Previously in enterprise SaaS.',
+    linkedin: 'https://linkedin.com/in/',
+  },
+];
+
+const values = [
+  { num: '01', title: 'Developer-First', desc: 'We build for developers. Clean APIs, great docs, and zero friction.' },
+  { num: '02', title: 'Quality Over Quantity', desc: 'Every image meets studio standards. No compromises on output quality.' },
+  { num: '03', title: 'Transparency', desc: 'Clear pricing, honest communication, and open roadmaps.' },
+  { num: '04', title: 'Speed', desc: 'Fast API, fast support, fast iteration. We respect your time.' },
+];
+---
+
+<BaseLayout
+  title="Team | Vehicle Imagery API"
+  description="Meet the team behind Vehicle Imagery. The people building the definitive vehicle imagery API."
+  canonicalUrl="/team"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+
+    <!-- Hero -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
+      <div class="max-w-3xl">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">About Us</p>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
+          Team
+        </h1>
+        <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
+          The people building the definitive vehicle imagery API. Small team, big ambitions.
+        </p>
+      </div>
+    </section>
+
+    <!-- Mission -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-24 sm:px-12 lg:px-16">
+      <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Mission</p>
+          <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight">
+            Why we exist
+          </h2>
+        </div>
+        <div>
+          <p class="text-[16px] text-black/60 leading-[1.8] max-w-2xl">
+            The automotive industry deserves better imagery infrastructure. We're building a single API that delivers studio-quality vehicle images — consistent, scalable, and ready to integrate in minutes. No more fragmented image sources, no more inconsistent quality.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Members -->
+    <section class="py-24 sm:py-32 bg-[#fafafa]">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">People</p>
+        <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-16">
+          Meet the team
+        </h2>
+
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {team.map((member) => (
+            <div class="group rounded-lg border border-black/[0.06] bg-white overflow-hidden transition-all duration-500 hover:border-black/10 hover:shadow-xl hover:shadow-black/5">
+              <div class="h-56 bg-gradient-to-br from-[rgb(10,43,49)] to-[rgb(10,43,49)]/80 flex items-center justify-center">
+                <span class="text-6xl font-extralight text-white/20">{member.name.split(' ').map(n => n[0]).join('')}</span>
+              </div>
+              <div class="p-8">
+                <h3 class="text-lg font-medium text-black mb-1">{member.name}</h3>
+                <p class="text-[12px] text-[rgb(200,90,70)] font-medium uppercase tracking-wider mb-4">{member.role}</p>
+                <p class="text-[13px] text-black/45 leading-relaxed mb-6">{member.desc}</p>
+                {member.linkedin && (
+                  <a href={member.linkedin} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-[12px] font-medium text-black/40 hover:text-[rgb(200,90,70)] transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+
+          <!-- Join card -->
+          <div class="group rounded-lg border border-dashed border-black/10 bg-white p-8 flex flex-col items-center justify-center text-center min-h-[400px] transition-all duration-500 hover:border-[rgb(200,90,70)]/30 hover:bg-[rgb(200,90,70)]/[0.02]">
+            <div class="w-16 h-16 rounded-full bg-black/[0.03] flex items-center justify-center mb-6 group-hover:bg-[rgb(200,90,70)]/10 transition-colors">
+              <svg class="w-7 h-7 text-black/20 group-hover:text-[rgb(200,90,70)] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-medium text-black mb-2">Join the team</h3>
+            <p class="text-[13px] text-black/40 leading-relaxed mb-6 max-w-[200px]">
+              We're always looking for talented people. Get in touch.
+            </p>
+            <a href="/contact" class="inline-flex items-center gap-2 text-[13px] font-medium text-[rgb(200,90,70)] hover:underline">
+              Say hello
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="py-24 sm:py-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Culture</p>
+            <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-6">
+              What drives us
+            </h2>
+            <p class="text-[14px] text-black/50 leading-relaxed max-w-sm">
+              Our principles shape everything we build and how we work.
+            </p>
+          </div>
+
+          <div class="space-y-0">
+            {values.map((v) => (
+              <div class="group flex gap-6 py-8 border-b border-black/[0.06] first:border-t">
+                <span class="text-[11px] font-mono text-black/20 pt-1 shrink-0">{v.num}</span>
+                <div>
+                  <h3 class="text-[16px] font-medium text-black mb-2 group-hover:text-[rgb(200,90,70)] transition-colors">{v.title}</h3>
+                  <p class="text-[13px] text-black/50 leading-relaxed max-w-md">{v.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="pb-24 sm:pb-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] px-8 py-20 sm:px-16 sm:py-24" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+          <div class="relative z-10 text-center max-w-2xl mx-auto">
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Get in Touch</p>
+            <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
+              Work with us
+            </h2>
+            <p class="text-[14px] text-white/40 leading-relaxed mb-12 max-w-md mx-auto">
+              Whether you want to join the team, partner with us, or integrate our API — we'd love to hear from you.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/contact" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
+                Contact Us
+              </a>
+              <a href="/documentation" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
+                Documentation
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
