@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Studio Quality | Vehicle Imagery API"
+  description="Our standard of excellence — studio-grade vehicle imagery with consistent lighting, angles, and color accuracy across every brand and model."
+  canonicalUrl="/coverage/quality"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+
+    <!-- Hero -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
+      <div class="max-w-3xl">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Studio Quality</p>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
+          Every pixel.<br />Every angle.
+        </h1>
+        <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
+          Consistent, studio-grade imagery across 140+ brands. No compromises on lighting, color accuracy, or resolution.
+        </p>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
+      <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
+        {[
+          { value: '36', label: 'Camera Angles' },
+          { value: '4K+', label: 'Max Resolution' },
+          { value: '9,000+', label: 'OEM Colors' },
+          { value: '<1%', label: 'Color Deviation' },
+        ].map((stat) => (
+          <div>
+            <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25 mt-1">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Quality Standards -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-32 sm:px-12 lg:px-16">
+      <div class="grid gap-8 lg:grid-cols-[1fr_2fr] items-stretch">
+
+        <!-- Left: Intro card -->
+        <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white flex flex-col">
+          <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/15 via-black/5 to-transparent"></div>
+          <div class="p-10 sm:p-12 flex flex-col flex-1">
+            <div class="flex items-center justify-between mb-16">
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25">01</span>
+            </div>
+            <h2 class="text-5xl sm:text-6xl font-light text-black tracking-tight leading-none mb-6">Standards</h2>
+            <p class="text-[14px] text-black/45 leading-relaxed mb-8">
+              Every image in our database follows a strict production pipeline — from 3D rendering to color calibration and final QA.
+            </p>
+            <div class="mt-auto">
+              <div class="border-t border-black/5 pt-8">
+                <a href="/documentation" class="group/btn inline-flex items-center gap-3 text-[13px] font-medium text-black transition-colors hover:text-[rgb(200,90,70)]">
+                  <span>View Documentation</span>
+                  <svg class="w-4 h-4 transform group-hover/btn:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Large dark card -->
+        <div class="relative rounded-[2rem] overflow-hidden" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[rgb(200,90,70)] via-[rgb(200,90,70)]/40 to-transparent"></div>
+          <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+
+          <div class="relative p-10 sm:p-14 flex flex-col">
+            <div class="flex items-center justify-between mb-12">
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">02</span>
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-[rgb(200,90,70)] px-3 py-1.5 rounded-full border border-white/10">Pipeline</span>
+            </div>
+
+            <h2 class="text-5xl sm:text-6xl font-light text-white tracking-tight leading-none mb-10">Production Pipeline</h2>
+
+            <div class="space-y-0">
+              {[
+                { step: '01', title: '3D Model Acquisition', desc: 'High-fidelity 3D models sourced from OEM data with accurate geometry, materials, and proportions.' },
+                { step: '02', title: 'Studio Lighting Setup', desc: 'Standardized HDRI lighting environment ensures consistent highlights, reflections, and shadow behavior across all vehicles.' },
+                { step: '03', title: 'OEM Color Calibration', desc: 'Each paint color is matched to the manufacturer\'s official color code with < 1% Delta-E deviation.' },
+                { step: '04', title: 'Multi-Angle Rendering', desc: 'Up to 36 camera positions per configuration — exterior, interior, and detail views rendered at up to 4K resolution.' },
+                { step: '05', title: 'Post-Processing & QA', desc: 'Automated and manual quality checks for artifacts, color consistency, transparency, and shadow accuracy.' },
+                { step: '06', title: 'CDN Delivery', desc: 'Signed URLs served via global CDN with ~50ms average latency. PNG and WebP formats with optional transparency.' },
+              ].map((item) => (
+                <div class="flex gap-6 py-6 border-b border-white/[0.06] first:border-t">
+                  <span class="text-[11px] font-bold text-white/15 mt-0.5 shrink-0">{item.step}</span>
+                  <div>
+                    <h3 class="text-[15px] font-bold text-white mb-1.5">{item.title}</h3>
+                    <p class="text-[13px] text-white/40 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="py-24 sm:py-32 bg-[#fafafa]">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start mb-20">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Features</p>
+            <h2 class="text-4xl sm:text-5xl font-light leading-[1.05] text-black tracking-tight">
+              What makes<br />it studio-grade
+            </h2>
+          </div>
+          <p class="text-[16px] text-black/50 leading-relaxed max-w-lg self-end">
+            Every detail matters when vehicle images drive purchase decisions. Our rendering pipeline is built for accuracy and consistency at scale.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { title: 'Consistent Lighting', desc: 'Standardized studio HDRI ensures every vehicle looks like it was shot in the same professional studio environment.' },
+            { title: 'Accurate Colors', desc: 'OEM color codes matched with < 1% Delta-E. Metallic, matte, pearl, and special edition finishes rendered faithfully.' },
+            { title: 'Transparent Backgrounds', desc: 'Clean cutouts with no artifacts. Perfect for configurators, listings, and marketing materials.' },
+            { title: 'Ground Shadows', desc: 'Natural, soft ground shadows that anchor the vehicle. Available separately or composited.' },
+            { title: 'High Resolution', desc: 'From standard web resolution to 4K+. Crisp details at any zoom level — wheel textures, badges, and reflections.' },
+            { title: 'Interior Coverage', desc: '360° cockpit panoramas, dashboard close-ups, and rear-seat views with material-accurate rendering.' },
+          ].map((feature) => (
+            <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">
+              <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/10 via-black/5 to-transparent"></div>
+              <h3 class="text-[15px] font-bold text-black mb-3">{feature.title}</h3>
+              <p class="text-[13px] text-black/45 leading-relaxed">{feature.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="py-24 sm:py-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
+          <div class="lg:sticky lg:top-32">
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Consistency</p>
+            <h2 class="text-4xl sm:text-5xl font-light text-black tracking-tight leading-[1.05]">
+              Stock photos<br />vs. our API
+            </h2>
+          </div>
+          <div class="space-y-0">
+            {[
+              { aspect: 'Lighting', stock: 'Varies by photographer, location, and time of day. Inconsistent across listings.', api: 'Standardized HDRI studio environment. Every vehicle rendered under identical conditions.' },
+              { aspect: 'Color Accuracy', stock: 'Subject to white balance, editing styles, and camera sensor differences.', api: 'OEM color codes with < 1% Delta-E. Consistent across every brand and model.' },
+              { aspect: 'Angles', stock: 'Random angles, often missing key views. No guarantee of front, rear, or interior.', api: 'Up to 36 standardized camera positions per configuration. Every angle, every time.' },
+              { aspect: 'Background', stock: 'Parking lots, streets, showrooms. Distracting and inconsistent.', api: 'Clean white or transparent backgrounds. Ready for any layout or configurator.' },
+              { aspect: 'Availability', stock: 'New models delayed weeks or months. Special editions often missing.', api: 'New models available within weeks of launch. Facelifts and special editions included.' },
+            ].map((row) => (
+              <div class="py-8 border-b border-black/5 first:border-t">
+                <h3 class="text-[15px] font-bold text-black mb-4">{row.aspect}</h3>
+                <div class="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25 mb-2">Stock Photos</p>
+                    <p class="text-[13px] text-black/45 leading-relaxed">{row.stock}</p>
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[rgb(200,90,70)] mb-2">Vehicle Imagery API</p>
+                    <p class="text-[13px] text-black/60 leading-relaxed">{row.api}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="pb-24 sm:pb-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] px-8 py-20 sm:px-16 sm:py-24" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+          <div class="relative z-10 text-center max-w-2xl mx-auto">
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Get started</p>
+            <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
+              See the quality yourself
+            </h2>
+            <p class="text-[14px] text-white/45 leading-relaxed mb-12 max-w-md mx-auto">
+              Request a free trial and explore our imagery with full API access. No credit card required.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/trial" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
+                Request Trial
+              </a>
+              <a href="/coverage" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
+                Browse Coverage
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
