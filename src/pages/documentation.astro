@@ -392,7 +392,7 @@ const errornotes = [
     </section>
 
     <script>
-      function showDocSection(id) {
+      function showDocSection(id, updateHash) {
         const sections = document.querySelectorAll('.doc-section');
         const links = document.querySelectorAll('.doc-nav-link');
         sections.forEach((el) => {
@@ -401,26 +401,31 @@ const errornotes = [
         links.forEach((a) => {
           a.classList.toggle('active', a.dataset.docLink === id);
         });
-        history.replaceState(null, '', '#' + id);
+        if (updateHash) history.replaceState(null, '', '#' + id);
       }
 
       function initDocNav() {
-        const hash = (location.hash || '#authentication').slice(1);
         const validIds = ['authentication', 'base-url', 'query-params', 'hierarchy', 'errors', 'errornotes', 'rate-limits', ...['brands','models','years','variants','trims','views','colors','features','image','resolutions','formats','getall']];
-        const id = validIds.includes(hash) ? hash : 'authentication';
-        showDocSection(id);
+        const rawHash = location.hash ? location.hash.slice(1) : '';
+        const hasExplicitHash = rawHash && validIds.includes(rawHash);
+        const id = hasExplicitHash ? rawHash : 'authentication';
+        showDocSection(id, hasExplicitHash);
+
+        if (!hasExplicitHash) {
+          window.scrollTo(0, 0);
+        }
 
         document.querySelectorAll('.doc-nav-link').forEach((a) => {
           a.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = a.dataset.docLink;
-            if (targetId) showDocSection(targetId);
+            if (targetId) showDocSection(targetId, true);
           });
         });
 
         window.addEventListener('hashchange', () => {
-          const h = (location.hash || '#authentication').slice(1);
-          if (validIds.includes(h)) showDocSection(h);
+          const h = location.hash ? location.hash.slice(1) : '';
+          if (validIds.includes(h)) showDocSection(h, true);
         });
       }
 
