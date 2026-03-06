@@ -159,58 +159,30 @@ import Footer from '../components/Footer.astro';
           const wrapper = document.getElementById('contact-form-wrapper');
           const formContent = document.getElementById('contact-form-content');
           const successEl = document.getElementById('contact-success');
-          const submitBtn = document.getElementById('contact-submit-btn');
 
-          form.addEventListener('submit', async (e) => {
+          form.addEventListener('submit', (e) => {
             e.preventDefault();
+            const data = Object.fromEntries(new FormData(form).entries());
+            fetch('https://submit-form.com/v6dFS1FAS', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
 
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `
-              <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-              </svg>
-              Sending…
-            `;
+            formContent.style.opacity = '0';
+            formContent.style.transform = 'scale(0.95)';
+            formContent.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
 
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-
-            try {
-              await fetch('https://submit-form.com/v6dFS1FAS', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify(data),
+            setTimeout(() => {
+              formContent.classList.add('hidden');
+              wrapper.classList.add('success');
+              wrapper.style.backgroundColor = '#16a34a';
+              successEl.classList.remove('hidden');
+              successEl.classList.add('flex');
+              successEl.style.opacity = '0';
+              successEl.style.transform = 'scale(0.95)';
+              requestAnimationFrame(() => {
+                successEl.style.transition = 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s';
+                successEl.style.opacity = '1';
+                successEl.style.transform = 'scale(1)';
               });
-
-              formContent.style.opacity = '0';
-              formContent.style.transform = 'scale(0.95)';
-              formContent.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-
-              setTimeout(() => {
-                formContent.classList.add('hidden');
-                wrapper.classList.add('success');
-                wrapper.style.backgroundColor = '#16a34a';
-                successEl.classList.remove('hidden');
-                successEl.classList.add('flex');
-                successEl.style.opacity = '0';
-                successEl.style.transform = 'scale(0.95)';
-
-                requestAnimationFrame(() => {
-                  successEl.style.transition = 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s';
-                  successEl.style.opacity = '1';
-                  successEl.style.transform = 'scale(1)';
-                });
-              }, 400);
-            } catch {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = `
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="rotate-[-45deg]">
-                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Try again
-              `;
-            }
+            }, 300);
           });
         </script>
       </div>

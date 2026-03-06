@@ -9,6 +9,10 @@ const site = process.env.SITE_URL || 'https://vehicleimagery.com';
 export default defineConfig({
   site,
   output: 'static',
+  build: {
+    format: 'file', // page.html statt page/index.html → keine 308-Redirects auf Cloudflare Pages
+  },
+  trailingSlash: 'never', // Dev/Prod konsistent, Sitemap/Canonicals ohne Slash
 
   integrations: [
     sitemap({
