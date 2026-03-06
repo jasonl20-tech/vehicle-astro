@@ -159,6 +159,7 @@ const homepageStructuredData: unknown[] = [
     .interior-cell.img-failed .img-placeholder { display: flex; }
   </style>
 
+  <main id="main-content">
   <!-- Hero Section -->
   <section class="hero-section relative grid grid-cols-1 min-h-[calc(100svh-5rem)] md:min-h-[calc(100vh-80px)] md:h-[calc(100vh-80px)] overflow-hidden md:overflow-visible">
     <div class="pointer-events-none absolute left-0 right-0 -top-[2px] z-10" style="height:2px; background-color:var(--vi-dark); background-image:linear-gradient(to right, var(--vi-cream) 0%, var(--vi-cream) 65%, var(--vi-dark) 65%, var(--vi-dark) 100%);"></div>
@@ -166,7 +167,7 @@ const homepageStructuredData: unknown[] = [
       <div class="absolute top-0 left-0 w-full h-px bg-black/5 md:hidden"></div>
       <div class="max-w-[640px] w-full md:mt-[-15%]">
         <div class="flex items-center space-x-4 mb-6 sm:mb-8">
-          <span class="text-xs font-mono text-gray-500 uppercase">Studio Quality Standards</span>
+          <span class="text-xs font-mono text-gray-600 uppercase">Studio Quality Standards</span>
         </div>
         <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-6 sm:mb-8 text-black leading-[0.9] tracking-tighter uppercase">
           VEHICLE<br/>IMAGES<br/>API.
@@ -268,7 +269,7 @@ const homepageStructuredData: unknown[] = [
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-6 tracking-tighter">Developer Experience First</h2>
-            <p class="text-lg text-gray-400 mb-8 leading-relaxed">Our API is designed to be intuitive and powerful. Unlike legacy providers, we don&apos;t hide behind complex SDKs or sales calls. You get instant access to clean, RESTful documentation.</p>
+            <p class="text-lg text-gray-600 mb-8 leading-relaxed">Our API is designed to be intuitive and powerful. Unlike legacy providers, we don&apos;t hide behind complex SDKs or sales calls. You get instant access to clean, RESTful documentation.</p>
             <ul class="space-y-4 mb-10">
               {["RESTful API architecture", "JSON responses", "Comprehensive error handling", "99.99% Uptime SLA", "Global CDN Delivery"].map((item) => (
                 <li class="flex items-center text-gray-300">
@@ -286,7 +287,7 @@ const homepageStructuredData: unknown[] = [
                 <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
                 <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
               </div>
-              <div class="text-sm text-gray-400 font-mono">example-request.js</div>
+              <div class="text-sm text-gray-600 font-mono">example-request.js</div>
             </div>
             <div class="p-8 font-mono text-base leading-relaxed overflow-x-auto">
               <div class="text-gray-300">
@@ -319,9 +320,9 @@ const homepageStructuredData: unknown[] = [
             <div class="hidden md:block max-w-sm mt-12 p-6 bg-[#fafafa] border border-black/5 shadow-sm relative transform -rotate-1 hover:rotate-0 transition-transform duration-500">
               <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-black/5 backdrop-blur-sm border border-black/5 rotate-2"></div>
               <div class="space-y-4">
-                <div class="flex items-center space-x-2 mb-2 opacity-40">
-                  <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
-                  <span class="text-[10px] font-mono uppercase tracking-widest text-black">Technical Memo</span>
+                <div class="flex items-center space-x-2 mb-2">
+                  <div class="w-1.5 h-1.5 bg-black/60 rounded-full" aria-hidden="true"></div>
+                  <span class="text-[10px] font-mono uppercase tracking-widest text-gray-700">Technical Memo</span>
                 </div>
                 <p class="text-sm text-gray-600 leading-relaxed font-light">Our <span class="text-black font-medium">Automotive Image API</span> is engineered for speed and precision. Whether you are building a dealership website or a global leasing platform, we provide <span class="text-black font-medium">high-resolution car stock photos</span> that adapt to your brand.</p>
                 <p class="text-sm text-gray-600 leading-relaxed font-light">From <span class="text-black font-medium">transparent PNG backgrounds</span> for seamless UI integration to factory-accurate color representation, our fleet of 40,000+ assets is ready to scale with your business needs.</p>
@@ -343,7 +344,7 @@ const homepageStructuredData: unknown[] = [
                     <svg class="w-5 h-5 text-black group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={industry.icon}></path></svg>
                   </div>
                   <h3 class="text-lg font-black mb-3 text-black tracking-tight">{industry.title}</h3>
-                  <p class="text-sm text-gray-500 leading-relaxed font-light mb-6">{industry.desc}</p>
+                  <p class="text-sm text-gray-600 leading-relaxed font-light mb-6">{industry.desc}</p>
                   <span class="flex items-center text-[11px] font-bold uppercase tracking-widest text-black group-hover:text-[rgb(200,90,70)] transition-colors">
                     Explore More
                     <svg class="w-3 h-3 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
@@ -419,8 +420,8 @@ const homepageStructuredData: unknown[] = [
           <input type="email" name="email" required placeholder="you@company.com" class="flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"/>
           <button type="submit" class="px-6 py-3 font-semibold whitespace-nowrap uppercase tracking-widest text-sm transition-colors text-white hover:text-[rgb(200,90,70)]">Request Free Trial →</button>
         </form>
-        <p class="text-xs sm:text-sm text-gray-400 mt-3 sm:mt-4">We&apos;ll send you an email with your trial access details.</p>
-        <p class="text-xs sm:text-sm text-gray-500 mt-4"><a href="/trial" class="text-white/80 hover:text-[rgb(200,90,70)] transition-colors">Or visit our trial page →</a></p>
+        <p class="text-xs sm:text-sm text-gray-600 mt-3 sm:mt-4">We&apos;ll send you an email with your trial access details.</p>
+        <p class="text-xs sm:text-sm text-gray-600 mt-4"><a href="/trial" class="text-white/80 hover:text-[rgb(200,90,70)] transition-colors">Or visit our trial page →</a></p>
       </div>
     </div>
   </section>
@@ -443,7 +444,7 @@ const homepageStructuredData: unknown[] = [
                       <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     </div>
                     <div>
-                      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Email</h3>
+                      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-1">Email</h3>
                       <a href="mailto:info@vehicleimagery.com" class="text-lg font-bold text-white hover:text-[rgb(200,90,70)] transition-colors">info@vehicleimagery.com</a>
                     </div>
                   </div>
@@ -452,9 +453,9 @@ const homepageStructuredData: unknown[] = [
                       <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     </div>
                     <div>
-                      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Office</h3>
+                      <h3 class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-1">Office</h3>
                       <p class="text-white font-bold">Vehicle Imagery HQ</p>
-                      <p class="text-gray-400">Germany</p>
+                      <p class="text-gray-600">Germany</p>
                     </div>
                   </div>
                 </div>
@@ -472,20 +473,20 @@ const homepageStructuredData: unknown[] = [
               <input type="hidden" name="subject" value="Contact Form"/>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">First name</label>
+                  <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">First name</label>
                   <input type="text" name="name" required placeholder="John" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Work Email</label>
+                  <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Work Email</label>
                   <input type="email" name="email" required placeholder="john@company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
                 </div>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Domain (optional)</label>
+                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Domain (optional)</label>
                 <input type="text" name="company" placeholder="company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Message (optional)</label>
+                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Message (optional)</label>
                 <textarea rows="4" name="message" placeholder="Tell us about your project..." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all resize-none"></textarea>
               </div>
               <div class="pt-2">
@@ -505,7 +506,7 @@ const homepageStructuredData: unknown[] = [
         <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
           <div class="text-center lg:text-left">
             <h2 class="text-2xl sm:text-3xl font-black text-black tracking-tighter mb-2">Trusted Performance.</h2>
-            <a class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors" href="/status">Check System Status →</a>
+            <a class="text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-black transition-colors" href="/status">Check System Status →</a>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12">
             {[
@@ -516,7 +517,7 @@ const homepageStructuredData: unknown[] = [
             ].map((stat) => (
               <div class="text-center lg:text-left">
                 <div class="text-3xl font-black tracking-tighter text-black">{stat.value}</div>
-                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">{stat.label}</div>
+                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-600">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -548,7 +549,7 @@ const homepageStructuredData: unknown[] = [
                 <span class="text-[10px] font-bold uppercase tracking-wider text-black/70">
                   {item.category ?? item.type === 'changelog' ? 'Changelog' : 'Blog'}
                 </span>
-                <time class="text-xs font-mono text-gray-500" datetime={item.date}>
+                <time class="text-xs font-mono text-gray-600" datetime={item.date}>
                   {item.date ? new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
                 </time>
               </div>
@@ -564,12 +565,13 @@ const homepageStructuredData: unknown[] = [
         ))}
       </div>
     ) : (
-      <div class="w-full py-12 text-center text-gray-500 px-6">
+      <div class="w-full py-12 text-center text-gray-600 px-6">
         <p>No updates yet. Add changelog entries or blog posts in Contentful.</p>
       </div>
     )}
   </section>
 
+  </main>
   <Footer />
 
   <script>
