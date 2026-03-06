@@ -26,8 +26,7 @@ const { label, headline, description, stats, bodyHtml, ctaTitle, ctaDescription,
 
 {bodyHtml && (
   <section class="mx-auto max-w-[1400px] px-4 pb-24 sm:px-6 lg:px-12 text-left">
-    <div class="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
-      <div></div>
+    <div class="max-w-3xl">
       <div class="dynamic-body w-full" set:html={bodyHtml} />
     </div>
   </section>
