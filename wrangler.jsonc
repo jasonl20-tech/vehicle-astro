@@ -1,8 +1,0 @@
-{
-  "name": "vehicle-astro",
-  "compatibility_date": "2026-03-06",
-  "assets": {
-    "directory": "./dist/",
-    "html_handling": "drop-trailing-slash"
-  }
-}
