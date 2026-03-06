@@ -9,10 +9,6 @@ const site = process.env.SITE_URL || 'https://vehicleimagery.com';
 export default defineConfig({
   site,
   output: 'static',
-  trailingSlash: 'never',
-  build: {
-    format: 'file',
-  },
 
   integrations: [
     sitemap({
