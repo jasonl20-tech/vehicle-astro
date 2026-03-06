@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 
+const defaultKeywords = 'vehicle imagery API, car stock photos API, automotive imagery API, vehicle photography API, car images API, vehicle stock imagery, automotive stock photos, vehicle imagery for dealerships, car stock photos for websites, vehicle photography API documentation, automotive imagery API Europe';
+
 interface Props {
   title: string;
   description?: string;
@@ -8,34 +10,41 @@ interface Props {
   ogImageAlt?: string;
   canonicalUrl?: string;
   noIndex?: boolean;
+  keywords?: string;
 }
 
-const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl, noIndex = false } = Astro.props;
+const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl, noIndex = false, keywords = defaultKeywords } = Astro.props;
 const siteUrl = Astro.url.origin;
 const defaultOgImage = `${siteUrl}/images/hero-car.webp`;
 const ogImageUrl = ogImage
   ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`)
   : defaultOgImage;
 const ogUrl = canonicalUrl ? `${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}` : Astro.url.href;
+const ogImageWidth = 1200;
+const ogImageHeight = 630;
 ---
 
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon" />
     <link rel="icon" href="/favicon-192.png" sizes="192x192" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" type="image/png" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
-    {noIndex && <meta name="robots" content="noindex" />}
+    <meta name="keywords" content={keywords} />
+    {noIndex ? <meta name="robots" content="noindex" /> : <meta name="robots" content="index, follow" />}
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     {canonicalUrl && <link rel="canonical" href={`${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}`} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content={ogImageWidth} />
+    <meta property="og:image:height" content={ogImageHeight} />
     {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
     <meta property="og:type" content="website" />
     <meta property="og:url" content={ogUrl} />
@@ -43,6 +52,8 @@ const ogUrl = canonicalUrl ? `${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:width" content={ogImageWidth} />
+    <meta name="twitter:image:height" content={ogImageHeight} />
     <link rel="preload" as="image" href="/images/hero-car.webp" />
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
