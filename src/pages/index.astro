@@ -59,6 +59,70 @@ try {
   latestUpdates = [];
   announcementBar = null;
 }
+
+const siteUrl = Astro.url.origin;
+const homepageStructuredData: unknown[] = [
+  {
+    '@type': 'SoftwareApplication',
+    name: 'Vehicle Imagery API',
+    applicationCategory: 'DeveloperApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '150' },
+    description: 'Studio-quality vehicle imagery API with 40k+ car stock photos. CDN-optimized, simple integration for automotive businesses. Alternative to IMAGIN.studio and EVOX Images with better pricing and European coverage.',
+    url: siteUrl,
+    provider: { '@type': 'Organization', name: 'Vehicle Imagery', url: siteUrl },
+  },
+  {
+    '@type': 'Organization',
+    name: 'Vehicle Imagery',
+    url: siteUrl,
+    logo: `${siteUrl}/logo.svg`,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+49-151-4798371',
+      contactType: 'customer service',
+      email: 'support@vehicleimagery.com',
+    },
+    sameAs: ['https://x.com/VehicleImagery', 'https://www.facebook.com/profile.php?id=61581800704053'],
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is Vehicle Imagery API?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Vehicle Imagery API provides studio-quality car stock photos and automotive imagery via a simple REST API. It's designed for dealerships, leasing companies, and automotive apps needing consistent, high-quality vehicle photography.",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How many car images are available?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Our database contains over 40,000 studio-quality car stock photos, covering more than 10,000 unique car models.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Does Vehicle Imagery API offer transparent backgrounds?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, all vehicle images are available as high-resolution PNGs with transparent backgrounds, ready for seamless integration into any design or platform.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is there a free trial available?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, you can sign up for free access to test our API with real images. No credit card is required to start exploring our library.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <BaseLayout
@@ -67,6 +131,7 @@ try {
   ogImage="/images/hero-car.webp"
   ogImageAlt="Vehicle Imagery – Studio quality car photography API for dealerships and automotive platforms"
   canonicalUrl="/"
+  structuredDataGraph={homepageStructuredData}
 >
   {announcementBar && (
     <AnnouncementBar

@@ -11,9 +11,11 @@ interface Props {
   canonicalUrl?: string;
   noIndex?: boolean;
   keywords?: string;
+  /** When set (e.g. homepage), replaces default JSON-LD @graph with this one for rich results parity. */
+  structuredDataGraph?: unknown[];
 }
 
-const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl, noIndex = false, keywords = defaultKeywords } = Astro.props;
+const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl, noIndex = false, keywords = defaultKeywords, structuredDataGraph } = Astro.props;
 const siteUrl = Astro.url.origin;
 const defaultOgImage = `${siteUrl}/images/hero-car.webp`;
 const ogImageUrl = ogImage
@@ -57,7 +59,7 @@ const ogImageHeight = 630;
     <meta name="twitter:image:width" content={ogImageWidth} />
     <meta name="twitter:image:height" content={ogImageHeight} />
     <link rel="preload" as="image" href="/images/hero-car.webp" />
-    <script type="application/ld+json" set:html={JSON.stringify({
+    <script type="application/ld+json" set:html={JSON.stringify(structuredDataGraph ? { '@context': 'https://schema.org', '@graph': structuredDataGraph } : {
       '@context': 'https://schema.org',
       '@graph': [
         {
