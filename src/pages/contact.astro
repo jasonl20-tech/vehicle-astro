@@ -84,42 +84,135 @@ import Footer from '../components/Footer.astro';
         </div>
 
         <!-- Right: Form -->
-        <div class="rounded-[2rem] bg-[#f4f4f5] p-8 sm:p-12">
-          <h3 class="text-2xl font-normal text-black mb-4">Get in Touch</h3>
-          <p class="text-[13px] text-black/60 mb-10 max-w-sm leading-relaxed">
-            Define your goals and identify areas where we can add value to your business
-          </p>
+        <div id="contact-form-wrapper" class="rounded-[2rem] bg-[#f4f4f5] p-8 sm:p-12 transition-all duration-700 ease-out">
+          <!-- Form Content -->
+          <div id="contact-form-content">
+            <h3 class="text-2xl font-normal text-black mb-4">Get in Touch</h3>
+            <p class="text-[13px] text-black/60 mb-10 max-w-sm leading-relaxed">
+              Define your goals and identify areas where we can add value to your business
+            </p>
 
-          <form class="space-y-6" action="https://submit-form.com/v6dFS1FAS" method="POST">
-            <input type="hidden" name="subject" value="Contact Form – Vehicle Imagery" />
-            <input type="hidden" name="_redirect" value="/contact?sent=1" />
-            
-            <div class="relative">
-              <input type="text" name="name" required placeholder="Full name" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
+            <form id="contact-form" class="space-y-6">
+              <input type="hidden" name="subject" value="Contact Form – Vehicle Imagery" />
+              
+              <div class="relative">
+                <input type="text" name="name" required placeholder="Full name" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
+              </div>
+              
+              <div class="relative">
+                <input type="email" name="email" required placeholder="Email" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
+              </div>
+              
+              <div class="relative">
+                <input type="text" name="subject_line" placeholder="Subject" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
+              </div>
+              
+              <div class="relative">
+                <textarea name="message" rows={1} placeholder="Message" class="w-full resize-none border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors"></textarea>
+              </div>
+              
+              <div class="pt-6">
+                <button type="submit" id="contact-submit-btn" class="inline-flex items-center justify-center gap-3 rounded-full bg-[#2d2d2d] px-6 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-black">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="rotate-[-45deg]">
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Send a message
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Success State -->
+          <div id="contact-success" class="hidden flex-col items-center justify-center text-center py-12">
+            <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
+              <svg id="checkmark-svg" class="h-10 w-10" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="26" cy="26" r="24" stroke="white" stroke-width="2.5" fill="none"
+                  stroke-dasharray="150.8" stroke-dashoffset="150.8" class="checkmark-circle" />
+                <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                  fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="checkmark-check" />
+              </svg>
             </div>
-            
-            <div class="relative">
-              <input type="email" name="email" required placeholder="Email" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
-            </div>
-            
-            <div class="relative">
-              <input type="text" name="subject_line" placeholder="Subject" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
-            </div>
-            
-            <div class="relative">
-              <textarea name="message" rows={1} placeholder="Message" class="w-full resize-none border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors"></textarea>
-            </div>
-            
-            <div class="pt-6">
-              <button type="submit" class="inline-flex items-center justify-center gap-3 rounded-full bg-[#2d2d2d] px-6 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-black">
+            <h3 class="text-2xl font-normal text-white mb-3">Message Sent!</h3>
+            <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">
+              Thank you for reaching out. We'll get back to you within 24 hours.
+            </p>
+          </div>
+        </div>
+
+        <style>
+          @keyframes draw-circle {
+            to { stroke-dashoffset: 0; }
+          }
+          @keyframes draw-check {
+            to { stroke-dashoffset: 0; }
+          }
+          #contact-form-wrapper.success .checkmark-circle {
+            animation: draw-circle 0.6s ease-out 0.2s forwards;
+          }
+          #contact-form-wrapper.success .checkmark-check {
+            animation: draw-check 0.4s ease-out 0.7s forwards;
+          }
+        </style>
+
+        <script>
+          const form = document.getElementById('contact-form');
+          const wrapper = document.getElementById('contact-form-wrapper');
+          const formContent = document.getElementById('contact-form-content');
+          const successEl = document.getElementById('contact-success');
+          const submitBtn = document.getElementById('contact-submit-btn');
+
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+              <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              Sending…
+            `;
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+              await fetch('https://submit-form.com/v6dFS1FAS', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(data),
+              });
+
+              formContent.style.opacity = '0';
+              formContent.style.transform = 'scale(0.95)';
+              formContent.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+              setTimeout(() => {
+                formContent.classList.add('hidden');
+                wrapper.classList.add('success');
+                wrapper.style.backgroundColor = '#16a34a';
+                successEl.classList.remove('hidden');
+                successEl.classList.add('flex');
+                successEl.style.opacity = '0';
+                successEl.style.transform = 'scale(0.95)';
+
+                requestAnimationFrame(() => {
+                  successEl.style.transition = 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s';
+                  successEl.style.opacity = '1';
+                  successEl.style.transform = 'scale(1)';
+                });
+              }, 400);
+            } catch {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = `
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="rotate-[-45deg]">
                   <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Send a message
-              </button>
-            </div>
-          </form>
-        </div>
+                Try again
+              `;
+            }
+          });
+        </script>
       </div>
     </section>
 
