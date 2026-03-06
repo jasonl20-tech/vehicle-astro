@@ -1,0 +1,3 @@
+# Trailing Slash entfernen (301) – alle URLs ohne / am Ende
+# https://developers.cloudflare.com/pages/configuration/redirects/
+/*/  /:splat  301
