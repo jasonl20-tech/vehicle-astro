@@ -46,8 +46,8 @@ const { label, headline, description, stats, features, bodyHtml, ctaTitle, ctaDe
 {stats && stats.length > 0 && <StatsSection stats={stats} />}
 
 {bodyHtml && (
-  <section class="py-24 sm:py-32">
-    <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+  <section class="py-24 sm:py-32 text-left">
+    <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16 flex flex-col items-start">
       <div class="dynamic-body" set:html={bodyHtml} />
     </div>
   </section>

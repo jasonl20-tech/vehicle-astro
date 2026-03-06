@@ -33,8 +33,11 @@ img {
 
 /* Dynamische Seiten (Contentful Body): linksbündig, Formatierung erhalten – ohne @tailwindcss/typography */
 .dynamic-body {
-  text-align: left;
+  text-align: left !important;
   max-width: 48rem;
+  width: 100%;
+  margin-left: 0;
+  margin-right: auto;
   font-size: 1rem;
   line-height: 1.75;
   color: rgba(0, 0, 0, 0.6);
@@ -42,7 +45,7 @@ img {
 .dynamic-body p {
   margin-top: 0;
   margin-bottom: 1rem;
-  text-align: left;
+  text-align: left !important;
 }
 .dynamic-body p:last-child {
   margin-bottom: 0;
@@ -69,7 +72,7 @@ img {
 .dynamic-body h4,
 .dynamic-body h5,
 .dynamic-body h6 {
-  text-align: left;
+  text-align: left !important;
   font-weight: 700;
   color: #000;
   margin-top: 1.75em;
@@ -94,7 +97,7 @@ img {
   margin-top: 1rem;
   margin-bottom: 1rem;
   padding-left: 1.5em;
-  text-align: left;
+  text-align: left !important;
 }
 .dynamic-body ul { list-style-type: disc; }
 .dynamic-body ol { list-style-type: decimal; }
@@ -121,4 +124,9 @@ img {
   margin: 2em 0;
   border: none;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+/* Alle Nachfahren linksbündig (übersteuert ggf. Inline-Styles aus Contentful) */
+.dynamic-body div,
+.dynamic-body span {
+  text-align: left !important;
 }

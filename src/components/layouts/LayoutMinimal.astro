@@ -21,8 +21,8 @@ const { label, headline, description, bodyHtml, ctaTitle, ctaDescription, ctaBut
 <HeroSection label={label} headline={headline} description={description} narrow />
 
 {bodyHtml && (
-  <section class="mx-auto max-w-3xl px-6 pb-24 sm:px-12 lg:px-16">
-    <div class="dynamic-body" set:html={bodyHtml} />
+  <section class="mx-auto max-w-3xl px-6 pb-24 sm:px-12 lg:px-16 text-left">
+    <div class="dynamic-body w-full" set:html={bodyHtml} />
   </section>
 )}
 

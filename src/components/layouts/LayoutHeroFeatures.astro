@@ -29,8 +29,8 @@ const { label, headline, description, stats, features, bodyHtml, ctaTitle, ctaDe
 {features && features.length > 0 && <FeatureList features={features} label={label} heading={headline} />}
 
 {bodyHtml && (
-  <section class="mx-auto max-w-[1400px] px-6 pb-24 sm:px-12 lg:px-16">
-    <div class="dynamic-body" set:html={bodyHtml} />
+  <section class="mx-auto max-w-[1400px] px-6 pb-24 sm:px-12 lg:px-16 text-left">
+    <div class="dynamic-body w-full" set:html={bodyHtml} />
   </section>
 )}
 
