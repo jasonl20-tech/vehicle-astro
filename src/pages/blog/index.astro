@@ -83,7 +83,7 @@ try {
 
 <BaseLayout
   title="Blog | Vehicle Imagery API"
-  description="Updates, API-Tipps und Einblicke – Vehicle Imagery Blog."
+  description="Updates, API tips, and insights – Vehicle Imagery Blog. Studio quality standards for developers and product teams."
   ogImage="/images/hero-car.webp"
   canonicalUrl="/blog"
 >
@@ -95,7 +95,7 @@ try {
         <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Vehicle Imagery</p>
         <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">Blog</h1>
         <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
-          Updates, API-Tipps und Einblicke. Studio Quality Standards für Entwickler und Produktteams.
+          Updates, API tips, and insights. Studio quality standards for developers and product teams.
         </p>
       </div>
     </section>
@@ -142,7 +142,7 @@ try {
                       {post.authorAvatarUrl && (
                         <img
                           src={post.authorAvatarUrl.startsWith('http') ? post.authorAvatarUrl : `https:${post.authorAvatarUrl}`}
-                          alt=""
+                          alt={post.authorName ? `${post.authorName} avatar` : ''}
                           class="h-9 w-9 rounded-full object-cover ring-2 ring-white"
                           width="36"
                           height="36"
@@ -152,7 +152,7 @@ try {
                         {post.authorName && <span class="font-medium text-[#1C2B32]/80">{post.authorName}</span>}
                         {post.date && (
                           <time datetime={post.date}>
-                            {new Date(post.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            {new Date(post.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
                           </time>
                         )}
                         {post.readingTimeMinutes != null && (

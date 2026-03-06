@@ -5,13 +5,13 @@ import Footer from '../components/Footer.astro';
 ---
 
 <BaseLayout
-  title="Seite nicht gefunden (404) | Vehicle Imagery"
-  description="Die angeforderte Seite existiert nicht. Zurück zur Startseite oder nutzen Sie die Navigation."
+  title="Page not found (404) | Vehicle Imagery"
+  description="The page you requested could not be found. Return to the homepage or use the navigation."
   noIndex={true}
 >
   <Header />
   <main class="min-h-[70vh] bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-    <!-- Hero-Bereich -->
+    <!-- Hero -->
     <section class="px-4 pt-8 pb-16 sm:px-8 lg:px-12">
       <div class="mx-auto max-w-[1400px]">
         <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] min-h-[320px] sm:min-h-[380px] flex flex-col justify-center items-center">
@@ -25,20 +25,20 @@ import Footer from '../components/Footer.astro';
           <div class="absolute inset-0 opacity-20" style="background: linear-gradient(135deg, transparent 0%, rgba(200,90,70,0.3) 100%);" aria-hidden="true" />
 
           <div class="relative text-center px-6 py-12">
-            <p class="text-[11px] font-medium tracking-widest text-white/60 uppercase mb-4">Fehler</p>
+            <p class="text-[11px] font-medium tracking-widest text-white/60 uppercase mb-4">Error</p>
             <h1 class="text-8xl sm:text-9xl font-light tracking-tighter text-white mb-4" style="text-shadow: 0 0 60px rgba(0,0,0,0.3);">404</h1>
             <p class="text-xl sm:text-2xl font-normal text-white/90 max-w-md mx-auto mb-2">
-              Diese Seite existiert nicht oder wurde verschoben.
+              This page does not exist or has been moved.
             </p>
             <p class="text-sm text-white/60 max-w-sm mx-auto mb-10">
-              Nutzen Sie die Navigation oder kehren Sie zur Startseite zurück.
+              Use the navigation or return to the homepage.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a href="/" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[rgb(200,90,70)] text-white font-medium hover:opacity-90 transition-opacity shadow-lg shadow-[rgb(200,90,70)]/20">
-                Zur Startseite
+                Back to homepage
               </a>
               <a href="/contact" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/30 text-white font-medium hover:bg-white/10 transition-colors">
-                Kontakt
+                Contact
               </a>
             </div>
           </div>
@@ -46,9 +46,9 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <!-- Hilfreiche Links -->
+    <!-- Helpful links -->
     <section class="mx-auto max-w-4xl px-6 pb-24 pt-4 sm:px-12">
-      <p class="text-[11px] font-medium text-black/50 mb-6 text-center">/ hilfreiche links /</p>
+      <p class="text-[11px] font-medium text-black/50 mb-6 text-center">/ helpful links /</p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
         <a href="/documentation" class="block p-4 rounded-2xl bg-black/[0.03] hover:bg-black/[0.06] transition-colors">
           <span class="text-[13px] font-medium text-black block">Documentation</span>
@@ -56,15 +56,15 @@ import Footer from '../components/Footer.astro';
         </a>
         <a href="/pricing" class="block p-4 rounded-2xl bg-black/[0.03] hover:bg-black/[0.06] transition-colors">
           <span class="text-[13px] font-medium text-black block">Pricing</span>
-          <span class="text-[12px] text-black/50">Pläne & Trial</span>
+          <span class="text-[12px] text-black/50">Plans &amp; Trial</span>
         </a>
         <a href="/faq" class="block p-4 rounded-2xl bg-black/[0.03] hover:bg-black/[0.06] transition-colors">
           <span class="text-[13px] font-medium text-black block">FAQ</span>
-          <span class="text-[12px] text-black/50">Häufige Fragen</span>
+          <span class="text-[12px] text-black/50">Common questions</span>
         </a>
         <a href="/blog" class="block p-4 rounded-2xl bg-black/[0.03] hover:bg-black/[0.06] transition-colors">
           <span class="text-[13px] font-medium text-black block">Blog</span>
-          <span class="text-[12px] text-black/50">Aktuelles</span>
+          <span class="text-[12px] text-black/50">Updates &amp; news</span>
         </a>
       </div>
     </section>

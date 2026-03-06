@@ -49,9 +49,14 @@ export async function getStaticPaths() {
 const { entry, type, assetMap } = Astro.props;
 
 if (type === 'page') {
-  var pageTitle = entry?.fields?.title ?? 'Seite';
+  var pageTitle = entry?.fields?.title ?? 'Page';
+  var pageSlug = entry?.fields?.slug as string | undefined;
+  var pageCanonical = pageSlug ? `/${pageSlug}` : undefined;
   var pageBody = entry?.fields?.body;
   var pageBodyHtml = pageBody ? documentToHtmlString(pageBody) : '';
+  var pageDescription = entry?.fields?.seoDescription
+    ? (typeof entry.fields.seoDescription === 'string' ? entry.fields.seoDescription : richTextToPlainText(entry.fields.seoDescription as any, 160))
+    : pageTitle;
 }
 
 if (type === 'dynamicPage') {
@@ -110,7 +115,7 @@ if (type === 'dynamicPage') {
 ---
 
 {type === 'page' && (
-  <BaseLayout title={pageTitle!} description={pageTitle!}>
+  <BaseLayout title={pageTitle!} description={pageDescription!} canonicalUrl={pageCanonical}>
     <Header />
     <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
       <article>
@@ -118,7 +123,7 @@ if (type === 'dynamicPage') {
         {pageBodyHtml ? (
           <div class="prose prose-lg mt-8" set:html={pageBodyHtml!} />
         ) : (
-          <p class="mt-8 text-gray-600">Kein Inhalt.</p>
+          <p class="mt-8 text-gray-600">No content.</p>
         )}
       </article>
     </main>
