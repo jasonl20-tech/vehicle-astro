@@ -1,6 +1,8 @@
 ---
 import { getEntries } from '../lib/contentful';
 
+const noTrailingSlash = (url: string) => (url || '').replace(/\/+$/, '') || '/';
+
 interface DynamicLink {
   label: string;
   href: string;
@@ -24,7 +26,8 @@ try {
     const category = (f.category as string) || 'Other';
     const slug = f.slug as string;
     const prefix = f.urlPrefix as string | undefined;
-    const href = prefix ? `/${prefix}/${slug}` : `/${slug}`;
+    const rawHref = prefix ? `/${prefix}/${slug}` : `/${slug}`;
+    const href = rawHref.replace(/\/+$/, '') || '/';
     const label = (f.footerLabel as string) || (f.title as string) || slug;
     const order = (f.order as number) || 999;
 
@@ -55,8 +58,8 @@ const totalCols = 4 + dynamicCategories.length;
           </div>
           <p class="text-gray-300 text-lg leading-relaxed mb-8">The developer-first vehicle imagery API.<br/>Studio quality. Global CDN. Transparent pricing.</p>
           <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <a class="bg-white text-black px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] hover:text-white transition-colors text-center sm:text-left" href="/trial">Get API Key</a>
-            <a class="border border-white/30 text-white px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-white/10 transition-colors text-center sm:text-left" href="/book-a-call">Book a Call</a>
+            <a class="bg-white text-black px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] hover:text-white transition-colors text-center sm:text-left" href={noTrailingSlash('/trial')}>Get API Key</a>
+            <a class="border border-white/30 text-white px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-white/10 transition-colors text-center sm:text-left" href={noTrailingSlash('/book-a-call')}>Book a Call</a>
           </div>
         </div>
         <div class="w-full lg:w-auto flex flex-col items-center text-center lg:items-end lg:text-left">
@@ -80,27 +83,27 @@ const totalCols = 4 + dynamicCategories.length;
         <div>
           <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">Product</h4>
           <ul class="space-y-4 text-sm text-gray-300">
-            <li><a class="hover:text-white transition-colors" href="/documentation">Documentation</a></li>
-            <li><a class="hover:text-white transition-colors" href="/pricing">Pricing</a></li>
-            <li><a class="hover:text-white transition-colors" href="/trial">Free Trial</a></li>
-            <li><a class="hover:text-white transition-colors" href="/book-a-call">Book a Call</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/documentation')}>Documentation</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/pricing')}>Pricing</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/trial')}>Free Trial</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/book-a-call')}>Book a Call</a></li>
           </ul>
         </div>
         <div>
           <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">Coverage</h4>
           <ul class="space-y-4 text-sm text-gray-400">
-            <li><a class="hover:text-white transition-colors" href="/coverage">All Brands</a></li>
-            <li><a class="hover:text-white transition-colors" href="/coverage/global">Global Coverage</a></li>
-            <li><a class="hover:text-white transition-colors" href="/coverage/vehicle-types">Vehicle Types</a></li>
-            <li><a class="hover:text-white transition-colors" href="/coverage/quality">Studio Quality</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/coverage')}>All Brands</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/coverage/global')}>Global Coverage</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/coverage/vehicle-types')}>Vehicle Types</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/coverage/quality')}>Studio Quality</a></li>
           </ul>
         </div>
         <div>
           <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">Resources</h4>
           <ul class="space-y-4 text-sm text-gray-300">
-            <li><a class="hover:text-white transition-colors" href="/blog">Blog</a></li>
-            <li><a class="hover:text-white transition-colors" href="/changelog">Changelog</a></li>
-            <li><a class="hover:text-white transition-colors" href="/faq">FAQ</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/blog')}>Blog</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/changelog')}>Changelog</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/faq')}>FAQ</a></li>
           </ul>
         </div>
 
@@ -109,7 +112,7 @@ const totalCols = 4 + dynamicCategories.length;
             <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{cat.name}</h4>
             <ul class="space-y-4 text-sm text-gray-400">
               {cat.links.map((link) => (
-                <li><a class="hover:text-white transition-colors" href={link.href}>{link.label}</a></li>
+                <li><a class="hover:text-white transition-colors" href={noTrailingSlash(link.href)}>{link.label}</a></li>
               ))}
             </ul>
           </div>
@@ -118,11 +121,11 @@ const totalCols = 4 + dynamicCategories.length;
         <div>
           <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">Company</h4>
           <ul class="space-y-4 text-sm text-gray-300">
-            <li><a class="hover:text-white transition-colors" href="/team">Team</a></li>
-            <li><a class="hover:text-white transition-colors" href="/contact">Contact</a></li>
-            <li><a class="hover:text-white transition-colors" href="/support">Support</a></li>
-            <li><a class="hover:text-white transition-colors" href="/partners">Partners</a></li>
-            <li><a class="hover:text-white transition-colors" href="/press">Press</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/team')}>Team</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/contact')}>Contact</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/support')}>Support</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/partners')}>Partners</a></li>
+            <li><a class="hover:text-white transition-colors" href={noTrailingSlash('/press')}>Press</a></li>
           </ul>
         </div>
       </div>
@@ -131,13 +134,13 @@ const totalCols = 4 + dynamicCategories.length;
       <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
         <p class="text-sm text-gray-300">© {new Date().getFullYear()} Vehicle Imagery. Made with German engineering.</p>
         <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-300">
-          <a class="hover:text-white transition-colors" href="/impressum">Imprint</a>
+          <a class="hover:text-white transition-colors" href={noTrailingSlash('/impressum')}>Imprint</a>
           <span class="text-white/30" aria-hidden="true">·</span>
-          <a class="hover:text-white transition-colors" href="/privacy">Privacy Policy</a>
+          <a class="hover:text-white transition-colors" href={noTrailingSlash('/privacy')}>Privacy Policy</a>
           <span class="text-white/30" aria-hidden="true">·</span>
-          <a class="hover:text-white transition-colors" href="/terms">Terms of Service</a>
+          <a class="hover:text-white transition-colors" href={noTrailingSlash('/terms')}>Terms of Service</a>
           <span class="text-white/30" aria-hidden="true">·</span>
-          <a class="hover:text-white transition-colors" href="/cookies">Cookie Settings</a>
+          <a class="hover:text-white transition-colors" href={noTrailingSlash('/cookies')}>Cookie Settings</a>
         </div>
         <div class="flex items-center gap-4">
           <a class="text-gray-300 hover:text-white transition-colors" href="https://twitter.com" aria-label="X (Twitter)">

@@ -13,6 +13,9 @@ try {
   changelogs = [];
 }
 
+// URLs ohne trailing Slash (konsistent mit trailingSlash: 'never')
+const noTrailingSlash = (url: string) => (url || '').replace(/\/+$/, '') || '/';
+
 const navItems = [
   {
     href: '/coverage',
@@ -76,7 +79,7 @@ const navItems = [
       
       <!-- Logo & Desktop Nav -->
       <div class="flex flex-1 items-center gap-6 lg:gap-9">
-        <a href="/" class="group flex shrink-0 items-center transition-opacity hover:opacity-80" aria-label="Vehicle Imagery Home">
+        <a href={noTrailingSlash('/')} class="group flex shrink-0 items-center transition-opacity hover:opacity-80" aria-label="Vehicle Imagery Home">
           <img
             src="/logo.svg"
             alt="Vehicle Imagery"
@@ -89,7 +92,7 @@ const navItems = [
           {navItems.map((item) => (
             <div class="group/nav relative flex h-20 items-center" data-nav-item>
               <a
-                href={item.href}
+                href={noTrailingSlash(item.href)}
                 class="peer relative text-[13px] lg:text-[14px] font-medium text-white/80 transition-colors duration-200 hover:text-white"
               >
                 {item.label}
@@ -123,7 +126,7 @@ const navItems = [
                     <ul class="flex flex-col gap-1">
                       {item.overlay.map((sub) => (
                         <li>
-                          <a href={sub.href} class="group/item flex flex-col justify-center px-4 py-3 -mx-4 border border-transparent transition-colors hover:bg-white/5">
+                          <a href={noTrailingSlash(sub.href)} class="group/item flex flex-col justify-center px-4 py-3 -mx-4 border border-transparent transition-colors hover:bg-white/5">
                             <span class="text-[14px] font-bold text-white/90 transition-colors group-hover/item:text-white">{sub.label}</span>
                             <span class="text-[12px] font-medium text-white/40 transition-colors group-hover/item:text-white/60">{sub.desc}</span>
                           </a>
@@ -138,7 +141,7 @@ const navItems = [
                     <div class="flex flex-col gap-6">
                       {changelogs.length > 0 ? (
                         changelogs.map((log) => (
-                          <a href={`/changelog/${log.fields.slug || ''}`} class="group/feat flex flex-col gap-2">
+                          <a href={noTrailingSlash(`/changelog/${log.fields.slug || ''}`)} class="group/feat flex flex-col gap-2">
                             <span class="text-[10px] font-bold uppercase tracking-widest text-[#FF8844]">
                               {new Date(log.sys.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </span>
@@ -166,7 +169,7 @@ const navItems = [
                         Get in touch with our team for custom requests and technical support.
                       </p>
                     </div>
-                    <a href="/contact" class="group/contact flex items-center justify-between border border-white/20 bg-transparent px-4 py-3 text-[13px] font-bold text-white transition-all duration-300 hover:border-white/50 hover:bg-white/5">
+                    <a href={noTrailingSlash('/contact')} class="group/contact flex items-center justify-between border border-white/20 bg-transparent px-4 py-3 text-[13px] font-bold text-white transition-all duration-300 hover:border-white/50 hover:bg-white/5">
                       <span>Contact Us</span>
                       <svg class="h-4 w-4 transition-transform duration-300 group-hover/contact:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="square" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -183,13 +186,13 @@ const navItems = [
       <!-- CTA Buttons + Mobile Menu Button -->
       <div class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2 sm:right-6 sm:gap-3 lg:right-12">
         <a
-          href="/book-a-call"
+          href={noTrailingSlash('/book-a-call')}
           class="hidden h-9 items-center justify-center border border-white/40 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:border-white hover:bg-white/5 sm:inline-flex"
         >
           Book a Call
         </a>
         <a
-          href="/trial"
+          href={noTrailingSlash('/trial')}
           class="inline-flex h-9 items-center justify-center border border-white bg-white px-4 text-[13px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-[rgb(255,254,252)] hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]"
         >
           Try Now
@@ -225,14 +228,14 @@ const navItems = [
         {navItems.map((item, idx) => (
           <div class="border-b border-white/5" data-mobile-nav-item>
             <div class="flex items-center justify-between gap-2">
-              <a href={item.href} class="flex-1 py-3.5 pl-4 pr-2 text-[15px] font-semibold text-white/95">{item.label}</a>
+              <a href={noTrailingSlash(item.href)} class="flex-1 py-3.5 pl-4 pr-2 text-[15px] font-semibold text-white/95">{item.label}</a>
               <button type="button" class="mobile-nav-toggle flex h-11 w-11 shrink-0 items-center justify-center text-white/60 hover:bg-white/5 hover:text-white" aria-expanded="false" aria-controls={`mobile-sub-${idx}`} id={`mobile-toggle-${idx}`} data-mobile-toggle data-target={`mobile-sub-${idx}`}>
                 <svg class="h-5 w-5 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
               </button>
             </div>
             <div id={`mobile-sub-${idx}`} class="hidden flex-col border-t border-white/5 bg-[#0f1a1d] pb-2" data-mobile-sub>
               {item.overlay.map((sub) => (
-                <a href={sub.href} class="mobile-menu-link block border-l-2 border-transparent py-2.5 pl-6 pr-4 text-[14px] font-medium text-white/75 transition-colors hover:border-white/30 hover:bg-white/5 hover:text-white">
+                <a href={noTrailingSlash(sub.href)} class="mobile-menu-link block border-l-2 border-transparent py-2.5 pl-6 pr-4 text-[14px] font-medium text-white/75 transition-colors hover:border-white/30 hover:bg-white/5 hover:text-white">
                   {sub.label}
                 </a>
               ))}
@@ -240,10 +243,10 @@ const navItems = [
           </div>
         ))}
         <div class="mt-4 flex flex-col gap-3 px-4">
-          <a href="/book-a-call" class="mobile-menu-link flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10">
+          <a href={noTrailingSlash('/book-a-call')} class="mobile-menu-link flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10">
             Book a Call
           </a>
-          <a href="/trial" class="mobile-menu-link flex items-center justify-center border border-white py-3.5 text-[14px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-white/90">
+          <a href={noTrailingSlash('/trial')} class="mobile-menu-link flex items-center justify-center border border-white py-3.5 text-[14px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-white/90">
             Try Now
           </a>
         </div>
