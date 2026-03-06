@@ -417,12 +417,50 @@ const homepageStructuredData: unknown[] = [
       <div class="max-w-[1024px] mx-auto">
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Try it free</h2>
         <p class="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8">Request your free trial access. Enter your email and we&apos;ll send you everything you need to get started. No credit card required.</p>
-        <form class="flex flex-col sm:flex-row gap-0 max-w-lg mx-auto border-b border-white/20 pb-2" action="https://submit-form.com/v6dFS1FAS" method="POST">
-          <input type="hidden" name="subject" value="Free Trial Request"/>
-          <input type="email" name="email" required placeholder="you@company.com" class="flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"/>
-          <button type="submit" class="px-6 py-3 font-semibold whitespace-nowrap uppercase tracking-widest text-sm transition-colors text-white hover:text-[rgb(200,90,70)]">Request Free Trial →</button>
-        </form>
-        <p class="text-xs sm:text-sm text-gray-600 mt-3 sm:mt-4">We&apos;ll send you an email with your trial access details.</p>
+        <div id="idx-trial-wrapper">
+          <div id="idx-trial-content">
+            <form id="idx-trial-form" class="flex flex-col sm:flex-row gap-0 max-w-lg mx-auto border-b border-white/20 pb-2">
+              <input type="hidden" name="subject" value="Free Trial Request"/>
+              <input type="email" name="email" required placeholder="you@company.com" class="flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"/>
+              <button type="submit" id="idx-trial-btn" class="px-6 py-3 font-semibold whitespace-nowrap uppercase tracking-widest text-sm transition-colors text-white hover:text-[rgb(200,90,70)]">Request Free Trial →</button>
+            </form>
+            <p class="text-xs sm:text-sm text-gray-600 mt-3 sm:mt-4">We&apos;ll send you an email with your trial access details.</p>
+          </div>
+          <div id="idx-trial-success" class="hidden items-center justify-center gap-3 py-4">
+            <svg class="h-6 w-6 text-emerald-400" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="26" r="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-dasharray="150.8" stroke-dashoffset="150.8" class="idx-trial-circle" />
+              <path d="M15 27L23 35L37 19" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="idx-trial-check" />
+            </svg>
+            <p class="text-white text-lg font-semibold">Request sent! Check your inbox.</p>
+          </div>
+        </div>
+
+        <style>
+          @keyframes idx-trial-dc { to { stroke-dashoffset: 0; } }
+          @keyframes idx-trial-dk { to { stroke-dashoffset: 0; } }
+          #idx-trial-wrapper.success .idx-trial-circle { animation: idx-trial-dc 0.6s ease-out 0.2s forwards; }
+          #idx-trial-wrapper.success .idx-trial-check { animation: idx-trial-dk 0.4s ease-out 0.7s forwards; }
+        </style>
+
+        <script>
+          (function() {
+            const form = document.getElementById('idx-trial-form');
+            const wrapper = document.getElementById('idx-trial-wrapper');
+            const content = document.getElementById('idx-trial-content');
+            const success = document.getElementById('idx-trial-success');
+            const btn = document.getElementById('idx-trial-btn');
+            form.addEventListener('submit', async (e) => {
+              e.preventDefault();
+              btn.disabled = true; btn.textContent = 'Sending…';
+              const data = Object.fromEntries(new FormData(form).entries());
+              try {
+                await fetch('https://submit-form.com/v6dFS1FAS', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) });
+                content.style.opacity = '0'; content.style.transition = 'opacity 0.4s ease';
+                setTimeout(() => { content.classList.add('hidden'); wrapper.classList.add('success'); success.classList.remove('hidden'); success.classList.add('flex'); success.style.opacity = '0'; requestAnimationFrame(() => { success.style.transition = 'opacity 0.5s ease'; success.style.opacity = '1'; }); }, 400);
+              } catch { btn.disabled = false; btn.textContent = 'Try again →'; }
+            });
+          })();
+        </script>
         <p class="text-xs sm:text-sm text-gray-600 mt-4"><a href="/trial" class="text-white/80 hover:text-[rgb(200,90,70)] transition-colors">Or visit our trial page →</a></p>
       </div>
     </div>
@@ -470,32 +508,72 @@ const homepageStructuredData: unknown[] = [
               </div>
             </div>
           </div>
-          <div class="lg:w-[60%] p-10 sm:p-12 lg:p-16">
-            <form class="space-y-6" action="https://submit-form.com/v6dFS1FAS" method="POST">
-              <input type="hidden" name="subject" value="Contact Form"/>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">First name</label>
-                  <input type="text" name="name" required placeholder="John" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+          <div id="idx-contact-wrapper" class="lg:w-[60%] p-10 sm:p-12 lg:p-16 transition-all duration-700 ease-out">
+            <div id="idx-contact-content">
+              <form id="idx-contact-form" class="space-y-6">
+                <input type="hidden" name="subject" value="Contact Form"/>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">First name</label>
+                    <input type="text" name="name" required placeholder="John" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Work Email</label>
+                    <input type="email" name="email" required placeholder="john@company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                  </div>
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Work Email</label>
-                  <input type="email" name="email" required placeholder="john@company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                  <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Domain (optional)</label>
+                  <input type="text" name="company" placeholder="company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
                 </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Message (optional)</label>
+                  <textarea rows="4" name="message" placeholder="Tell us about your project..." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all resize-none"></textarea>
+                </div>
+                <div class="pt-2">
+                  <button type="submit" id="idx-contact-btn" class="w-full px-8 py-4 rounded-[2px] text-sm font-bold uppercase tracking-widest transition-colors shadow-lg bg-black text-white hover:bg-[rgb(200,90,70)] hover:shadow-xl transform hover:-translate-y-0.5 duration-200">Send Message</button>
+                </div>
+              </form>
+            </div>
+
+            <div id="idx-contact-success" class="hidden flex-col items-center justify-center text-center py-16">
+              <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
+                <svg class="h-10 w-10 text-emerald-600" viewBox="0 0 52 52" fill="none">
+                  <circle cx="26" cy="26" r="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-dasharray="150.8" stroke-dashoffset="150.8" class="idx-contact-circle" />
+                  <path d="M15 27L23 35L37 19" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="idx-contact-check" />
+                </svg>
               </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Domain (optional)</label>
-                <input type="text" name="company" placeholder="company.com" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">Message (optional)</label>
-                <textarea rows="4" name="message" placeholder="Tell us about your project..." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all resize-none"></textarea>
-              </div>
-              <div class="pt-2">
-                <button type="submit" class="w-full px-8 py-4 rounded-[2px] text-sm font-bold uppercase tracking-widest transition-colors shadow-lg bg-black text-white hover:bg-[rgb(200,90,70)] hover:shadow-xl transform hover:-translate-y-0.5 duration-200">Send Message</button>
-              </div>
-            </form>
+              <h3 class="text-2xl font-bold text-black mb-3">Message Sent!</h3>
+              <p class="text-[14px] text-black/60 max-w-xs leading-relaxed">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+            </div>
           </div>
+
+          <style>
+            @keyframes idx-contact-dc { to { stroke-dashoffset: 0; } }
+            @keyframes idx-contact-dk { to { stroke-dashoffset: 0; } }
+            #idx-contact-wrapper.success .idx-contact-circle { animation: idx-contact-dc 0.6s ease-out 0.2s forwards; }
+            #idx-contact-wrapper.success .idx-contact-check { animation: idx-contact-dk 0.4s ease-out 0.7s forwards; }
+          </style>
+
+          <script>
+            (function() {
+              const form = document.getElementById('idx-contact-form');
+              const wrapper = document.getElementById('idx-contact-wrapper');
+              const formContent = document.getElementById('idx-contact-content');
+              const successEl = document.getElementById('idx-contact-success');
+              const submitBtn = document.getElementById('idx-contact-btn');
+              form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                submitBtn.disabled = true; submitBtn.textContent = 'Sending…';
+                const data = Object.fromEntries(new FormData(form).entries());
+                try {
+                  await fetch('https://submit-form.com/v6dFS1FAS', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) });
+                  formContent.style.opacity = '0'; formContent.style.transform = 'scale(0.95)'; formContent.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                  setTimeout(() => { formContent.classList.add('hidden'); wrapper.classList.add('success'); wrapper.style.backgroundColor = '#f0fdf4'; successEl.classList.remove('hidden'); successEl.classList.add('flex'); successEl.style.opacity = '0'; successEl.style.transform = 'scale(0.95)'; requestAnimationFrame(() => { successEl.style.transition = 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s'; successEl.style.opacity = '1'; successEl.style.transform = 'scale(1)'; }); }, 400);
+                } catch { submitBtn.disabled = false; submitBtn.textContent = 'Try again'; }
+              });
+            })();
+          </script>
         </div>
       </div>
     </div>

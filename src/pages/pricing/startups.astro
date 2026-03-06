@@ -92,32 +92,74 @@ const benefits = [
               We'll reply within 24 hours with a tailored offer and next steps.
             </p>
 
-            <form class="space-y-5" action="https://submit-form.com/v6dFS1FAS" method="POST">
-              <input type="hidden" name="subject" value="Pricing – Startup Plan Request" />
-              <input type="hidden" name="_redirect" value="/pricing/startups?sent=1" />
+            <div id="startups-form-wrapper" class="transition-all duration-700 ease-out">
+              <div id="startups-form-content">
+                <form id="startups-form" class="space-y-5">
+                  <input type="hidden" name="subject" value="Pricing – Startup Plan Request" />
 
-              <div>
-                <input type="text" name="name" required placeholder="Your name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
-              </div>
-              <div>
-                <input type="email" name="email" required placeholder="Work email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
-              </div>
-              <div>
-                <input type="text" name="company" placeholder="Company / Product" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
-              </div>
-              <div>
-                <textarea name="message" rows="3" placeholder="Tell us about your stage, expected usage, and what you're building..." class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
+                  <div>
+                    <input type="text" name="name" required placeholder="Your name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                  </div>
+                  <div>
+                    <input type="email" name="email" required placeholder="Work email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                  </div>
+                  <div>
+                    <input type="text" name="company" placeholder="Company / Product" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                  </div>
+                  <div>
+                    <textarea name="message" rows="3" placeholder="Tell us about your stage, expected usage, and what you're building..." class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
+                  </div>
+
+                  <div class="pt-4">
+                    <button type="submit" id="startups-submit-btn" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white w-full sm:w-auto">
+                      <span>Request Startup Quote</span>
+                      <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </form>
               </div>
 
-              <div class="pt-4">
-                <button type="submit" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white w-full sm:w-auto">
-                  <span>Request Startup Quote</span>
-                  <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              <div id="startups-success" class="hidden flex-col items-center justify-center text-center py-12">
+                <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
+                  <svg class="h-10 w-10" viewBox="0 0 52 52" fill="none">
+                    <circle cx="26" cy="26" r="24" stroke="white" stroke-width="2.5" fill="none" stroke-dasharray="150.8" stroke-dashoffset="150.8" class="startups-circle" />
+                    <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="startups-check" />
                   </svg>
-                </button>
+                </div>
+                <h3 class="text-2xl font-normal text-white mb-3">Quote Requested!</h3>
+                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">We'll reply within 24 hours with a tailored offer.</p>
               </div>
-            </form>
+            </div>
+
+            <style>
+              @keyframes startups-draw-circle { to { stroke-dashoffset: 0; } }
+              @keyframes startups-draw-check { to { stroke-dashoffset: 0; } }
+              #startups-form-wrapper.success .startups-circle { animation: startups-draw-circle 0.6s ease-out 0.2s forwards; }
+              #startups-form-wrapper.success .startups-check { animation: startups-draw-check 0.4s ease-out 0.7s forwards; }
+            </style>
+
+            <script>
+              (function() {
+                const form = document.getElementById('startups-form');
+                const wrapper = document.getElementById('startups-form-wrapper');
+                const formContent = document.getElementById('startups-form-content');
+                const successEl = document.getElementById('startups-success');
+                const submitBtn = document.getElementById('startups-submit-btn');
+                form.addEventListener('submit', async (e) => {
+                  e.preventDefault();
+                  submitBtn.disabled = true;
+                  submitBtn.innerHTML = '<svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Sending…';
+                  const data = Object.fromEntries(new FormData(form).entries());
+                  try {
+                    await fetch('https://submit-form.com/v6dFS1FAS', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) });
+                    formContent.style.opacity = '0'; formContent.style.transform = 'scale(0.95)'; formContent.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    setTimeout(() => { formContent.classList.add('hidden'); wrapper.classList.add('success'); successEl.classList.remove('hidden'); successEl.classList.add('flex'); successEl.style.opacity = '0'; successEl.style.transform = 'scale(0.95)'; requestAnimationFrame(() => { successEl.style.transition = 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s'; successEl.style.opacity = '1'; successEl.style.transform = 'scale(1)'; }); }, 400);
+                  } catch { submitBtn.disabled = false; submitBtn.innerHTML = '<span>Try again</span>'; }
+                });
+              })();
+            </script>
           </div>
         </div>
       </div>
