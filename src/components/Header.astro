@@ -71,37 +71,35 @@ const navItems = [
 ---
 
 <header id="site-header" class="sticky top-0 z-50 border-b border-white/10 bg-[#1C2B32] transition-transform duration-300 ease-out" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-  <div style="position:relative; width:100%; padding-left:48px; padding-right:48px;">
-    <nav style="display:flex; height:5rem; width:100%; align-items:center;">
+  <div class="relative w-full px-4 sm:px-6 lg:px-12">
+    <nav class="flex h-14 sm:h-16 md:h-20 w-full items-center">
       
-      <!-- Linker Bereich: Logo & Menü direkt daneben -->
-      <div style="display:flex; align-items:center; gap:3rem;">
-        <!-- Logo -->
-        <a href="/" class="group flex shrink-0 items-center transition-opacity hover:opacity-80">
-          <img 
-            src="/logo.svg" 
-            alt="Vehicle Imagery" 
-            class="h-[38px] w-auto brightness-0 invert" 
+      <!-- Logo & Desktop Nav -->
+      <div class="flex flex-1 items-center gap-6 lg:gap-9">
+        <a href="/" class="group flex shrink-0 items-center transition-opacity hover:opacity-80" aria-label="Vehicle Imagery Home">
+          <img
+            src="/logo.svg"
+            alt="Vehicle Imagery"
+            class="h-8 w-auto brightness-0 invert sm:h-[38px]"
           />
         </a>
 
-        <!-- Navigation (Links neben dem Logo) -->
-        <div class="hidden items-center gap-9 md:flex relative" id="nav-menu">
+        <!-- Desktop Navigation (hidden on mobile) -->
+        <div class="hidden items-center gap-6 lg:gap-9 md:flex relative" id="nav-menu">
           {navItems.map((item) => (
             <div class="group/nav relative flex h-20 items-center" data-nav-item>
               <a
                 href={item.href}
-                class="peer relative text-[14px] font-medium text-white/80 transition-colors duration-200 hover:text-white"
+                class="peer relative text-[13px] lg:text-[14px] font-medium text-white/80 transition-colors duration-200 hover:text-white"
               >
                 {item.label}
                 <span class="pointer-events-none absolute -bottom-[31px] left-0 h-[3px] w-0 bg-white opacity-0 transition-all duration-300 group-hover/nav:w-full group-hover/nav:opacity-100 z-[60]"></span>
               </a>
               
-              <!-- Bridge (unsichtbar) für den Hover -->
               <div class="absolute top-[80px] left-0 h-[30px] w-full bg-transparent z-[40]"></div>
               
-              <!-- Overlay: Positioniert unter dem ausgewählten Nav-Punkt -->
-              <div class="nav-overlay pointer-events-none fixed top-[80px] z-50 w-[860px] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 group-hover/nav:pointer-events-auto group-hover/nav:translate-y-0 group-hover/nav:opacity-100" style="left: 0;">
+              <!-- Dropdown Overlay (responsive width) -->
+              <div class="nav-overlay pointer-events-none fixed top-[80px] z-50 w-[calc(100vw-2rem)] max-w-[860px] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 group-hover/nav:pointer-events-auto group-hover/nav:translate-y-0 group-hover/nav:opacity-100 left-0" style="left: 0;">
                 
                 <!-- Visuelle Verbindungslinie zum Menü -->
                 <div class="absolute -top-[1px] left-0 h-[1px] w-full bg-white/20"></div>
@@ -118,9 +116,9 @@ const navItems = [
                     {item.label === 'Contact' && <svg class="w-96 h-96" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>}
                   </div>
 
-                  <div class="grid grid-cols-12 relative z-10">
+                  <div class="grid grid-cols-1 lg:grid-cols-12 relative z-10">
                   <!-- Linke Spalte: Links -->
-                  <div class="col-span-5 border-r border-white/10 p-8">
+                  <div class="lg:col-span-5 border-b border-white/10 lg:border-b-0 lg:border-r border-white/10 p-4 sm:p-6 lg:p-8">
                     <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">Explore {item.label}</h3>
                     <ul class="flex flex-col gap-1">
                       {item.overlay.map((sub) => (
@@ -135,7 +133,7 @@ const navItems = [
                   </div>
 
                   <!-- Mittlere Spalte: Changelogs -->
-                  <div class="col-span-4 border-r border-white/10 p-8">
+                  <div class="lg:col-span-4 border-b border-white/10 lg:border-b-0 lg:border-r border-white/10 p-4 sm:p-6 lg:p-8">
                     <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">Latest Changelogs</h3>
                     <div class="flex flex-col gap-6">
                       {changelogs.length > 0 ? (
@@ -161,7 +159,7 @@ const navItems = [
                   </div>
 
                   <!-- Rechte Spalte: Contact -->
-                  <div class="col-span-3 bg-[#25363F] p-8 flex flex-col justify-between">
+                  <div class="lg:col-span-3 bg-[#25363F] p-4 sm:p-6 lg:p-8 flex flex-col justify-between">
                     <div>
                       <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">Need Help?</h3>
                       <p class="text-[13px] leading-relaxed text-white/60 mb-6">
@@ -182,69 +180,70 @@ const navItems = [
         ))}
       </div>
 
-      <!-- CTA Buttons -->
-      <div style="position:absolute; right:48px; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:0.75rem;">
+      <!-- CTA Buttons + Mobile Menu Button -->
+      <div class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2 sm:right-6 sm:gap-3 lg:right-12">
         <a
           href="/book-a-call"
-          class="hidden h-[38px] items-center justify-center border border-white/40 bg-transparent px-5 text-[13px] font-medium text-white transition-all duration-300 hover:border-white hover:bg-white/5 sm:inline-flex"
+          class="hidden h-9 items-center justify-center border border-white/40 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:border-white hover:bg-white/5 sm:inline-flex"
         >
           Book a Call
         </a>
         <a
           href="/trial"
-          class="inline-flex h-[38px] items-center justify-center border border-white bg-white px-5 text-[13px] font-medium text-[rgb(10,43,49)] transition-all duration-300 hover:bg-[rgb(255,254,252)] hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+          class="inline-flex h-9 items-center justify-center border border-white bg-white px-4 text-[13px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-[rgb(255,254,252)] hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]"
         >
           Try Now
         </a>
-        
-        <!-- Mobile Menu Button -->
+        <!-- Mobile Menu Toggle -->
         <button
           type="button"
-          class="flex h-10 w-10 items-center justify-center text-white/80 transition-colors hover:text-white md:hidden"
-          aria-label="Menü öffnen"
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-white/80 transition-colors hover:bg-white/10 hover:text-white md:hidden"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
           id="mobile-menu-btn"
         >
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" viewBox="0 0 24 24">
-            <path d="M4 6h16M4 12h16M4 18h16" />
+          <svg class="h-6 w-6" id="mobile-menu-icon-open" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg class="hidden h-6 w-6" id="mobile-menu-icon-close" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
     </nav>
 
-    <!-- Mobile Menu -->
-    <div class="hidden border-t border-white/10 pb-6 pt-2 md:hidden" id="mobile-menu">
-      <div class="space-y-0">
-        {navItems.map((item) => (
-          <div class="border-b border-white/5">
-            <a
-              href={item.href}
-              class="block bg-white/5 px-4 py-3.5 text-[15px] font-semibold text-white/90 uppercase tracking-wide"
-            >
-              {item.label}
-            </a>
-            <div class="flex flex-col bg-[#1C2B32] px-2 py-2">
+    <!-- Mobile Menu (accordion + close on link click) -->
+    <div class="hidden border-t border-white/10 bg-[#1C2B32] md:hidden" id="mobile-menu" role="dialog" aria-label="Navigation menu">
+      <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-white/50">Menu</span>
+        <button type="button" class="flex h-9 w-9 items-center justify-center rounded-md text-white/70 hover:bg-white/10 hover:text-white" aria-label="Close menu" id="mobile-menu-close">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <div class="max-h-[calc(100vh-8rem)] overflow-y-auto pb-6">
+        {navItems.map((item, idx) => (
+          <div class="border-b border-white/5" data-mobile-nav-item>
+            <div class="flex items-center justify-between gap-2">
+              <a href={item.href} class="flex-1 py-3.5 pl-4 pr-2 text-[15px] font-semibold text-white/95">{item.label}</a>
+              <button type="button" class="mobile-nav-toggle flex h-11 w-11 shrink-0 items-center justify-center text-white/60 hover:bg-white/5 hover:text-white" aria-expanded="false" aria-controls={`mobile-sub-${idx}`} id={`mobile-toggle-${idx}`} data-mobile-toggle data-target={`mobile-sub-${idx}`}>
+                <svg class="h-5 w-5 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+            </div>
+            <div id={`mobile-sub-${idx}`} class="hidden flex-col border-t border-white/5 bg-[#0f1a1d] pb-2" data-mobile-sub>
               {item.overlay.map((sub) => (
-                <a
-                  href={sub.href}
-                  class="px-4 py-3 text-[14px] font-medium text-white/70 transition-colors hover:bg-white/5 hover:text-white"
-                >
+                <a href={sub.href} class="mobile-menu-link block border-l-2 border-transparent py-2.5 pl-6 pr-4 text-[14px] font-medium text-white/75 transition-colors hover:border-white/30 hover:bg-white/5 hover:text-white">
                   {sub.label}
                 </a>
               ))}
             </div>
           </div>
         ))}
-        <div class="mt-6 flex flex-col gap-3 px-4">
-          <a
-            href="/book-a-call"
-            class="flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10"
-          >
+        <div class="mt-4 flex flex-col gap-3 px-4">
+          <a href="/book-a-call" class="mobile-menu-link flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10">
             Book a Call
           </a>
-          <a
-            href="/trial"
-            class="flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10"
-          >
+          <a href="/trial" class="mobile-menu-link flex items-center justify-center border border-white py-3.5 text-[14px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-white/90">
             Try Now
           </a>
         </div>
@@ -254,13 +253,60 @@ const navItems = [
 </header>
 
 <script>
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  if (btn && menu) {
-    btn.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
+  (function initMobileMenu() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const closeBtn = document.getElementById('mobile-menu-close');
+    const iconOpen = document.getElementById('mobile-menu-icon-open');
+    const iconClose = document.getElementById('mobile-menu-icon-close');
+
+    function openMenu() {
+      menu?.classList.remove('hidden');
+      btn?.setAttribute('aria-expanded', 'true');
+      btn?.setAttribute('aria-label', 'Close menu');
+      iconOpen?.classList.add('hidden');
+      iconClose?.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      menu?.classList.add('hidden');
+      btn?.setAttribute('aria-expanded', 'false');
+      btn?.setAttribute('aria-label', 'Open menu');
+      iconOpen?.classList.remove('hidden');
+      iconClose?.classList.add('hidden');
+      document.body.style.overflow = '';
+      // collapse all accordion sections
+      document.querySelectorAll('[data-mobile-sub]').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('[data-mobile-toggle]').forEach(el => { el.setAttribute('aria-expanded', 'false'); el.querySelector('svg')?.classList.remove('rotate-180'); });
+    }
+
+    btn?.addEventListener('click', () => { if (menu?.classList.contains('hidden')) openMenu(); else closeMenu(); });
+    closeBtn?.addEventListener('click', closeMenu);
+
+    document.querySelectorAll('.mobile-menu-link').forEach(link => {
+      link.addEventListener('click', closeMenu);
     });
-  }
+
+    document.querySelectorAll('[data-mobile-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const target = targetId ? document.getElementById(targetId) : null;
+        if (!target) return;
+        const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+        if (isExpanded) {
+          target.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.querySelector('svg')?.classList.remove('rotate-180');
+        } else {
+          target.classList.remove('hidden');
+          btn.setAttribute('aria-expanded', 'true');
+          btn.querySelector('svg')?.classList.add('rotate-180');
+        }
+      });
+    });
+
+    window.addEventListener('resize', () => { if (window.innerWidth >= 768) closeMenu(); });
+  })();
 
   // Header hide on scroll down, show on scroll up
   (function() {
@@ -293,14 +339,16 @@ const navItems = [
       if (!overlay) return;
       const rect = item.getBoundingClientRect();
       let left = rect.left;
-      const overlayWidth = 860;
-      const maxLeft = window.innerWidth - overlayWidth;
-      if (left > maxLeft) left = maxLeft;
-      if (left < 0) left = 0;
+      const overlayWidth = overlay.offsetWidth;
+      const maxLeft = window.innerWidth - overlayWidth - 16;
+      if (left > maxLeft) left = Math.max(8, maxLeft);
+      if (left < 8) left = 8;
       overlay.style.left = left + 'px';
     });
   }
 
-  positionOverlays();
-  window.addEventListener('resize', positionOverlays);
+  if (document.querySelector('[data-nav-item]')) {
+    positionOverlays();
+    window.addEventListener('resize', positionOverlays);
+  }
 </script>
