@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getEntries } from '../../lib/contentful';
-import { renderRichText, buildAssetMap } from '../../lib/contentful-rich-text';
+import { renderRichText, richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
 import type { Document } from '@contentful/rich-text-types';
 
 export async function getStaticPaths() {
@@ -35,6 +35,7 @@ const { category } = Astro.params;
 interface FaqItem {
   question: string;
   answerHtml: string;
+  answerText: string;
   order: number;
 }
 
@@ -58,6 +59,7 @@ try {
     faqs.push({
       question: fields.question,
       answerHtml: fields.answer ? renderRichText(fields.answer, assetMap) : '',
+      answerText: fields.answer ? richTextToPlainText(fields.answer, 0) : '',
       order: fields.order ?? 999,
     });
   }
@@ -66,6 +68,26 @@ try {
 } catch {
   faqs = [];
 }
+
+const siteUrl = Astro.url.origin;
+const faqSchema = faqs.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answerText || faq.question },
+  })),
+} : null;
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: 'FAQ', item: `${siteUrl}/faq` },
+    { '@type': 'ListItem', position: 3, name: categoryLabel, item: `${siteUrl}/faq/${category}` },
+  ],
+};
 ---
 
 <BaseLayout
@@ -159,6 +181,8 @@ try {
         )}
       </div>
     </section>
+    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   </main>
   <Footer />
 </BaseLayout>
