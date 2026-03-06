@@ -28,7 +28,7 @@ const { label, headline, description, stats, bodyHtml, ctaTitle, ctaDescription,
   <section class="mx-auto max-w-[1400px] px-6 pb-24 sm:px-12 lg:px-16">
     <div class="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
       <div></div>
-      <div class="prose prose-lg max-w-none text-left prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-left prose-p:text-left prose-p:text-black/50 prose-p:text-[15px] prose-p:leading-relaxed prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-strong:text-black prose-strong:font-bold prose-ul:text-black/50 prose-ol:text-black/50" set:html={bodyHtml} />
+      <div class="dynamic-body" set:html={bodyHtml} />
     </div>
   </section>
 )}

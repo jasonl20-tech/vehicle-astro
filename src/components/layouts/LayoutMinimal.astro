@@ -22,7 +22,7 @@ const { label, headline, description, bodyHtml, ctaTitle, ctaDescription, ctaBut
 
 {bodyHtml && (
   <section class="mx-auto max-w-3xl px-6 pb-24 sm:px-12 lg:px-16">
-    <div class="prose prose-lg max-w-none text-left prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-left prose-p:text-left prose-p:text-black/50 prose-p:text-[15px] prose-p:leading-relaxed prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-strong:text-black prose-strong:font-bold prose-ul:text-black/50 prose-ol:text-black/50 prose-li:marker:text-black/30" set:html={bodyHtml} />
+    <div class="dynamic-body" set:html={bodyHtml} />
   </section>
 )}
 

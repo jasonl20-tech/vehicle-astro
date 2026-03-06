@@ -30,3 +30,95 @@ img {
 .animate-scroll:hover {
   animation-play-state: paused;
 }
+
+/* Dynamische Seiten (Contentful Body): linksbündig, Formatierung erhalten – ohne @tailwindcss/typography */
+.dynamic-body {
+  text-align: left;
+  max-width: 48rem;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: rgba(0, 0, 0, 0.6);
+}
+.dynamic-body p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+.dynamic-body p:last-child {
+  margin-bottom: 0;
+}
+.dynamic-body strong,
+.dynamic-body b {
+  font-weight: 700;
+  color: #000;
+}
+.dynamic-body em,
+.dynamic-body i {
+  font-style: italic;
+}
+.dynamic-body a {
+  color: rgb(200, 90, 70);
+  text-decoration: none;
+}
+.dynamic-body a:hover {
+  text-decoration: underline;
+}
+.dynamic-body h1,
+.dynamic-body h2,
+.dynamic-body h3,
+.dynamic-body h4,
+.dynamic-body h5,
+.dynamic-body h6 {
+  text-align: left;
+  font-weight: 700;
+  color: #000;
+  margin-top: 1.75em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.dynamic-body h1:first-child,
+.dynamic-body h2:first-child,
+.dynamic-body h3:first-child,
+.dynamic-body h4:first-child {
+  margin-top: 0;
+}
+.dynamic-body h1 { font-size: 1.875rem; }
+.dynamic-body h2 { font-size: 1.5rem; }
+.dynamic-body h3 { font-size: 1.25rem; }
+.dynamic-body h4 { font-size: 1.125rem; }
+.dynamic-body h5 { font-size: 1rem; }
+.dynamic-body h6 { font-size: 0.9375rem; }
+.dynamic-body ul,
+.dynamic-body ol {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5em;
+  text-align: left;
+}
+.dynamic-body ul { list-style-type: disc; }
+.dynamic-body ol { list-style-type: decimal; }
+.dynamic-body li {
+  margin-bottom: 0.375em;
+  padding-left: 0.25em;
+}
+.dynamic-body blockquote {
+  margin: 1.5em 0;
+  padding-left: 1em;
+  border-left: 4px solid rgb(200, 90, 70);
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.7);
+}
+.dynamic-body figure {
+  margin: 1.5em 0;
+}
+.dynamic-body figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+.dynamic-body hr {
+  margin: 2em 0;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
