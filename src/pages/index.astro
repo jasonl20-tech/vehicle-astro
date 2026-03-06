@@ -132,6 +132,8 @@ const homepageStructuredData: unknown[] = [
   ogImageAlt="Vehicle Imagery – Studio quality car photography API for dealerships and automotive platforms"
   canonicalUrl="/"
   structuredDataGraph={homepageStructuredData}
+  preloadHero
+  preloadFirstImage="/images/cupra_front.webp"
 >
   {announcementBar && (
     <AnnouncementBar
@@ -198,7 +200,7 @@ const homepageStructuredData: unknown[] = [
     <div class="hidden md:block absolute inset-0 z-20 pointer-events-none" style="left:65%; transform:translateX(-50%);">
       <picture>
       <source srcset="/images/hero-car.webp" type="image/webp" />
-      <img src="/images/hero-car.png" alt="BMW X6 - Vehicle Imagery API Preview" draggable="false" fetchpriority="high" decoding="async" class="w-auto max-w-none object-contain pointer-events-auto" style="height:58.5%; margin-top:20%; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.3)); user-select:none;"/>
+      <img src="/images/hero-car.png" alt="BMW X6 - Vehicle Imagery API Preview" width="1200" height="805" draggable="false" fetchpriority="high" decoding="async" class="w-auto max-w-none object-contain pointer-events-auto" style="height:58.5%; margin-top:20%; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.3)); user-select:none;"/>
     </picture>
     </div>
   </section>
@@ -249,7 +251,7 @@ const homepageStructuredData: unknown[] = [
               <>
                 <picture class="absolute inset-0 flex items-center justify-center p-2">
                   <source srcset={`/images/${a.img}.webp`} type="image/webp" />
-                  <img src={`/images/${a.img}.png`} alt={a.name} class="max-w-full max-h-full w-auto h-auto object-contain" loading={i < 4 ? "eager" : "lazy"} decoding="async" draggable="false"/>
+                  <img src={`/images/${a.img}.png`} alt={a.name} class="max-w-full max-h-full w-auto h-auto object-contain" loading={i < 4 ? "eager" : "lazy"} decoding="async" draggable="false" fetchpriority={i === 0 ? "high" : undefined}/>
                 </picture>
                 <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center">
                   <span class="text-xs font-bold uppercase tracking-widest text-black px-3 py-1.5 bg-white/95 rounded-lg shadow-sm">{a.name}</span>

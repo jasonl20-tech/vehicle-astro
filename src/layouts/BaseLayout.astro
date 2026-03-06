@@ -13,9 +13,13 @@ interface Props {
   keywords?: string;
   /** When set (e.g. homepage), replaces default JSON-LD @graph with this one for rich results parity. */
   structuredDataGraph?: unknown[];
+  /** Preload hero image only on homepage; use media (min-width: 768px) so mobile LCP is not delayed. */
+  preloadHero?: boolean;
+  /** On mobile, preload this image as LCP candidate (e.g. first visible gallery image). */
+  preloadFirstImage?: string;
 }
 
-const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl, noIndex = false, keywords = defaultKeywords, structuredDataGraph } = Astro.props;
+const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl, noIndex = false, keywords = defaultKeywords, structuredDataGraph, preloadHero = false, preloadFirstImage } = Astro.props;
 const siteUrl = Astro.url.origin;
 const defaultOgImage = `${siteUrl}/images/hero-car.webp`;
 const ogImageUrl = ogImage
@@ -58,7 +62,8 @@ const ogImageHeight = 630;
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:width" content={ogImageWidth} />
     <meta name="twitter:image:height" content={ogImageHeight} />
-    <link rel="preload" as="image" href="/images/hero-car.webp" />
+    {preloadHero && <link rel="preload" as="image" href="/images/hero-car.webp" media="(min-width: 768px)" />}
+    {preloadFirstImage && <link rel="preload" as="image" href={preloadFirstImage} media="(max-width: 767px)" />}
     <script type="application/ld+json" set:html={JSON.stringify(structuredDataGraph ? { '@context': 'https://schema.org', '@graph': structuredDataGraph } : {
       '@context': 'https://schema.org',
       '@graph': [
@@ -79,10 +84,9 @@ const ogImageHeight = 630;
         },
       ]},
     )} />
-    <!-- Google Tag Manager (wie vehicleimagery.com) -->
+    <!-- Google Tag Manager: nach load/idle laden, damit LCP (v. a. Mobile) nicht blockiert -->
     <script is:inline define:vars={{ gtmId: 'GTM-57V9GF6S' }}>
-      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtmId);
+      (function(w,d,s,l,i){function g(){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;if(f&&f.parentNode)f.parentNode.insertBefore(j,f);}w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});if(w.requestIdleCallback){w.requestIdleCallback(function(){g();},{timeout:2500});}else if(d.readyState==='complete'){g();}else{w.addEventListener('load',function(){setTimeout(g,0);});}})(window,document,'script','dataLayer',gtmId);
     </script>
     <!-- End Google Tag Manager -->
     <!-- Silktide CSS non-blocking: lädt nach erstem Paint -->
