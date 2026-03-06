@@ -1,5 +1,5 @@
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
-import type { Document } from '@contentful/rich-text-types';
+import { BLOCKS, type Document } from '@contentful/rich-text-types';
 
 /** Rich-Text-Document zu reinem Text (z.B. für meta description). Max. maxLength Zeichen. */
 export function richTextToPlainText(doc: Document | null | undefined, maxLength = 160): string {
@@ -23,10 +23,13 @@ function getAssetUrl(asset: { fields?: { file?: { url?: string } } } | null | un
   return url.startsWith('//') ? `https:${url}` : url;
 }
 
+type Next = (nodes: unknown) => string;
+
 export function renderRichText(doc: Document | null | undefined, assetMap?: AssetMap): string {
   if (!doc) return '';
   return documentToHtmlString(doc, {
     renderNode: {
+      [BLOCKS.PARAGRAPH]: (_node: { content?: unknown[] }, next: Next) => `<p>${next(_node.content ?? [])}</p>`,
       'embedded-asset-block': (node: { data?: { target?: { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } } }) => {
         let target = node.data?.target;
         if (!getAssetUrl(target) && assetMap && target?.sys?.id) {
