@@ -10,6 +10,9 @@ export default defineConfig({
   site,
   output: 'static',
   trailingSlash: 'never',
+  build: {
+    format: 'file',
+  },
 
   integrations: [
     sitemap({
