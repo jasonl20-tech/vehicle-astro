@@ -38,9 +38,17 @@ img {
   width: 100%;
   margin-left: 0;
   margin-right: auto;
+  padding-left: 0;
   font-size: 1rem;
   line-height: 1.75;
   color: rgba(0, 0, 0, 0.6);
+}
+/* Keine zusätzliche Einrückung durch Wrapper (z. B. aus Contentful) */
+.dynamic-body > * {
+  margin-left: 0 !important;
+}
+.dynamic-body > *:not(ul):not(ol) {
+  padding-left: 0 !important;
 }
 .dynamic-body p {
   margin-top: 0;

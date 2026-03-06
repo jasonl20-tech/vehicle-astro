@@ -20,12 +20,12 @@ interface Props {
 const { label, headline, description, stats, bodyHtml, ctaTitle, ctaDescription, ctaButtonLabel, ctaButtonUrl, ctaSecondaryLabel, ctaSecondaryUrl } = Astro.props;
 ---
 
-<HeroSection label={label} headline={headline} description={description} />
+<HeroSection label={label} headline={headline} description={description} tightPadding />
 
 {stats && stats.length > 0 && <StatsSection stats={stats} />}
 
 {bodyHtml && (
-  <section class="mx-auto max-w-[1400px] px-6 pb-24 sm:px-12 lg:px-16 text-left">
+  <section class="mx-auto max-w-[1400px] px-4 pb-24 sm:px-6 lg:px-12 text-left">
     <div class="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
       <div></div>
       <div class="dynamic-body w-full" set:html={bodyHtml} />

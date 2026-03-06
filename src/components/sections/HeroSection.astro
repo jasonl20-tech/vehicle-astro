@@ -4,12 +4,15 @@ interface Props {
   headline: string;
   description?: string;
   narrow?: boolean;
+  /** Wie Header: weniger linkes Padding (px-4 sm:px-6 lg:px-12) für gleiche linke Kante mit Titel/Body. */
+  tightPadding?: boolean;
 }
 
-const { label, headline, description, narrow = false } = Astro.props;
+const { label, headline, description, narrow = false, tightPadding = false } = Astro.props;
+const padClass = tightPadding ? 'px-4 sm:px-6 lg:px-12' : 'px-6 sm:px-12 lg:px-16';
 ---
 
-<section class={`mx-auto ${narrow ? 'max-w-3xl' : 'max-w-[1400px]'} px-6 pt-24 pb-8 sm:px-12 lg:px-16`}>
+<section class={`mx-auto ${narrow ? 'max-w-3xl' : 'max-w-[1400px]'} ${padClass} pt-24 pb-8`}>
   <div class={narrow ? '' : 'max-w-3xl'}>
     {label && (
       <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">{label}</p>

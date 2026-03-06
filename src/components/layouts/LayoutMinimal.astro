@@ -18,10 +18,10 @@ interface Props {
 const { label, headline, description, bodyHtml, ctaTitle, ctaDescription, ctaButtonLabel, ctaButtonUrl, ctaSecondaryLabel, ctaSecondaryUrl } = Astro.props;
 ---
 
-<HeroSection label={label} headline={headline} description={description} narrow />
+<HeroSection label={label} headline={headline} description={description} narrow tightPadding />
 
 {bodyHtml && (
-  <section class="mx-auto max-w-3xl px-6 pb-24 sm:px-12 lg:px-16 text-left">
+  <section class="mx-auto max-w-3xl px-4 pb-24 sm:px-6 lg:px-12 text-left">
     <div class="dynamic-body w-full" set:html={bodyHtml} />
   </section>
 )}

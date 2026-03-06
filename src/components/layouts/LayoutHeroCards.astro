@@ -22,7 +22,7 @@ interface Props {
 const { label, headline, description, stats, features, bodyHtml, ctaTitle, ctaDescription, ctaButtonLabel, ctaButtonUrl, ctaSecondaryLabel, ctaSecondaryUrl } = Astro.props;
 ---
 
-<HeroSection label={label} headline={headline} description={description} />
+<HeroSection label={label} headline={headline} description={description} tightPadding />
 
 {stats && stats.length > 0 && <StatsSection stats={stats} />}
 
@@ -30,7 +30,7 @@ const { label, headline, description, stats, features, bodyHtml, ctaTitle, ctaDe
 
 {bodyHtml && (
   <section class="py-24 sm:py-32 text-left">
-    <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16 flex flex-col items-start">
+    <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 flex flex-col items-start">
       <div class="dynamic-body" set:html={bodyHtml} />
     </div>
   </section>
