@@ -28,6 +28,7 @@ type Next = (nodes: unknown) => string;
 export function renderRichText(doc: Document | null | undefined, assetMap?: AssetMap): string {
   if (!doc) return '';
   return documentToHtmlString(doc, {
+    preserveWhitespace: true,
     renderNode: {
       [BLOCKS.PARAGRAPH]: (_node: { content?: unknown[] }, next: Next) => `<p>${next(_node.content ?? [])}</p>`,
       'embedded-asset-block': (node: { data?: { target?: { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } } }) => {

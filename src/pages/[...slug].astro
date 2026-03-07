@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getEntries } from '../lib/contentful';
-import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 import { renderRichText, richTextToPlainText, buildAssetMap } from '../lib/contentful-rich-text';
 
 import LayoutHeroText from '../components/layouts/LayoutHeroText.astro';
@@ -53,7 +52,7 @@ if (type === 'page') {
   var pageSlug = entry?.fields?.slug as string | undefined;
   var pageCanonical = pageSlug ? `/${pageSlug}` : undefined;
   var pageBody = entry?.fields?.body;
-  var pageBodyHtml = pageBody ? documentToHtmlString(pageBody) : '';
+  var pageBodyHtml = pageBody ? renderRichText(pageBody as any) : '';
   var pageDescription = entry?.fields?.seoDescription
     ? (typeof entry.fields.seoDescription === 'string' ? entry.fields.seoDescription : richTextToPlainText(entry.fields.seoDescription as any, 160))
     : pageTitle;
