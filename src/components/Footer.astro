@@ -41,25 +41,7 @@ try {
   dynamicCategories = [];
 }
 
-interface FooterColumn {
-  name: string;
-  links: DynamicLink[];
-  showHeader: boolean;
-}
-
-const MAX_LINKS_PER_COL = 6;
-const dynamicColumns: FooterColumn[] = [];
-for (const cat of dynamicCategories) {
-  for (let i = 0; i < cat.links.length; i += MAX_LINKS_PER_COL) {
-    dynamicColumns.push({
-      name: cat.name,
-      links: cat.links.slice(i, i + MAX_LINKS_PER_COL),
-      showHeader: i === 0,
-    });
-  }
-}
-
-const totalCols = 4 + dynamicColumns.length;
+const MAX_LINKS = 6;
 ---
 
 <footer class="text-white pt-24 pb-12 w-full border-t border-white/10" style="background-color:rgb(10, 43, 49); font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
@@ -123,12 +105,7 @@ const totalCols = 4 + dynamicColumns.length;
       </div>
 
       <!-- Link columns -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-10 mb-12 items-start" style={`--cols: ${totalCols};`} data-footer-grid>
-        <style>
-          @media (min-width: 1024px) {
-            [data-footer-grid] { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)) !important; }
-          }
-        </style>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-10 mb-12 items-start">
         <div>
           <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">Product</h4>
           <ul class="space-y-4 text-sm text-gray-300">
@@ -156,15 +133,11 @@ const totalCols = 4 + dynamicColumns.length;
           </ul>
         </div>
 
-        {dynamicColumns.map((col) => (
+        {dynamicCategories.map((cat) => (
           <div>
-            {col.showHeader ? (
-              <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{col.name}</h4>
-            ) : (
-              <h4 class="font-bold mb-6 uppercase tracking-widest text-xs opacity-0" aria-hidden="true">&nbsp;</h4>
-            )}
+            <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{cat.name}</h4>
             <ul class="space-y-4 text-sm text-gray-400">
-              {col.links.map((link) => (
+              {cat.links.slice(0, MAX_LINKS).map((link) => (
                 <li><a class="hover:text-white transition-colors" href={link.href}>{link.label}</a></li>
               ))}
             </ul>
