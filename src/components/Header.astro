@@ -199,9 +199,9 @@ const navItems = [
             id="lang-dropdown-btn"
           >
             <span>{localeNames[locale]}</span>
-            <svg class="h-3.5 w-3.5 transition-transform group-hover/lang:rotate-180 group-[.open]/lang:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            <svg class="h-3.5 w-3.5 transition-transform duration-200 group-[.open]/lang:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </button>
-          <div id="lang-dropdown-menu" role="listbox" class="lang-dropdown-menu pointer-events-none absolute right-0 top-full z-[60] mt-1 min-w-[140px] translate-y-1 opacity-0 transition-all duration-200 group-hover/lang:pointer-events-auto group-hover/lang:translate-y-0 group-hover/lang:opacity-100 group-[.open]/lang:pointer-events-auto group-[.open]/lang:translate-y-0 group-[.open]/lang:opacity-100">
+          <div id="lang-dropdown-menu" role="listbox" class="lang-dropdown-menu pointer-events-none absolute right-0 top-full z-[60] mt-1 min-w-[140px] translate-y-1 opacity-0 transition-all duration-200 group-[.open]/lang:pointer-events-auto group-[.open]/lang:translate-y-0 group-[.open]/lang:opacity-100">
             <div class="border border-white/15 bg-[#1C2B32] shadow-lg">
               {localeOptions.map((opt) => (
                 <a
