@@ -4,16 +4,16 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
 const benefits = [
-  { num: '01', title: 'Revenue Share', desc: 'Earn commissions on every customer you bring. Transparent tracking, monthly payouts.' },
-  { num: '02', title: 'Co-Marketing', desc: 'Joint campaigns, case studies, and featured placement on our website and materials.' },
-  { num: '03', title: 'Priority Access', desc: 'Early access to new features, dedicated API endpoints, and beta programs.' },
-  { num: '04', title: 'Technical Support', desc: 'Dedicated integration engineer and priority support channel for your team.' },
+  { num: '01', title: 'Reparto de ingresos', desc: 'Gana comisiones por cada cliente que traigas. Seguimiento transparente, pagos mensuales.' },
+  { num: '02', title: 'Co-marketing', desc: 'Campañas conjuntas, casos de estudio y posicionamiento destacado en nuestro sitio web y materiales.' },
+  { num: '03', title: 'Acceso prioritario', desc: 'Acceso anticipado a nuevas funciones, endpoints de API dedicados y programas beta.' },
+  { num: '04', title: 'Soporte técnico', desc: 'Ingeniero de integración dedicado y canal de soporte prioritario para tu equipo.' },
 ];
 ---
 
 <BaseLayout
-  title="Partners | Vehicle Imagery API"
-  description="Vehicle Imagery partner program. Join leading automotive companies using our API. Partnership inquiries welcome."
+  title="Socios | Vehicle Imagery API"
+  description="Programa de socios de Vehicle Imagery. Únete a las principales empresas automotrices que usan nuestra API. Consultas de asociación bienvenidas."
   canonicalUrl="/es/partners"
 >
   <Header />
@@ -22,12 +22,12 @@ const benefits = [
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Partner Program</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Programa de socios</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Partners
+          Socios
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          We work with leading automotive companies across Europe. Become a partner and grow with us.
+          Trabajamos con empresas automotrices líderes en Europa. Conviértete en socio y crece con nosotros.
         </p>
       </div>
     </section>
@@ -38,12 +38,12 @@ const benefits = [
       <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
         <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start">
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Benefits</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Beneficios</p>
             <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-6">
-              Why partner<br/>with us
+              Por qué asociarte<br/>con nosotros
             </h2>
             <p class="text-[14px] text-black/50 leading-relaxed max-w-sm">
-              More than just an API integration. A real partnership with shared growth.
+              Más que una simple integración de API. Una verdadera asociación con crecimiento compartido.
             </p>
           </div>
 
@@ -67,10 +67,10 @@ const benefits = [
       <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {[
-            { value: '50+', label: 'Brands Covered' },
-            { value: '50ms', label: 'Avg. Latency' },
-            { value: '99.9%', label: 'Uptime SLA' },
-            { value: '24h', label: 'Response Time' },
+            { value: '50+', label: 'Marcas cubiertas' },
+            { value: '50ms', label: 'Latencia prom.' },
+            { value: '99.9%', label: 'SLA de disponibilidad' },
+            { value: '24h', label: 'Tiempo de respuesta' },
           ].map((stat) => (
             <div class="text-center">
               <p class="text-5xl sm:text-6xl lg:text-7xl font-extralight text-black tracking-tight mb-3">{stat.value}</p>
@@ -91,16 +91,16 @@ const benefits = [
 
           <div class="relative z-10 grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20 items-start">
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Become a Partner</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Conviértete en socio</p>
               <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
-                Let's grow<br/>together
+                Crezcamos<br/>juntos
               </h2>
               <p class="text-[14px] text-white/40 leading-relaxed mb-10 max-w-sm">
-                Tell us about your company and how we can work together. We respond to every inquiry within 24 hours.
+                Cuéntanos sobre tu empresa y cómo podemos trabajar juntos. Respondemos a cada consulta en 24 horas.
               </p>
               <div class="space-y-4">
                 <div>
-                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Partnerships</p>
+                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Asociaciones</p>
                   <a href="mailto:partners@vehicleimagery.com" class="text-[14px] text-white/70 hover:text-white transition-colors">partners@vehicleimagery.com</a>
                 </div>
                 <div>
@@ -113,27 +113,27 @@ const benefits = [
             <div id="partners-form-wrapper" class="transition-all duration-700 ease-out">
               <div id="partners-form-content">
                 <form id="partners-form" class="space-y-5">
-                  <input type="hidden" name="subject" value="Partner Inquiry – Vehicle Imagery" />
+                  <input type="hidden" name="subject" value="Consulta de asociación – Vehicle Imagery" />
 
                   <div>
-                    <input type="text" name="name" required placeholder="Your name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="name" required placeholder="Tu nombre" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="email" name="email" required placeholder="Work email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="email" name="email" required placeholder="Correo de trabajo" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="text" name="company" required placeholder="Company name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="company" required placeholder="Nombre de la empresa" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="text" name="website" placeholder="Website (optional)" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="website" placeholder="Sitio web (opcional)" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <textarea name="message" rows="2" placeholder="Tell us about the partnership you have in mind" class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
+                    <textarea name="message" rows="2" placeholder="Cuéntanos sobre la asociación que tienes en mente" class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
                   </div>
 
                   <div class="pt-4">
                     <button type="submit" id="partners-submit-btn" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white">
-                      <span>Submit Inquiry</span>
+                      <span>Enviar consulta</span>
                       <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                       </svg>
@@ -149,8 +149,8 @@ const benefits = [
                     <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="partners-check" />
                   </svg>
                 </div>
-                <h3 class="text-2xl font-normal text-white mb-3">Inquiry Sent!</h3>
-                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">We'll respond within 24 hours.</p>
+                <h3 class="text-2xl font-normal text-white mb-3">¡Consulta enviada!</h3>
+                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">Responderemos en 24 horas.</p>
               </div>
             </div>
 

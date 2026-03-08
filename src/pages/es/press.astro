@@ -6,16 +6,16 @@ import { getEntries } from '../../lib/contentful';
 import { richTextToPlainText } from '../../lib/contentful-rich-text';
 
 const facts = [
-  { label: 'Founded', value: '2024' },
-  { label: 'Headquarters', value: 'Germany' },
-  { label: 'Industry', value: 'Automotive SaaS' },
-  { label: 'Product', value: 'Vehicle Imagery API' },
+  { label: 'Fundación', value: '2024' },
+  { label: 'Sede', value: 'Alemania' },
+  { label: 'Industria', value: 'SaaS automotriz' },
+  { label: 'Producto', value: 'Vehicle Imagery API' },
 ];
 
 const mediaAssets = [
-  { title: 'Logo (Light)', desc: 'Primary logo in vector format. Use on light backgrounds.', file: '/logo.svg', type: 'SVG', bg: 'light' },
-  { title: 'Logo (Dark)', desc: 'Inverted logo for dark backgrounds. White version.', file: '/logo.svg', type: 'SVG', bg: 'dark' },
-  { title: 'Vehicle Fleet', desc: 'Fleet overview with multiple vehicles. Use for editorial and feature images.', file: '/images/footer_vehicles.webp', type: 'WebP', bg: 'light' },
+  { title: 'Logo (claro)', desc: 'Logo principal en formato vectorial. Usar sobre fondos claros.', file: '/logo.svg', type: 'SVG', bg: 'light' },
+  { title: 'Logo (oscuro)', desc: 'Logo invertido para fondos oscuros. Versión en blanco.', file: '/logo.svg', type: 'SVG', bg: 'dark' },
+  { title: 'Flota de vehículos', desc: 'Vista general de la flota con múltiples vehículos. Usar para imágenes editoriales y destacadas.', file: '/images/footer_vehicles.webp', type: 'WebP', bg: 'light' },
 ];
 
 type PressRelease = { title: string; shortText: string; date: string; excerpt: string; link: string };
@@ -37,8 +37,8 @@ try {
 ---
 
 <BaseLayout
-  title="Press & Media Kit | Vehicle Imagery API"
-  description="Press resources, media kit, and brand assets for Vehicle Imagery. Logos, screenshots, and press releases."
+  title="Prensa y kit de medios | Vehicle Imagery API"
+  description="Recursos de prensa, kit de medios y activos de marca de Vehicle Imagery. Logos, capturas de pantalla y comunicados de prensa."
   canonicalUrl="/es/press"
 >
   <Header />
@@ -47,12 +47,12 @@ try {
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Press & Media</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Prensa y medios</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Media Kit
+          Kit de prensa
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Everything you need to write about Vehicle Imagery. Logos, product images, company facts, and press releases.
+          Todo lo que necesitas para escribir sobre Vehicle Imagery. Logos, imágenes de producto, datos de la empresa y comunicados de prensa.
         </p>
       </div>
     </section>
@@ -61,14 +61,14 @@ try {
     <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-24 sm:px-12 lg:px-16">
       <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start">
         <div>
-          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">About</p>
+          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Acerca de</p>
           <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-6">
-            Company overview
+            Descripción de la empresa
           </h2>
         </div>
         <div>
           <p class="text-[15px] text-black/60 leading-[1.8] mb-10">
-            Vehicle Imagery is a developer-first API that delivers studio-quality vehicle images for the automotive industry. Built for dealerships, leasing platforms, and automotive marketplaces, the API provides instant access to high-resolution vehicle imagery across 50+ brands — served via a global CDN with average response times under 50ms.
+            Vehicle Imagery es una API orientada al desarrollador que ofrece imágenes de vehículos con calidad de estudio para la industria automotriz. Diseñada para concesionarios, plataformas de leasing y marketplaces automotrices, la API proporciona acceso instantáneo a imágenes de alta resolución de más de 50 marcas — servidas a través de un CDN global con tiempos de respuesta promedio inferiores a 50ms.
           </p>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {facts.map((fact) => (
@@ -87,13 +87,13 @@ try {
       <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-16">
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Brand Assets</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Recursos de marca</p>
             <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight">
-              Logos & imagery
+              Logos e imágenes
             </h2>
           </div>
           <p class="text-[13px] text-black/40 max-w-sm leading-relaxed">
-            Please don't modify, distort, or recolor our logos. Use them as provided.
+            Por favor, no modifiques, distorsiones ni recolorees nuestros logos. Úsalos tal como se proporcionan.
           </p>
         </div>
 
@@ -133,42 +133,42 @@ try {
       <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
         <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start">
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Brand</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Marca</p>
             <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight">
-              Guidelines
+              Directrices
             </h2>
           </div>
           <div>
             <div class="space-y-8">
               <!-- Colors -->
               <div>
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-black/30 mb-4">Brand Colors</p>
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-black/30 mb-4">Colores de marca</p>
                 <div class="flex flex-wrap gap-4">
                   <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl" style="background-color: rgb(10, 43, 49);"></div>
                     <div>
-                      <p class="text-[13px] font-medium text-black">Dark Teal</p>
+                      <p class="text-[13px] font-medium text-black">Verde azulado oscuro</p>
                       <p class="text-[11px] text-black/40 font-mono">rgb(10, 43, 49)</p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl" style="background-color: rgb(200, 90, 70);"></div>
                     <div>
-                      <p class="text-[13px] font-medium text-black">Accent Red</p>
+                      <p class="text-[13px] font-medium text-black">Rojo de acento</p>
                       <p class="text-[11px] text-black/40 font-mono">rgb(200, 90, 70)</p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl border border-black/10" style="background-color: #ffffff;"></div>
                     <div>
-                      <p class="text-[13px] font-medium text-black">White</p>
+                      <p class="text-[13px] font-medium text-black">Blanco</p>
                       <p class="text-[11px] text-black/40 font-mono">#FFFFFF</p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl" style="background-color: #f4f4f5;"></div>
                     <div>
-                      <p class="text-[13px] font-medium text-black">Light Gray</p>
+                      <p class="text-[13px] font-medium text-black">Gris claro</p>
                       <p class="text-[11px] text-black/40 font-mono">#F4F4F5</p>
                     </div>
                   </div>
@@ -176,16 +176,16 @@ try {
               </div>
               <!-- Typography -->
               <div class="border-t border-black/[0.06] pt-8">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-black/30 mb-4">Typography</p>
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-black/30 mb-4">Tipografía</p>
                 <p class="text-[14px] text-black/60 leading-relaxed">
-                  We use <strong class="text-black">Arial</strong> (Helvetica Neue, Helvetica) as our primary typeface across all platforms. Headlines are set in light weight, body text in regular.
+                  Usamos <strong class="text-black">Arial</strong> (Helvetica Neue, Helvetica) como nuestra tipografía principal en todas las plataformas. Los títulos se establecen en peso ligero y el texto del cuerpo en regular.
                 </p>
               </div>
               <!-- Name -->
               <div class="border-t border-black/[0.06] pt-8">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-black/30 mb-4">Company Name</p>
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-black/30 mb-4">Nombre de la empresa</p>
                 <p class="text-[14px] text-black/60 leading-relaxed">
-                  Always write as <strong class="text-black">Vehicle Imagery</strong> (two words, both capitalized). The product is referred to as <strong class="text-black">Vehicle Imagery API</strong>.
+                  Siempre escríbelo como <strong class="text-black">Vehicle Imagery</strong> (dos palabras, ambas en mayúscula). El producto se denomina <strong class="text-black">Vehicle Imagery API</strong>.
                 </p>
               </div>
             </div>
@@ -197,15 +197,15 @@ try {
     <!-- Press Releases -->
     <section class="py-24 sm:py-32 bg-[#fafafa]">
       <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">News</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Noticias</p>
         <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-16">
-          Press releases
+          Comunicados de prensa
         </h2>
 
         {pressReleases.length > 0 ? (
           <div class="space-y-0">
             {pressReleases.map((pr) => {
-              const d = pr.date && pr.date.length > 4 ? new Date(pr.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : pr.date;
+              const d = pr.date && pr.date.length > 4 ? new Date(pr.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' }) : pr.date;
               return (
                 <div class="group flex flex-col sm:flex-row gap-6 sm:gap-12 py-10 border-b border-black/[0.06] first:border-t">
                   <span class="text-[12px] font-mono text-black/25 shrink-0 pt-1 min-w-[100px]">{d}</span>
@@ -217,7 +217,7 @@ try {
                     {pr.excerpt && <p class="text-[13px] text-black/45 leading-relaxed max-w-2xl">{pr.excerpt}</p>}
                     {pr.link && (
                       <a href={pr.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-[12px] font-medium text-[rgb(200,90,70)] mt-3 hover:underline">
-                        Read more
+                        Leer más
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                       </a>
                     )}
@@ -227,7 +227,7 @@ try {
             })}
           </div>
         ) : (
-          <p class="text-[14px] text-black/40">No press releases yet. Check back soon.</p>
+          <p class="text-[14px] text-black/40">Aún no hay comunicados de prensa. Vuelve pronto.</p>
         )}
       </div>
     </section>
@@ -241,16 +241,16 @@ try {
 
           <div class="relative z-10 grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20 items-start">
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Press Contact</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Contacto de prensa</p>
               <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
-                Get in touch
+                Ponte en contacto
               </h2>
               <p class="text-[14px] text-white/40 leading-relaxed mb-10 max-w-sm">
-                For press inquiries, interviews, or additional materials reach out to our media team.
+                Para consultas de prensa, entrevistas o materiales adicionales, contacta con nuestro equipo de medios.
               </p>
               <div class="space-y-4">
                 <div>
-                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Email</p>
+                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Correo electrónico</p>
                   <a href="mailto:press@vehicleimagery.com" class="text-[14px] text-white/70 hover:text-white transition-colors">press@vehicleimagery.com</a>
                 </div>
                 <div>
@@ -263,24 +263,24 @@ try {
             <div id="press-form-wrapper" class="transition-all duration-700 ease-out">
               <div id="press-form-content">
                 <form id="press-form" class="space-y-5">
-                  <input type="hidden" name="subject" value="Press Inquiry – Vehicle Imagery" />
+                  <input type="hidden" name="subject" value="Consulta de prensa – Vehicle Imagery" />
 
                   <div>
-                    <input type="text" name="name" required placeholder="Your name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="name" required placeholder="Tu nombre" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="email" name="email" required placeholder="Email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="email" name="email" required placeholder="Correo electrónico" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="text" name="publication" placeholder="Publication / outlet" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="publication" placeholder="Publicación / medio" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <textarea name="message" rows="2" placeholder="How can we help?" class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
+                    <textarea name="message" rows="2" placeholder="¿Cómo podemos ayudarte?" class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
                   </div>
 
                   <div class="pt-4">
                     <button type="submit" id="press-submit-btn" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white">
-                      <span>Send Inquiry</span>
+                      <span>Enviar consulta</span>
                       <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                       </svg>
@@ -296,8 +296,8 @@ try {
                     <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="press-check" />
                   </svg>
                 </div>
-                <h3 class="text-2xl font-normal text-white mb-3">Inquiry Sent!</h3>
-                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">We'll get back to you shortly.</p>
+                <h3 class="text-2xl font-normal text-white mb-3">¡Consulta enviada!</h3>
+                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">Te responderemos pronto.</p>
               </div>
             </div>
 

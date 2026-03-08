@@ -6,45 +6,45 @@ import Footer from '../../components/Footer.astro';
 const channels = [
   {
     icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>',
-    title: 'Email Support',
-    desc: 'For general questions, billing, and account issues.',
+    title: 'Soporte por correo',
+    desc: 'Para preguntas generales, facturación y problemas con la cuenta.',
     contact: 'support@vehicleimagery.com',
     href: 'mailto:support@vehicleimagery.com',
-    response: 'Within 24 hours',
+    response: 'En 24 horas',
   },
   {
     icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/>',
-    title: 'Technical Support',
-    desc: 'API integration help, error debugging, and technical guidance.',
+    title: 'Soporte técnico',
+    desc: 'Ayuda con la integración de la API, depuración de errores y orientación técnica.',
     contact: 'dev@vehicleimagery.com',
     href: 'mailto:dev@vehicleimagery.com',
-    response: 'Within 12 hours',
+    response: 'En 12 horas',
   },
   {
     icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>',
-    title: 'Documentation',
-    desc: 'Full API reference, endpoints, parameters, and code examples.',
-    contact: 'Browse Docs',
+    title: 'Documentación',
+    desc: 'Referencia completa de la API, endpoints, parámetros y ejemplos de código.',
+    contact: 'Ver documentación',
     href: '/documentation',
-    response: 'Self-service',
+    response: 'Autoservicio',
   },
 ];
 
 const faqs = [
-  { q: 'How do I get my API key?', a: 'Contact us via the form below or email support@vehicleimagery.com. We\'ll set up your account and send your key within 24 hours.' },
-  { q: 'My API key is not working', a: 'Check that you\'re sending the key via the x-api-key header. If you\'re getting a 403, your key may have expired or the requested resource may not be part of your plan.' },
-  { q: 'I\'m getting 404 errors', a: 'Make sure the brand, model, year, variant, and trim all exist in our database. Use the /api/brands endpoint to start and navigate the hierarchy step by step.' },
-  { q: 'Images are loading slowly', a: 'Our average latency is ~50ms. If you\'re experiencing slowness, check your CDN caching. Signed URLs are valid for 7 days — cache them on your end for best performance.' },
-  { q: 'How do I upgrade my plan?', a: 'Contact sales at info@vehicleimagery.com. Plan changes take effect immediately. No downtime.' },
-  { q: 'Do you offer on-premise deployment?', a: 'Yes, on-premise and white-label options are available on our custom plans. Contact us for details.' },
+  { q: '¿Cómo obtengo mi clave de API?', a: 'Contáctanos a través del formulario a continuación o envía un correo a support@vehicleimagery.com. Configuraremos tu cuenta y te enviaremos tu clave en 24 horas.' },
+  { q: 'Mi clave de API no funciona', a: 'Verifica que estés enviando la clave a través del encabezado x-api-key. Si recibes un 403, tu clave puede haber expirado o el recurso solicitado puede no estar incluido en tu plan.' },
+  { q: 'Estoy recibiendo errores 404', a: 'Asegúrate de que la marca, modelo, año, variante y acabado existan en nuestra base de datos. Usa el endpoint /api/brands para empezar y navegar la jerarquía paso a paso.' },
+  { q: 'Las imágenes cargan lentamente', a: 'Nuestra latencia promedio es de ~50ms. Si experimentas lentitud, verifica tu caché de CDN. Las URLs firmadas son válidas por 7 días — almacénalas en caché de tu lado para un mejor rendimiento.' },
+  { q: '¿Cómo actualizo mi plan?', a: 'Contacta a ventas en info@vehicleimagery.com. Los cambios de plan entran en vigor de inmediato. Sin tiempo de inactividad.' },
+  { q: '¿Ofrecen despliegue on-premise?', a: 'Sí, las opciones on-premise y de marca blanca están disponibles en nuestros planes personalizados. Contáctanos para más detalles.' },
 ];
 
 
 ---
 
 <BaseLayout
-  title="Support | Vehicle Imagery API"
-  description="Get help with the Vehicle Imagery API. Technical support, documentation, and frequently asked questions."
+  title="Soporte | Vehicle Imagery API"
+  description="Obtén ayuda con la API de Vehicle Imagery. Soporte técnico, documentación y preguntas frecuentes."
   canonicalUrl="/es/support"
 >
   <Header />
@@ -53,12 +53,12 @@ const faqs = [
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Help Center</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Centro de ayuda</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Support
+          Soporte
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Need help? Find answers, reach our team, or check the system status. We're here for you.
+          ¿Necesitas ayuda? Encuentra respuestas, contacta con nuestro equipo o consulta el estado del sistema. Estamos aquí para ti.
         </p>
       </div>
     </section>
@@ -89,10 +89,10 @@ const faqs = [
           <div>
             <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">FAQ</p>
             <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-6">
-              Common<br/>questions
+              Preguntas<br/>frecuentes
             </h2>
             <p class="text-[14px] text-black/50 leading-relaxed">
-              Quick answers to the most common issues. Can't find yours? <a href="#contact" class="text-black underline underline-offset-4 hover:text-[rgb(200,90,70)] transition-colors">Contact us below</a>.
+              Respuestas rápidas a los problemas más comunes. ¿No encuentras el tuyo? <a href="#contact" class="text-black underline underline-offset-4 hover:text-[rgb(200,90,70)] transition-colors">Contáctanos a continuación</a>.
             </p>
           </div>
 
@@ -124,20 +124,20 @@ const faqs = [
 
           <div class="relative z-10 grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20 items-start">
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Contact Support</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Contacto de soporte</p>
               <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
-                Still need help?
+                ¿Aún necesitas ayuda?
               </h2>
               <p class="text-[14px] text-white/40 leading-relaxed mb-10 max-w-sm">
-                Describe your issue and our team will get back to you as quickly as possible.
+                Describe tu problema y nuestro equipo te responderá lo antes posible.
               </p>
               <div class="space-y-4">
                 <div>
-                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Support</p>
+                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Soporte</p>
                   <a href="mailto:support@vehicleimagery.com" class="text-[14px] text-white/70 hover:text-white transition-colors">support@vehicleimagery.com</a>
                 </div>
                 <div>
-                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Technical</p>
+                  <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Técnico</p>
                   <a href="mailto:dev@vehicleimagery.com" class="text-[14px] text-white/70 hover:text-white transition-colors">dev@vehicleimagery.com</a>
                 </div>
               </div>
@@ -146,24 +146,24 @@ const faqs = [
             <div id="support-form-wrapper" class="transition-all duration-700 ease-out">
               <div id="support-form-content">
                 <form id="support-form" class="space-y-5">
-                  <input type="hidden" name="subject" value="Support Request – Vehicle Imagery" />
+                  <input type="hidden" name="subject" value="Solicitud de soporte – Vehicle Imagery" />
 
                   <div>
-                    <input type="text" name="name" required placeholder="Your name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="name" required placeholder="Tu nombre" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="email" name="email" required placeholder="Email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="email" name="email" required placeholder="Correo electrónico" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="text" name="subject_line" placeholder="Subject" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="subject_line" placeholder="Asunto" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <textarea name="message" rows="3" required placeholder="Describe your issue in detail" class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
+                    <textarea name="message" rows="3" required placeholder="Describe tu problema en detalle" class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
                   </div>
 
                   <div class="pt-4">
                     <button type="submit" id="support-submit-btn" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white">
-                      <span>Submit Request</span>
+                      <span>Enviar solicitud</span>
                       <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                       </svg>
@@ -179,8 +179,8 @@ const faqs = [
                     <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="support-check" />
                   </svg>
                 </div>
-                <h3 class="text-2xl font-normal text-white mb-3">Request Sent!</h3>
-                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">We'll get back to you as quickly as possible.</p>
+                <h3 class="text-2xl font-normal text-white mb-3">¡Solicitud enviada!</h3>
+                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">Te responderemos lo antes posible.</p>
               </div>
             </div>
 
