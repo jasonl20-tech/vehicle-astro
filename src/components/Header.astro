@@ -7,8 +7,12 @@ const t = useTranslations(locale);
 const l = (url: string) => localizeUrl(url, locale);
 
 const currentPath = stripLocalePrefix(Astro.url.pathname);
-const switchLocale: Locale = locale === 'en' ? 'es' : 'en';
-const switchUrl = localizeUrl(currentPath, switchLocale);
+const localeOptions = locales.map((loc) => ({
+  locale: loc,
+  label: localeNames[loc],
+  href: localizeUrl(currentPath, loc),
+  isActive: loc === locale,
+}));
 
 let changelogs: any[] = [];
 try {
@@ -184,14 +188,37 @@ const navItems = [
       </div>
 
       <div class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2 sm:right-6 sm:gap-3 lg:right-12">
-        <!-- Language Switcher -->
-        <a
-          href={switchUrl}
-          class="hidden h-9 items-center justify-center border border-white/25 bg-transparent px-3 text-[12px] font-bold uppercase tracking-wider text-white/70 transition-colors hover:border-white/50 hover:text-white sm:inline-flex"
-          aria-label={`Switch to ${localeNames[switchLocale]}`}
-        >
-          {switchLocale.toUpperCase()}
-        </a>
+        <!-- Language Dropdown -->
+        <div class="lang-dropdown group/lang relative hidden sm:block">
+          <button
+            type="button"
+            class="lang-dropdown-trigger flex h-9 min-w-[72px] items-center justify-between gap-1.5 border border-white/25 bg-transparent px-3 text-[12px] font-bold uppercase tracking-wider text-white/70 transition-colors hover:border-white/50 hover:text-white"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="lang-dropdown-menu"
+            id="lang-dropdown-btn"
+          >
+            <span>{localeNames[locale]}</span>
+            <svg class="h-3.5 w-3.5 transition-transform group-hover/lang:rotate-180 group-[.open]/lang:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="lang-dropdown-menu" role="listbox" class="lang-dropdown-menu pointer-events-none absolute right-0 top-full z-[60] mt-1 min-w-[140px] translate-y-1 opacity-0 transition-all duration-200 group-hover/lang:pointer-events-auto group-hover/lang:translate-y-0 group-hover/lang:opacity-100 group-[.open]/lang:pointer-events-auto group-[.open]/lang:translate-y-0 group-[.open]/lang:opacity-100">
+            <div class="border border-white/15 bg-[#1C2B32] shadow-lg">
+              {localeOptions.map((opt) => (
+                <a
+                  href={opt.href}
+                  role="option"
+                  aria-selected={opt.isActive}
+                  class={`block px-4 py-2.5 text-[13px] font-medium transition-colors ${opt.isActive ? 'bg-white/10 text-white' : 'text-white/80 hover:bg-white/5 hover:text-white'}`}
+                >
+                  <span class="flex items-center gap-2">
+                    {opt.isActive && <svg class="h-4 w-4 text-[#FF8844]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>}
+                    {opt.label}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
         <a
           href={l('/book-a-call')}
           class="hidden h-9 items-center justify-center border border-white/40 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:border-white hover:bg-white/5 sm:inline-flex"
@@ -249,10 +276,15 @@ const navItems = [
         ))}
         <!-- Mobile language switcher -->
         <div class="border-b border-white/5 px-4 py-3">
-          <a href={switchUrl} class="mobile-menu-link flex items-center gap-2 text-[14px] font-semibold text-white/80 hover:text-white">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            {localeNames[switchLocale]}
-          </a>
+          <p class="text-[11px] font-bold uppercase tracking-widest text-white/40 mb-2">Idioma / Language</p>
+          <div class="flex flex-col gap-1">
+            {localeOptions.map((opt) => (
+              <a href={opt.href} class={`mobile-menu-link flex items-center gap-2 py-2.5 px-3 text-[14px] font-medium rounded transition-colors ${opt.isActive ? 'bg-white/10 text-white' : 'text-white/75 hover:bg-white/5 hover:text-white'}`}>
+                {opt.isActive && <svg class="h-4 w-4 text-[#FF8844] shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>}
+                {opt.label}
+              </a>
+            ))}
+          </div>
         </div>
         <div class="mt-4 flex flex-col gap-3 px-4">
           <a href={l('/book-a-call')} class="mobile-menu-link flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10">
@@ -320,6 +352,38 @@ const navItems = [
     });
 
     window.addEventListener('resize', () => { if (window.innerWidth >= 768) closeMenu(); });
+  })();
+
+  (function initLangDropdown() {
+    const btn = document.getElementById('lang-dropdown-btn');
+    const dropdown = btn?.closest('.lang-dropdown');
+    const menu = document.getElementById('lang-dropdown-menu');
+    if (!btn || !dropdown || !menu) return;
+
+    function openDropdown() {
+      dropdown?.classList.add('open');
+      btn?.setAttribute('aria-expanded', 'true');
+    }
+    function closeDropdown() {
+      dropdown?.classList.remove('open');
+      btn?.setAttribute('aria-expanded', 'false');
+    }
+    function toggleDropdown() {
+      dropdown?.classList.contains('open') ? closeDropdown() : openDropdown();
+    }
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleDropdown();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (dropdown && !dropdown.contains(e.target)) closeDropdown();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDropdown();
+    });
   })();
 
   (function() {
