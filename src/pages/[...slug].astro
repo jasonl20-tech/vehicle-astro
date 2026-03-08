@@ -2,8 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getEntries } from '../lib/contentful';
+import { getEntries, getLocalizedEntries } from '../lib/contentful';
 import { renderRichText, richTextToPlainText, buildAssetMap } from '../lib/contentful-rich-text';
+import { locales, defaultLocale, type Locale, localizeUrl, getContentfulLocale } from '../i18n/utils';
 
 import LayoutHeroText from '../components/layouts/LayoutHeroText.astro';
 import LayoutHeroFeatures from '../components/layouts/LayoutHeroFeatures.astro';
@@ -12,45 +13,51 @@ import LayoutDarkPremium from '../components/layouts/LayoutDarkPremium.astro';
 import LayoutMinimal from '../components/layouts/LayoutMinimal.astro';
 
 export async function getStaticPaths() {
-  const paths: Array<{ params: { slug: string }; props: Record<string, any> }> = [];
+  const paths: Array<{ params: { slug: string | undefined }; props: Record<string, any> }> = [];
 
-  try {
-    const pageRes = await getEntries({ content_type: 'page' });
-    for (const item of pageRes.items as any[]) {
-      if (item.fields?.slug) {
-        paths.push({
-          params: { slug: item.fields.slug },
-          props: { entry: item, type: 'page' },
-        });
-      }
-    }
-  } catch {}
+  for (const locale of locales) {
+    const cfLocale = getContentfulLocale(locale);
+    const prefix = locale === defaultLocale ? '' : `${locale}/`;
 
-  try {
-    const dpRes = await getEntries({ content_type: 'dynamicPage-2', limit: 500, include: 2 });
-    const assetMap = buildAssetMap(dpRes.includes as any);
-    for (const item of dpRes.items as any[]) {
-      if (item.fields?.slug) {
-        const slug = item.fields.slug as string;
-        const prefix = item.fields.urlPrefix as string | undefined;
-        const path = prefix ? `${prefix}/${slug}` : slug;
-        paths.push({
-          params: { slug: path },
-          props: { entry: item, type: 'dynamicPage', assetMap },
-        });
+    try {
+      const pageRes = await getEntries({ content_type: 'page', locale: cfLocale });
+      for (const item of pageRes.items as any[]) {
+        if (item.fields?.slug) {
+          const slug = item.fields.slug as string;
+          paths.push({
+            params: { slug: `${prefix}${slug}` },
+            props: { entry: item, type: 'page', locale },
+          });
+        }
       }
-    }
-  } catch {}
+    } catch {}
+
+    try {
+      const dpRes = await getEntries({ content_type: 'dynamicPage-2', limit: 500, include: 2, locale: cfLocale });
+      const assetMap = buildAssetMap(dpRes.includes as any);
+      for (const item of dpRes.items as any[]) {
+        if (item.fields?.slug) {
+          const slug = item.fields.slug as string;
+          const urlPrefix = item.fields.urlPrefix as string | undefined;
+          const path = urlPrefix ? `${urlPrefix}/${slug}` : slug;
+          paths.push({
+            params: { slug: `${prefix}${path}` },
+            props: { entry: item, type: 'dynamicPage', assetMap, locale },
+          });
+        }
+      }
+    } catch {}
+  }
 
   return paths;
 }
 
-const { entry, type, assetMap } = Astro.props;
+const { entry, type, assetMap, locale = 'en' } = Astro.props;
 
 if (type === 'page') {
   var pageTitle = entry?.fields?.title ?? 'Page';
   var pageSlug = entry?.fields?.slug as string | undefined;
-  var pageCanonical = pageSlug ? `/${pageSlug}` : undefined;
+  var pageCanonical = pageSlug ? localizeUrl(`/${pageSlug}`, locale as Locale) : undefined;
   var pageBody = entry?.fields?.body;
   var pageBodyHtml = pageBody ? renderRichText(pageBody as any) : '';
   var pageDescription = entry?.fields?.seoDescription
@@ -85,7 +92,8 @@ if (type === 'dynamicPage') {
   var dpSeoDesc = toPlain(f.seoDescription, 160) || dpDescription || richTextToPlainText(f.body as any, 160) || '';
   const slug = f.slug as string;
   const prefix = f.urlPrefix as string | undefined;
-  var dpCanonical = prefix ? `/${prefix}/${slug}` : `/${slug}`;
+  const basePath = prefix ? `/${prefix}/${slug}` : `/${slug}`;
+  var dpCanonical = localizeUrl(basePath, locale as Locale);
   var dpNoIndex = (f.noIndex as boolean) || false;
 
   var dpOgImage: string | undefined;

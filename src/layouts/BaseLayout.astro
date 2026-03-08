@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { getLocaleFromUrl, getAlternateUrls, getOgLocale, type Locale } from '../i18n/utils';
 
 const defaultKeywords = 'vehicle imagery API, car stock photos API, automotive imagery API, vehicle photography API, car images API, vehicle stock imagery, automotive stock photos, vehicle imagery for dealerships, car stock photos for websites, vehicle photography API documentation, automotive imagery API Europe';
 
@@ -11,15 +12,13 @@ interface Props {
   canonicalUrl?: string;
   noIndex?: boolean;
   keywords?: string;
-  /** When set (e.g. homepage), replaces default JSON-LD @graph with this one for rich results parity. */
   structuredDataGraph?: unknown[];
-  /** Preload hero image only on homepage; use media (min-width: 768px) so mobile LCP is not delayed. */
   preloadHero?: boolean;
-  /** On mobile, preload this image as LCP candidate (e.g. first visible gallery image). */
   preloadFirstImage?: string;
 }
 
 const { title, description = '', ogImage, ogImageAlt = '', canonicalUrl, noIndex = false, keywords = defaultKeywords, structuredDataGraph, preloadHero = false, preloadFirstImage } = Astro.props;
+const locale: Locale = getLocaleFromUrl(Astro.url);
 const siteUrl = Astro.url.origin;
 const defaultOgImage = `${siteUrl}/images/hero-car.webp`;
 const ogImageUrl = ogImage
@@ -28,10 +27,11 @@ const ogImageUrl = ogImage
 const ogUrl = canonicalUrl ? `${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}` : Astro.url.href;
 const ogImageWidth = 1200;
 const ogImageHeight = 630;
+const alternateUrls = getAlternateUrls(Astro.url.pathname, siteUrl);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -46,6 +46,10 @@ const ogImageHeight = 630;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     {canonicalUrl && <link rel="canonical" href={`${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}`} />}
+    {alternateUrls.map(({ locale: loc, href }) => (
+      <link rel="alternate" hreflang={loc} href={href} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={alternateUrls.find(a => a.locale === 'en')?.href ?? siteUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
@@ -54,7 +58,7 @@ const ogImageHeight = 630;
     {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
     <meta property="og:type" content="website" />
     <meta property="og:url" content={ogUrl} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={getOgLocale(locale)} />
     <meta property="og:site_name" content="Vehicle Imagery API" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
