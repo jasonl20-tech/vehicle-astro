@@ -1,8 +1,12 @@
 import { defaultLocale, locales, type Locale, contentfulLocaleMap, ogLocaleMap, dateLocaleMap } from './config';
 import { ui, type TranslationKey } from './ui';
 
+function cleanPathname(pathname: string): string {
+  return pathname.replace(/\.html$/, '');
+}
+
 export function getLocaleFromUrl(url: URL): Locale {
-  const [, segment] = url.pathname.split('/');
+  const [, segment] = cleanPathname(url.pathname).split('/');
   if (segment && locales.includes(segment as Locale) && segment !== defaultLocale) {
     return segment as Locale;
   }
@@ -18,16 +22,18 @@ export function useTranslations(locale: Locale) {
 export function localizeUrl(url: string, locale: Locale): string {
   const clean = url.startsWith('/') ? url : `/${url}`;
   if (locale === defaultLocale) return clean;
+  if (clean === '/') return `/${locale}`;
   return `/${locale}${clean}`;
 }
 
 export function stripLocalePrefix(pathname: string): string {
+  const p = cleanPathname(pathname);
   for (const loc of locales) {
     if (loc === defaultLocale) continue;
-    if (pathname === `/${loc}`) return '/';
-    if (pathname.startsWith(`/${loc}/`)) return pathname.slice(loc.length + 1);
+    if (p === `/${loc}`) return '/';
+    if (p.startsWith(`/${loc}/`)) return p.slice(loc.length + 1);
   }
-  return pathname;
+  return p;
 }
 
 export function getAlternateUrls(pathname: string, siteUrl: string): Array<{ locale: Locale; href: string }> {
