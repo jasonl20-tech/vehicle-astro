@@ -5,35 +5,35 @@ import Footer from '../../../components/Footer.astro';
 
 const regions = [
   {
-    title: 'Europe',
-    desc: 'Complete coverage of all European markets including UK, DACH, Nordics, and Southern Europe.',
-    countries: 'Germany, UK, France, Italy, Spain, Sweden, Netherlands, Switzerland, Austria, Norway, Belgium, Denmark, Poland, Czech Republic, Finland',
+    title: 'Europa',
+    desc: 'Cobertura completa de todos los mercados europeos incluyendo Reino Unido, DACH, Nórdicos y Europa del Sur.',
+    countries: 'Alemania, Reino Unido, Francia, Italia, España, Suecia, Países Bajos, Suiza, Austria, Noruega, Bélgica, Dinamarca, Polonia, República Checa, Finlandia',
     brands: '85+',
   },
   {
-    title: 'North America',
-    desc: 'Full US and Canadian market coverage including US-spec lighting, safety equipment, and trim configurations.',
-    countries: 'United States, Canada, Mexico',
+    title: 'Norteamérica',
+    desc: 'Cobertura completa del mercado estadounidense y canadiense incluyendo iluminación, equipamiento de seguridad y configuraciones de acabado con especificaciones de EE. UU.',
+    countries: 'Estados Unidos, Canadá, México',
     brands: '60+',
   },
   {
-    title: 'Asia Pacific',
-    desc: 'Japanese, Korean, and Australian market vehicles with region-specific trim levels and configurations.',
-    countries: 'Japan, South Korea, Australia, China, India, Thailand, Indonesia, Malaysia',
+    title: 'Asia Pacífico',
+    desc: 'Vehículos de los mercados japonés, coreano y australiano con niveles de acabado y configuraciones específicos de cada región.',
+    countries: 'Japón, Corea del Sur, Australia, China, India, Tailandia, Indonesia, Malasia',
     brands: '45+',
   },
   {
-    title: 'Middle East & Africa',
-    desc: 'GCC-spec vehicles and select African markets. Region-specific trim levels and equipment packages.',
-    countries: 'UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, Oman, South Africa',
+    title: 'Oriente Medio y África',
+    desc: 'Vehículos con especificaciones GCC y mercados africanos selectos. Niveles de acabado y paquetes de equipamiento específicos de la región.',
+    countries: 'EAU, Arabia Saudita, Catar, Kuwait, Baréin, Omán, Sudáfrica',
     brands: '30+',
   },
 ];
 ---
 
 <BaseLayout
-  title="Global Coverage | Vehicle Imagery API"
-  description="Vehicle imagery coverage spanning Europe, North America, Asia Pacific, and the Middle East. 140+ brands across all major automotive markets."
+  title="Cobertura global | Vehicle Imagery API"
+  description="Cobertura de imágenes de vehículos en Europa, Norteamérica, Asia Pacífico y Oriente Medio. Más de 140 marcas en todos los principales mercados automotrices."
   canonicalUrl="/es/coverage/global"
 >
   <Header />
@@ -42,12 +42,12 @@ const regions = [
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Global Coverage</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Cobertura global</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Worldwide.<br />Every market.
+          Mundial.<br />Cada mercado.
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Our vehicle imagery database covers all major automotive markets — with region-specific configurations, specifications, and trim levels.
+          Nuestra base de datos de imágenes de vehículos cubre todos los principales mercados automotrices — con configuraciones, especificaciones y niveles de acabado específicos de cada región.
         </p>
       </div>
     </section>
@@ -56,10 +56,10 @@ const regions = [
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '140+', label: 'Brands' },
-          { value: '4', label: 'Regions' },
-          { value: '40+', label: 'Countries' },
-          { value: '65,000+', label: 'Models' },
+          { value: '140+', label: 'Marcas' },
+          { value: '4', label: 'Regiones' },
+          { value: '40+', label: 'Países' },
+          { value: '65.000+', label: 'Modelos' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -72,15 +72,15 @@ const regions = [
     <!-- World Map -->
     <section class="mx-auto max-w-[1400px] px-6 pb-24 sm:px-12 lg:px-16">
       <div class="bg-[#fafafa] rounded-2xl p-6 sm:p-10">
-        <img src="/images/world-map.svg" alt="Global vehicle imagery coverage map" class="w-full h-auto" loading="eager" />
+        <img src="/images/world-map.svg" alt="Mapa de cobertura global de imágenes de vehículos" class="w-full h-auto" loading="eager" />
         <div class="flex items-center gap-8 mt-6 pl-2">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-sm" style="background: rgba(200,90,70,0.18); border: 1px solid rgba(200,90,70,0.5);"></span>
-            <span class="text-[11px] text-black/40">Active coverage</span>
+            <span class="text-[11px] text-black/40">Cobertura activa</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-sm bg-[#e8e8e8] border border-[#d0d0d0]"></span>
-            <span class="text-[11px] text-black/40">Expanding</span>
+            <span class="text-[11px] text-black/40">En expansión</span>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@ const regions = [
               <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/20">{String(idx + 1).padStart(2, '0')}</span>
               <div class="flex items-baseline gap-1.5">
                 <span class="text-3xl sm:text-4xl font-extralight text-black tracking-tight">{region.brands}</span>
-                <span class="text-[10px] text-black/25 uppercase tracking-wider">brands</span>
+                <span class="text-[10px] text-black/25 uppercase tracking-wider">marcas</span>
               </div>
             </div>
             <h2 class="text-2xl sm:text-3xl font-light text-black tracking-tight mb-3">{region.title}</h2>
@@ -113,19 +113,19 @@ const regions = [
           <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
           <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
           <div class="relative z-10 text-center max-w-2xl mx-auto">
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Get started</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Comenzar</p>
             <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
-              Global imagery, one API
+              Imágenes globales, una API
             </h2>
             <p class="text-[14px] text-white/45 leading-relaxed mb-12 max-w-md mx-auto">
-              Access vehicle imagery for any market through a single, consistent API. Start with a free trial.
+              Accede a imágenes de vehículos para cualquier mercado a través de una API única y consistente. Comienza con una prueba gratuita.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/es/trial" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
-                Request Trial
+                Solicitar prueba
               </a>
               <a href="/es/coverage" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
-                Browse Brands
+                Explorar marcas
               </a>
             </div>
           </div>

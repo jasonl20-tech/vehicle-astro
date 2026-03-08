@@ -5,8 +5,8 @@ import Footer from '../../../components/Footer.astro';
 ---
 
 <BaseLayout
-  title="Studio Quality | Vehicle Imagery API"
-  description="Our standard of excellence — studio-grade vehicle imagery with consistent lighting, angles, and color accuracy across every brand and model."
+  title="Calidad de estudio | Vehicle Imagery API"
+  description="Nuestro estándar de excelencia — imágenes de vehículos con calidad de estudio con iluminación, ángulos y precisión de color consistentes en cada marca y modelo."
   canonicalUrl="/es/coverage/quality"
 >
   <Header />
@@ -15,12 +15,12 @@ import Footer from '../../../components/Footer.astro';
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Studio Quality</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Calidad de estudio</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Every pixel.<br />Every angle.
+          Cada píxel.<br />Cada ángulo.
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Consistent, studio-grade imagery across 140+ brands. No compromises on lighting, color accuracy, or resolution.
+          Imágenes consistentes con calidad de estudio en más de 140 marcas. Sin compromisos en iluminación, precisión de color o resolución.
         </p>
       </div>
     </section>
@@ -29,8 +29,8 @@ import Footer from '../../../components/Footer.astro';
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '36', label: 'Camera Angles' },
-          { value: '2K', label: 'Max Resolution' },
+          { value: '36', label: 'Ángulos de cámara' },
+          { value: '2K', label: 'Resolución máx.' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -51,14 +51,14 @@ import Footer from '../../../components/Footer.astro';
             <div class="flex items-center justify-between mb-16">
               <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25">01</span>
             </div>
-            <h2 class="text-5xl sm:text-6xl font-light text-black tracking-tight leading-none mb-6">Standards</h2>
+            <h2 class="text-5xl sm:text-6xl font-light text-black tracking-tight leading-none mb-6">Estándares</h2>
             <p class="text-[14px] text-black/45 leading-relaxed mb-8">
-              Every image in our database follows a strict production pipeline — from 3D rendering to color calibration and final QA.
+              Cada imagen en nuestra base de datos sigue un estricto proceso de producción — desde el renderizado 3D hasta la calibración de color y el control de calidad final.
             </p>
             <div class="mt-auto">
               <div class="border-t border-black/5 pt-8">
                 <a href="/es/documentation" class="group/btn inline-flex items-center gap-3 text-[13px] font-medium text-black transition-colors hover:text-[rgb(200,90,70)]">
-                  <span>View Documentation</span>
+                  <span>Ver documentación</span>
                   <svg class="w-4 h-4 transform group-hover/btn:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                   </svg>
@@ -80,16 +80,16 @@ import Footer from '../../../components/Footer.astro';
               <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-[rgb(200,90,70)] px-3 py-1.5 rounded-full border border-white/10">Pipeline</span>
             </div>
 
-            <h2 class="text-5xl sm:text-6xl font-light text-white tracking-tight leading-none mb-10">Production Pipeline</h2>
+            <h2 class="text-5xl sm:text-6xl font-light text-white tracking-tight leading-none mb-10">Proceso de producción</h2>
 
             <div class="space-y-0">
               {[
-                { step: '01', title: '3D Model Acquisition', desc: 'High-fidelity 3D models sourced from OEM data with accurate geometry, materials, and proportions.' },
-                { step: '02', title: 'Studio Lighting Setup', desc: 'Standardized HDRI lighting environment ensures consistent highlights, reflections, and shadow behavior across all vehicles.' },
-                { step: '03', title: 'Color Calibration', desc: 'Each paint color is carefully matched to the manufacturer\'s official color specification.' },
-                { step: '04', title: 'Multi-Angle Rendering', desc: 'Up to 36 camera positions per configuration — exterior, interior, and detail views rendered at up to 2K resolution.' },
-                { step: '05', title: 'Post-Processing & QA', desc: 'Automated and manual quality checks for artifacts, color consistency, transparency, and shadow accuracy.' },
-                { step: '06', title: 'CDN Delivery', desc: 'Signed URLs served via global CDN with ~50ms average latency. PNG and WebP formats with optional transparency.' },
+                { step: '01', title: 'Adquisición de modelos 3D', desc: 'Modelos 3D de alta fidelidad obtenidos de datos OEM con geometría, materiales y proporciones precisas.' },
+                { step: '02', title: 'Configuración de iluminación de estudio', desc: 'El entorno de iluminación HDRI estandarizado garantiza reflejos, brillos y comportamiento de sombras consistentes en todos los vehículos.' },
+                { step: '03', title: 'Calibración de color', desc: 'Cada color de pintura se ajusta cuidadosamente a la especificación oficial de color del fabricante.' },
+                { step: '04', title: 'Renderizado multiángulo', desc: 'Hasta 36 posiciones de cámara por configuración — vistas exteriores, interiores y de detalle renderizadas a resolución de hasta 2K.' },
+                { step: '05', title: 'Postproducción y control de calidad', desc: 'Controles de calidad automáticos y manuales para artefactos, consistencia de color, transparencia y precisión de sombras.' },
+                { step: '06', title: 'Entrega por CDN', desc: 'URLs firmadas servidas a través de CDN global con latencia media de ~50ms. Formatos PNG y WebP con transparencia opcional.' },
               ].map((item) => (
                 <div class="flex gap-6 py-6 border-b border-white/[0.06] first:border-t">
                   <span class="text-[11px] font-bold text-white/15 mt-0.5 shrink-0">{item.step}</span>
@@ -111,24 +111,24 @@ import Footer from '../../../components/Footer.astro';
       <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
         <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start mb-20">
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Features</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Características</p>
             <h2 class="text-4xl sm:text-5xl font-light leading-[1.05] text-black tracking-tight">
-              What makes<br />it studio-grade
+              Qué la convierte en<br />calidad de estudio
             </h2>
           </div>
           <p class="text-[16px] text-black/50 leading-relaxed max-w-lg self-end">
-            Every detail matters when vehicle images drive purchase decisions. Our rendering pipeline is built for accuracy and consistency at scale.
+            Cada detalle importa cuando las imágenes de vehículos impulsan las decisiones de compra. Nuestro proceso de renderizado está diseñado para la precisión y consistencia a escala.
           </p>
         </div>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { title: 'Consistent Lighting', desc: 'Standardized studio HDRI ensures every vehicle looks like it was shot in the same professional studio environment.' },
-            { title: 'Accurate Colors', desc: 'Colors matched to manufacturer specifications. Metallic, matte, pearl, and special edition finishes rendered faithfully.' },
-            { title: 'Transparent Backgrounds', desc: 'Clean cutouts with no artifacts. Perfect for configurators, listings, and marketing materials.' },
-            { title: 'Ground Shadows', desc: 'Natural, soft ground shadows that anchor the vehicle. Available separately or composited.' },
-            { title: 'High Resolution', desc: 'From standard web resolution to 2K. Crisp details at any zoom level — wheel textures, badges, and reflections.' },
-            { title: 'Interior Coverage', desc: '360° cockpit panoramas, dashboard close-ups, and rear-seat views with material-accurate rendering.' },
+            { title: 'Iluminación consistente', desc: 'El HDRI de estudio estandarizado garantiza que cada vehículo se vea como si hubiera sido fotografiado en el mismo entorno profesional de estudio.' },
+            { title: 'Colores precisos', desc: 'Colores ajustados a las especificaciones del fabricante. Acabados metalizados, mate, perlados y de edición especial renderizados con fidelidad.' },
+            { title: 'Fondos transparentes', desc: 'Recortes limpios sin artefactos. Perfectos para configuradores, listados y materiales de marketing.' },
+            { title: 'Sombras de suelo', desc: 'Sombras de suelo naturales y suaves que anclan el vehículo. Disponibles por separado o compuestas.' },
+            { title: 'Alta resolución', desc: 'Desde resolución web estándar hasta 2K. Detalles nítidos a cualquier nivel de zoom — texturas de llantas, emblemas y reflejos.' },
+            { title: 'Cobertura interior', desc: 'Panorámicas de cabina de 360°, primeros planos del salpicadero y vistas de asientos traseros con renderizado fiel a los materiales.' },
           ].map((feature) => (
             <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">
               <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/10 via-black/5 to-transparent"></div>
@@ -145,24 +145,24 @@ import Footer from '../../../components/Footer.astro';
       <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
         <div class="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
           <div class="lg:sticky lg:top-32">
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Consistency</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Consistencia</p>
             <h2 class="text-4xl sm:text-5xl font-light text-black tracking-tight leading-[1.05]">
-              Stock photos<br />vs. our API
+              Fotos de stock<br />vs. nuestra API
             </h2>
           </div>
           <div class="space-y-0">
             {[
-              { aspect: 'Lighting', stock: 'Varies by photographer, location, and time of day. Inconsistent across listings.', api: 'Standardized HDRI studio environment. Every vehicle rendered under identical conditions.' },
-              { aspect: 'Color Accuracy', stock: 'Subject to white balance, editing styles, and camera sensor differences.', api: 'Colors matched to manufacturer specifications. Consistent across every brand and model.' },
-              { aspect: 'Angles', stock: 'Random angles, often missing key views. No guarantee of front, rear, or interior.', api: 'Up to 36 standardized camera positions per configuration. Every angle, every time.' },
-              { aspect: 'Background', stock: 'Parking lots, streets, showrooms. Distracting and inconsistent.', api: 'Clean white or transparent backgrounds. Ready for any layout or configurator.' },
-              { aspect: 'Availability', stock: 'New models delayed weeks or months. Special editions often missing.', api: 'New models available within weeks of launch. Facelifts and special editions included.' },
+              { aspect: 'Iluminación', stock: 'Varía según el fotógrafo, la ubicación y la hora del día. Inconsistente entre listados.', api: 'Entorno de estudio HDRI estandarizado. Cada vehículo renderizado bajo condiciones idénticas.' },
+              { aspect: 'Precisión de color', stock: 'Sujeto al balance de blancos, estilos de edición y diferencias del sensor de la cámara.', api: 'Colores ajustados a las especificaciones del fabricante. Consistente en todas las marcas y modelos.' },
+              { aspect: 'Ángulos', stock: 'Ángulos aleatorios, a menudo sin vistas clave. Sin garantía de frontal, trasera o interior.', api: 'Hasta 36 posiciones de cámara estandarizadas por configuración. Cada ángulo, cada vez.' },
+              { aspect: 'Fondo', stock: 'Estacionamientos, calles, concesionarios. Distractores e inconsistentes.', api: 'Fondos blancos limpios o transparentes. Listos para cualquier diseño o configurador.' },
+              { aspect: 'Disponibilidad', stock: 'Nuevos modelos con retraso de semanas o meses. Ediciones especiales a menudo ausentes.', api: 'Nuevos modelos disponibles en semanas desde el lanzamiento. Restylings y ediciones especiales incluidos.' },
             ].map((row) => (
               <div class="py-8 border-b border-black/5 first:border-t">
                 <h3 class="text-[15px] font-bold text-black mb-4">{row.aspect}</h3>
                 <div class="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25 mb-2">Stock Photos</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25 mb-2">Fotos de stock</p>
                     <p class="text-[13px] text-black/45 leading-relaxed">{row.stock}</p>
                   </div>
                   <div>
@@ -184,19 +184,19 @@ import Footer from '../../../components/Footer.astro';
           <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
           <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
           <div class="relative z-10 text-center max-w-2xl mx-auto">
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Get started</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Comenzar</p>
             <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
-              See the quality yourself
+              Comprueba la calidad tú mismo
             </h2>
             <p class="text-[14px] text-white/45 leading-relaxed mb-12 max-w-md mx-auto">
-              Request a free trial and explore our imagery with full API access. No credit card required.
+              Solicita una prueba gratuita y explora nuestras imágenes con acceso completo a la API. Sin tarjeta de crédito.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/es/trial" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
-                Request Trial
+                Solicitar prueba
               </a>
               <a href="/es/coverage" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
-                Browse Coverage
+                Explorar cobertura
               </a>
             </div>
           </div>

@@ -5,8 +5,8 @@ import Footer from '../../../components/Footer.astro';
 
 const categories = [
   {
-    title: 'Sport & Performance',
-    desc: 'High-performance sports cars and supercars from the world\'s most prestigious manufacturers.',
+    title: 'Deportivo y rendimiento',
+    desc: 'Deportivos de alto rendimiento y superdeportivos de los fabricantes más prestigiosos del mundo.',
     brands: [
       { slug: 'ferrari', name: 'Ferrari' }, { slug: 'porsche', name: 'Porsche' }, { slug: 'lamborghini', name: 'Lamborghini' },
       { slug: 'mclaren', name: 'McLaren' }, { slug: 'aston_martin', name: 'Aston Martin' }, { slug: 'bugatti', name: 'Bugatti' },
@@ -15,8 +15,8 @@ const categories = [
     ],
   },
   {
-    title: 'Luxury',
-    desc: 'Premium luxury vehicles from the world\'s most exclusive automotive brands.',
+    title: 'Lujo',
+    desc: 'Vehículos de lujo premium de las marcas automotrices más exclusivas del mundo.',
     brands: [
       { slug: 'rolls_royce', name: 'Rolls-Royce' }, { slug: 'bentley', name: 'Bentley' }, { slug: 'mercedes_benz', name: 'Mercedes-Benz' },
       { slug: 'bmw', name: 'BMW' }, { slug: 'audi', name: 'Audi' }, { slug: 'lexus', name: 'Lexus' },
@@ -25,8 +25,8 @@ const categories = [
     ],
   },
   {
-    title: 'Mainstream',
-    desc: 'Popular mass-market vehicles from leading global manufacturers.',
+    title: 'Generalistas',
+    desc: 'Vehículos populares de mercado masivo de los principales fabricantes globales.',
     brands: [
       { slug: 'volkswagen', name: 'Volkswagen' }, { slug: 'toyota', name: 'Toyota' }, { slug: 'ford', name: 'Ford' },
       { slug: 'honda', name: 'Honda' }, { slug: 'nissan', name: 'Nissan' }, { slug: 'hyundai', name: 'Hyundai' },
@@ -35,8 +35,8 @@ const categories = [
     ],
   },
   {
-    title: 'European',
-    desc: 'European automotive manufacturers including French, Italian, and other continental brands.',
+    title: 'Europeos',
+    desc: 'Fabricantes automotrices europeos incluyendo marcas francesas, italianas y de otros países del continente.',
     brands: [
       { slug: 'peugeot', name: 'Peugeot' }, { slug: 'renault', name: 'Renault' }, { slug: 'citroen', name: 'Citroën' },
       { slug: 'seat', name: 'SEAT' }, { slug: 'skoda', name: 'Škoda' }, { slug: 'cupra', name: 'CUPRA' },
@@ -46,8 +46,8 @@ const categories = [
     ],
   },
   {
-    title: 'American',
-    desc: 'American automotive manufacturers including trucks, SUVs, and classic American vehicles.',
+    title: 'Americanos',
+    desc: 'Fabricantes automotrices americanos incluyendo camionetas, SUVs y vehículos clásicos americanos.',
     brands: [
       { slug: 'chevrolet', name: 'Chevrolet' }, { slug: 'gmc', name: 'GMC' }, { slug: 'dodge', name: 'Dodge' },
       { slug: 'ram', name: 'RAM' }, { slug: 'jeep', name: 'Jeep' }, { slug: 'chrysler', name: 'Chrysler' },
@@ -57,8 +57,8 @@ const categories = [
     ],
   },
   {
-    title: 'Electric & Hybrid',
-    desc: 'Electric and hybrid vehicle manufacturers leading the transition to sustainable mobility.',
+    title: 'Eléctricos e híbridos',
+    desc: 'Fabricantes de vehículos eléctricos e híbridos que lideran la transición hacia la movilidad sostenible.',
     brands: [
       { slug: 'tesla', name: 'Tesla' }, { slug: 'polestar', name: 'Polestar' }, { slug: 'lucid', name: 'Lucid' },
     ],
@@ -67,8 +67,8 @@ const categories = [
 ---
 
 <BaseLayout
-  title="Vehicle Coverage | 140+ Brands & 65,000+ Models | Vehicle Imagery API"
-  description="Comprehensive vehicle imagery database covering 140+ automotive brands and 65,000+ models worldwide."
+  title="Cobertura de vehículos | Más de 140 marcas y 65.000+ modelos | Vehicle Imagery API"
+  description="Base de datos completa de imágenes de vehículos que cubre más de 140 marcas automotrices y 65.000+ modelos en todo el mundo."
   canonicalUrl="/es/coverage"
 >
   <Header />
@@ -77,12 +77,12 @@ const categories = [
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Coverage</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Cobertura</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          140+ brands.<br />65K models.
+          Más de 140 marcas.<br />65K modelos.
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Studio-quality vehicle imagery for every major manufacturer. From supercars to family vehicles, always up to date.
+          Imágenes de vehículos con calidad de estudio para todos los principales fabricantes. Desde superdeportivos hasta vehículos familiares, siempre actualizados.
         </p>
       </div>
     </section>
@@ -91,10 +91,10 @@ const categories = [
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '140+', label: 'Brands' },
-          { value: '65,000+', label: 'Models' },
-          { value: '1,000+', label: 'Colors' },
-          { value: '50ms', label: 'Avg. Response' },
+          { value: '140+', label: 'Marcas' },
+          { value: '65.000+', label: 'Modelos' },
+          { value: '1.000+', label: 'Colores' },
+          { value: '50ms', label: 'Resp. media' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -116,7 +116,7 @@ const categories = [
                   <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/20">{String(catIdx + 1).padStart(2, '0')}</span>
                   <h2 class="text-3xl sm:text-4xl font-light text-black tracking-tight">{cat.title}</h2>
                 </div>
-                <p class="text-[13px] text-black/35 mt-2 sm:mt-0">{cat.brands.length} brands</p>
+                <p class="text-[13px] text-black/35 mt-2 sm:mt-0">{cat.brands.length} marcas</p>
               </div>
               <p class="text-[14px] text-black/45 leading-relaxed mb-10 max-w-xl">{cat.desc}</p>
               <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3">
@@ -148,16 +148,16 @@ const categories = [
     <section class="mx-auto max-w-[1400px] px-6 pb-32 sm:px-12 lg:px-16">
       <div class="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
         <div class="lg:sticky lg:top-32">
-          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Data</p>
-          <h2 class="text-4xl sm:text-5xl font-light text-black tracking-tight leading-[1.05]">Beyond<br />imagery.</h2>
+          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Datos</p>
+          <h2 class="text-4xl sm:text-5xl font-light text-black tracking-tight leading-[1.05]">Más allá de<br />las imágenes.</h2>
         </div>
         <div class="space-y-0">
           {[
-            { title: 'Trim Levels & Equipment', text: 'Coverage of all trim levels and equipment packages. AMG-Line, S-Line, M-Package — our API delivers the correct images for the exact specification.' },
-            { title: 'Paint Colors', text: 'Comprehensive paint color coverage matched to manufacturer specifications. Standard, metallic, matte, and special edition colors.' },
-            { title: 'Interior Configurations', text: '360° interior panoramas with multiple seat configurations, dashboard variants, and material options. Cockpit, front row, and rear row perspectives.' },
-            { title: 'Regional Specifications', text: 'US-Specs, EU-Specs, and market variations. Lighting differences, safety equipment, and RHD variants for UK, Australia, and Asian markets.' },
-            { title: 'Model Year Updates', text: 'New model years, facelifts, and mid-cycle updates available within weeks of official launch. Accurate visual representation for every model year.' },
+            { title: 'Niveles de acabado y equipamiento', text: 'Cobertura de todos los niveles de acabado y paquetes de equipamiento. AMG-Line, S-Line, M-Package — nuestra API entrega las imágenes correctas para la especificación exacta.' },
+            { title: 'Colores de pintura', text: 'Cobertura completa de colores de pintura ajustados a las especificaciones del fabricante. Colores estándar, metalizados, mate y de edición especial.' },
+            { title: 'Configuraciones de interior', text: 'Panorámicas interiores de 360° con múltiples configuraciones de asientos, variantes de salpicadero y opciones de materiales. Perspectivas de cabina, fila delantera y fila trasera.' },
+            { title: 'Especificaciones regionales', text: 'Especificaciones de EE. UU., especificaciones europeas y variaciones de mercado. Diferencias de iluminación, equipamiento de seguridad y variantes de conducción a la derecha para los mercados de Reino Unido, Australia y Asia.' },
+            { title: 'Actualizaciones por año de modelo', text: 'Nuevos años de modelo, restylings y actualizaciones de media vida disponibles en semanas desde el lanzamiento oficial. Representación visual precisa para cada año de modelo.' },
           ].map((item) => (
             <div class="py-8 border-b border-black/5 first:border-t">
               <h3 class="text-[15px] font-bold text-black mb-2">{item.title}</h3>
@@ -175,15 +175,15 @@ const categories = [
         <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[rgb(200,90,70)] via-[rgb(200,90,70)]/40 to-transparent"></div>
         <div class="relative p-10 sm:p-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
           <div>
-            <h2 class="text-3xl sm:text-4xl font-light text-white tracking-tight mb-3">Need a specific brand?</h2>
-            <p class="text-[14px] text-white/40 max-w-md">Can't find a brand or model? We're constantly expanding and welcome requests.</p>
+            <h2 class="text-3xl sm:text-4xl font-light text-white tracking-tight mb-3">¿Necesitas una marca específica?</h2>
+            <p class="text-[14px] text-white/40 max-w-md">¿No encuentras una marca o modelo? Estamos en constante expansión y aceptamos solicitudes.</p>
           </div>
           <div class="flex gap-3 shrink-0">
             <a href="/es/contact" class="group/btn inline-flex items-center gap-3 bg-white text-[rgb(10,43,49)] px-7 py-4 text-[13px] font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] hover:text-white transition-colors">
-              Request Coverage
+              Solicitar cobertura
             </a>
             <a href="/es/documentation" class="inline-flex items-center gap-3 border border-white/20 text-white px-7 py-4 text-[13px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors">
-              Docs
+              Documentación
             </a>
           </div>
         </div>
