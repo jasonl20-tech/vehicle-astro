@@ -1,0 +1,189 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+
+const vehicleTypes = [
+  {
+    title: 'Sedans & Saloons',
+    desc: 'From compact city sedans to full-size luxury saloons. Every trim, every color, every angle.',
+    count: '18,000+',
+    examples: 'BMW 3 Series, Mercedes C-Class, Audi A4, Toyota Camry, Honda Civic',
+  },
+  {
+    title: 'SUVs & Crossovers',
+    desc: 'Compact crossovers to full-size luxury SUVs. The fastest-growing segment with the most comprehensive coverage.',
+    count: '15,000+',
+    examples: 'BMW X5, Range Rover, Porsche Cayenne, Toyota RAV4, Volkswagen Tiguan',
+  },
+  {
+    title: 'Sports Cars & Supercars',
+    desc: 'High-performance vehicles from every angle — aerodynamic details, spoilers, and diffusers rendered with precision.',
+    count: '4,500+',
+    examples: 'Ferrari 296 GTB, Porsche 911, Lamborghini Huracán, McLaren 750S, Aston Martin Vantage',
+  },
+  {
+    title: 'Hatchbacks & Wagons',
+    desc: 'European favorites and practical everyday vehicles. Estate, Avant, Touring, and Sportback variants included.',
+    count: '8,000+',
+    examples: 'Volkswagen Golf, BMW 3 Series Touring, Audi A4 Avant, Ford Focus, Peugeot 308',
+  },
+  {
+    title: 'Coupés & Convertibles',
+    desc: 'Two-door coupés, cabriolets, and roadsters. Roof-up and roof-down configurations where available.',
+    count: '3,500+',
+    examples: 'BMW 4 Series, Mercedes E-Class Coupé, Porsche 718 Boxster, Audi TT, Ford Mustang',
+  },
+  {
+    title: 'Pickup Trucks',
+    desc: 'Full-size and mid-size trucks. Single cab, crew cab, and chassis cab configurations.',
+    count: '2,800+',
+    examples: 'Ford F-150, RAM 1500, Chevrolet Silverado, Toyota Hilux, GMC Sierra',
+  },
+  {
+    title: 'Vans & MPVs',
+    desc: 'Commercial vans, passenger vans, and multi-purpose vehicles. Panel van and crew van variants.',
+    count: '3,200+',
+    examples: 'Mercedes Sprinter, Ford Transit, Volkswagen Transporter, Peugeot Expert, Renault Master',
+  },
+  {
+    title: 'Electric Vehicles',
+    desc: 'Dedicated EV platforms and electric variants. Battery configuration details and charge port positioning included.',
+    count: '5,000+',
+    examples: 'Tesla Model 3, Porsche Taycan, BMW iX, Mercedes EQS, Hyundai Ioniq 5',
+  },
+];
+---
+
+<BaseLayout
+  title="Vehicle Types | Vehicle Imagery API"
+  description="Comprehensive imagery coverage for every vehicle segment — sedans, SUVs, sports cars, trucks, vans, and electric vehicles."
+  canonicalUrl="/es/coverage/vehicle-types"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+
+    <!-- Hero -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
+      <div class="max-w-3xl">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Vehicle Types</p>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
+          Every segment.<br />Every body style.
+        </h1>
+        <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
+          From compact hatchbacks to full-size SUVs, supercars to commercial vans — studio-quality imagery for every vehicle category.
+        </p>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
+      <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
+        {[
+          { value: '8', label: 'Segments' },
+          { value: '65,000+', label: 'Configurations' },
+          { value: '36', label: 'Views per Config' },
+          { value: 'Weekly', label: 'New Additions' },
+        ].map((stat) => (
+          <div>
+            <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25 mt-1">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Vehicle Types -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-32 sm:px-12 lg:px-16">
+      <div class="space-y-6">
+        {vehicleTypes.map((type, idx) => (
+          <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white">
+            <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/10 via-black/5 to-transparent"></div>
+            <div class="p-8 sm:p-12">
+              <div class="grid lg:grid-cols-[1fr_1fr] gap-8 lg:gap-16 items-start">
+                <div>
+                  <div class="flex items-center gap-4 mb-6">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/20">{String(idx + 1).padStart(2, '0')}</span>
+                    <h2 class="text-3xl sm:text-4xl font-light text-black tracking-tight">{type.title}</h2>
+                  </div>
+                  <p class="text-[14px] text-black/45 leading-relaxed mb-6">{type.desc}</p>
+                  <div class="border-t border-black/5 pt-6">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25 mb-2">Popular Models</p>
+                    <p class="text-[13px] text-black/40 leading-relaxed">{type.examples}</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-end">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-5xl sm:text-6xl font-extralight text-black tracking-tight">{type.count}</span>
+                    <span class="text-[11px] text-black/30 uppercase tracking-wider">configs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Data per Vehicle -->
+    <section class="py-24 sm:py-32 bg-[#fafafa]">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start mb-20">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Per Vehicle</p>
+            <h2 class="text-4xl sm:text-5xl font-light leading-[1.05] text-black tracking-tight">
+              What you get<br />for each config
+            </h2>
+          </div>
+          <p class="text-[16px] text-black/50 leading-relaxed max-w-lg self-end">
+            Every vehicle configuration in our database comes with a complete set of assets and metadata, regardless of segment.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { title: 'Exterior Views', desc: 'Front, front-left, side, rear, rear-left, and top-down angles. Up to 36 positions for premium coverage.' },
+            { title: 'Interior Views', desc: 'Cockpit, dashboard, rear seats, and trunk. 360° panoramas for supported models.' },
+            { title: 'All Trim Levels', desc: 'Base, mid-range, and top-tier trims. M-Package, AMG-Line, S-Line, and sport variants.' },
+            { title: 'Multiple Formats', desc: 'PNG and WebP with optional transparent backgrounds and ground shadows. From web to 2K resolution.' },
+            { title: 'Vehicle Metadata', desc: 'Brand, model, year, variant, trim, and color data returned with every API response.' },
+          ].map((item) => (
+            <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">
+              <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/10 via-black/5 to-transparent"></div>
+              <h3 class="text-[15px] font-bold text-black mb-3">{item.title}</h3>
+              <p class="text-[13px] text-black/45 leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="pb-24 sm:pb-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] px-8 py-20 sm:px-16 sm:py-24" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+          <div class="relative z-10 text-center max-w-2xl mx-auto">
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Explore</p>
+            <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
+              Find your vehicle type
+            </h2>
+            <p class="text-[14px] text-white/45 leading-relaxed mb-12 max-w-md mx-auto">
+              Browse our full brand database or start a free trial to explore the API with real imagery.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/es/trial" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
+                Request Trial
+              </a>
+              <a href="/es/coverage" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
+                Browse Brands
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { getEntries } from '../../../lib/contentful';
+
+let categories: { slug: string; label: string; count: number; desc: string }[] = [];
+
+try {
+  const res = await getEntries({ content_type: 'faq', limit: 1000 });
+  const items = res.items || [];
+  const catMap = new Map<string, number>();
+
+  for (const item of items) {
+    const cat = (item as { fields?: { category?: string } }).fields?.category;
+    if (cat) {
+      const slug = cat.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      catMap.set(slug, (catMap.get(slug) || 0) + 1);
+    }
+  }
+
+  const categoryMeta: Record<string, { label: string; desc: string }> = {
+    general: { label: 'General', desc: 'Common questions about Vehicle Imagery and our services.' },
+    api: { label: 'API', desc: 'Technical questions about endpoints, authentication, and integration.' },
+    billing: { label: 'Billing', desc: 'Pricing, invoices, plans, and payment-related questions.' },
+    support: { label: 'Support', desc: 'Get help with your account, technical issues, and more.' },
+    account: { label: 'Account', desc: 'Account management, settings, and access.' },
+    coverage: { label: 'Coverage', desc: 'Available brands, models, and regional support.' },
+    integration: { label: 'Integration', desc: 'SDKs, webhooks, and third-party integrations.' },
+  };
+
+  categories = Array.from(catMap.entries()).map(([slug, count]) => ({
+    slug,
+    label: categoryMeta[slug]?.label ?? slug.charAt(0).toUpperCase() + slug.slice(1),
+    count,
+    desc: categoryMeta[slug]?.desc ?? `Frequently asked questions about ${slug}.`,
+  }));
+
+  categories.sort((a, b) => a.label.localeCompare(b.label));
+} catch {
+  categories = [];
+}
+
+const displayCategories = categories;
+---
+
+<BaseLayout
+  title="FAQ | Vehicle Imagery API"
+  description="Frequently asked questions about Vehicle Imagery API – general, technical, billing, and more."
+  canonicalUrl="/es/faq"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    <!-- Hero -->
+    <section class="px-4 pt-6 pb-10 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-[#1C2B32]">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#1C2B32] via-[#25363F] to-[#1C2B32]" aria-hidden="true" />
+          <div class="relative flex min-h-[240px] flex-col justify-end px-8 py-10 sm:min-h-[300px] sm:px-16 sm:py-16">
+            <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl">FAQ</h1>
+            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
+              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
+                <p class="text-[13px] tracking-wide text-black/80">
+                  <a href="/es" class="transition-colors hover:text-black">Home</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <span class="font-medium text-black">FAQ</span>
+                </p>
+              </div>
+            </div>
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[25%] -rotate-90 origin-center pointer-events-none select-none" aria-hidden="true">
+              <span class="text-[140px] sm:text-[180px] font-extralight tracking-tighter text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.08);">FAQ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Cards -->
+    <section class="w-full px-4 pb-24 pt-10 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        {displayCategories.length > 0 ? (
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {displayCategories.map((cat) => (
+              <a
+                href={`/es/faq/${cat.slug}`}
+                class="group relative min-h-[220px] sm:min-h-[260px] flex flex-col justify-end rounded-2xl bg-[#f5f5f5] p-10 sm:p-12 transition-all duration-300 hover:bg-[#ebebeb]"
+              >
+                <span class="absolute top-10 right-10 sm:top-12 sm:right-12 w-10 h-10 rounded-full border border-black/10 flex items-center justify-center group-hover:border-[rgb(200,90,70)] group-hover:bg-[rgb(200,90,70)] transition-all">
+                  <svg class="w-4 h-4 text-black/25 group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-black text-black tracking-tight mb-3">{cat.label}</h2>
+                <p class="text-[14px] text-black/40 leading-relaxed max-w-md">{cat.desc}</p>
+                {cat.count > 0 && (
+                  <p class="mt-4 text-[11px] font-medium text-black/25">{cat.count} {cat.count === 1 ? 'question' : 'questions'}</p>
+                )}
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-20">
+            <p class="text-black/40 text-sm">No FAQ categories found. Add FAQ entries in Contentful to see categories here.</p>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

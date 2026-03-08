@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { getEntries } from '../../../lib/contentful';
+import { renderRichText, richTextToPlainText, buildAssetMap } from '../../../lib/contentful-rich-text';
+import type { Document } from '@contentful/rich-text-types';
+
+export async function getStaticPaths() {
+  let categories: string[] = [];
+  try {
+    const res = await getEntries({ content_type: 'faq', limit: 1000, locale: 'es' });
+    const items = res.items || [];
+    const catSet = new Set<string>();
+    for (const item of items) {
+      const cat = (item as { fields?: { category?: string } }).fields?.category;
+      if (cat) {
+        catSet.add(cat.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''));
+      }
+    }
+    categories = Array.from(catSet);
+  } catch {
+    categories = ['general', 'api', 'billing', 'support'];
+  }
+
+  if (categories.length === 0) {
+    categories = ['general', 'api', 'billing', 'support'];
+  }
+
+  return categories.map((cat) => ({ params: { category: cat } }));
+}
+
+const { category } = Astro.params;
+
+interface FaqItem {
+  question: string;
+  answerHtml: string;
+  answerText: string;
+  order: number;
+}
+
+let faqs: FaqItem[] = [];
+let categoryLabel = category ? category.charAt(0).toUpperCase() + category.slice(1) : '';
+
+try {
+  const res = await getEntries({ content_type: 'faq', limit: 1000, include: 2, locale: 'es' });
+  const assetMap = buildAssetMap(res?.includes);
+  const items = res.items || [];
+
+  for (const item of items) {
+    const fields = (item as { fields?: { category?: string; question?: string; answer?: Document; order?: number } }).fields;
+    if (!fields?.category || !fields?.question) continue;
+
+    const slug = fields.category.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    if (slug !== category) continue;
+
+    categoryLabel = fields.category.charAt(0).toUpperCase() + fields.category.slice(1);
+
+    faqs.push({
+      question: fields.question,
+      answerHtml: fields.answer ? renderRichText(fields.answer, assetMap) : '',
+      answerText: fields.answer ? richTextToPlainText(fields.answer, 0) : '',
+      order: fields.order ?? 999,
+    });
+  }
+
+  faqs.sort((a, b) => a.order - b.order);
+} catch {
+  faqs = [];
+}
+
+const siteUrl = Astro.url.origin;
+const faqSchema = faqs.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answerText || faq.question },
+  })),
+} : null;
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${siteUrl}/es/es` },
+    { '@type': 'ListItem', position: 2, name: 'FAQ', item: `${siteUrl}/es/faq` },
+    { '@type': 'ListItem', position: 3, name: categoryLabel, item: `${siteUrl}/es/faq/${category}` },
+  ],
+};
+---
+
+<BaseLayout
+  title={`${categoryLabel} FAQ | Vehicle Imagery API`}
+  description={`Preguntas frecuentes sobre ${categoryLabel} – Vehicle Imagery API.`}
+  canonicalUrl={`/es/faq/${category}`}
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+
+    <section class="px-4 pt-6 pb-0 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-[#1C2B32]">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#1C2B32] via-[#25363F] to-[#1C2B32]" aria-hidden="true" />
+          <div class="relative flex min-h-[200px] flex-col justify-end px-8 py-10 sm:min-h-[280px] sm:px-16 sm:py-14">
+            <div class="flex items-end justify-between">
+              <div>
+                <a href="/es/faq" class="inline-flex items-center text-[11px] font-bold uppercase tracking-widest text-white/40 hover:text-white/70 transition-colors mb-4">
+                  <svg class="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7" /></svg>
+                  Todos los temas
+                </a>
+                <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">{categoryLabel}</h1>
+              </div>
+              {faqs.length > 0 && (
+                <span class="hidden sm:block text-[13px] text-white/30 font-medium mb-2">{faqs.length} {faqs.length === 1 ? 'pregunta' : 'preguntas'}</span>
+              )}
+            </div>
+            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
+              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
+                <p class="text-[13px] tracking-wide text-black/80">
+                  <a href="/es" class="transition-colors hover:text-black">Inicio</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <a href="/es/faq" class="transition-colors hover:text-black">FAQ</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <span class="font-medium text-black">{categoryLabel}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="w-full px-4 pb-24 pt-12 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1000px]">
+        {faqs.length > 0 ? (
+          <div class="space-y-4">
+            {faqs.map((faq, i) => (
+              <details class="group rounded-2xl bg-[#f5f5f5] transition-all duration-300 open:bg-[#1C2B32] open:shadow-[0_12px_48px_-12px_rgba(28,43,50,0.3)]" open={i === 0}>
+                <summary class="flex cursor-pointer items-center justify-between p-7 sm:p-9 select-none list-none [&::-webkit-details-marker]:hidden">
+                  <div class="flex items-center gap-5 sm:gap-7 pr-4">
+                    <span class="text-[28px] sm:text-[36px] font-black leading-none tracking-tighter text-black/[0.06] group-open:text-white/10 transition-colors shrink-0 w-10 sm:w-12 text-right">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="text-[16px] sm:text-[18px] font-bold text-black group-open:text-white tracking-tight leading-snug transition-colors">{faq.question}</span>
+                  </div>
+                  <span class="flex-shrink-0 w-10 h-10 rounded-full border border-black/10 group-open:border-white/20 flex items-center justify-center transition-all group-open:bg-white/10">
+                    <svg class="w-4 h-4 text-black/30 group-open:text-white transition-all duration-300 group-open:rotate-45" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                  </span>
+                </summary>
+                <div class="px-7 sm:px-9 pb-9 sm:pb-11 pt-0">
+                  <div class="ml-[60px] sm:ml-[76px]">
+                    <div class="w-8 h-px bg-white/20 mb-6" />
+                    <div class="text-[15px] leading-[1.8] text-white/70 prose prose-sm prose-invert max-w-none prose-p:text-white/70 prose-strong:text-white prose-a:text-[rgb(200,90,70)] prose-a:no-underline hover:prose-a:underline prose-ul:text-white/70 prose-ol:text-white/70 prose-li:marker:text-white/30 prose-code:text-white/80 prose-code:bg-white/10 prose-code:rounded prose-code:px-1.5 prose-code:py-0.5" set:html={faq.answerHtml} />
+                  </div>
+                </div>
+              </details>
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-24 rounded-2xl bg-[#f5f5f5]">
+            <p class="text-black/35 text-[15px] mb-6">Aún no hay preguntas en esta categoría.</p>
+            <a href="/es/faq" class="inline-flex items-center text-[12px] font-bold uppercase tracking-widest text-black/50 hover:text-[rgb(200,90,70)] transition-colors">
+              <svg class="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7" /></svg>
+              Volver a todos los temas
+            </a>
+          </div>
+        )}
+
+        {faqs.length > 0 && (
+          <div class="mt-16 flex items-center justify-between">
+            <a href="/es/faq" class="inline-flex items-center text-[12px] font-bold uppercase tracking-widest text-black/40 hover:text-[rgb(200,90,70)] transition-colors">
+              <svg class="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7" /></svg>
+              Todos los temas
+            </a>
+            <a href="/es/contact" class="inline-flex items-center text-[12px] font-bold uppercase tracking-widest text-black/40 hover:text-[rgb(200,90,70)] transition-colors">
+              ¿Necesitas más ayuda?
+              <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-7-7m7 7l-7 7" /></svg>
+            </a>
+          </div>
+        )}
+      </div>
+    </section>
+    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </main>
+  <Footer />
+</BaseLayout>

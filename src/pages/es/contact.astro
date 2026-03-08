@@ -1,0 +1,253 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Contact | Vehicle Imagery API"
+  description="Get in touch with Vehicle Imagery. API keys, sales, and technical support for studio-quality vehicle imagery."
+  canonicalUrl="/es/contact"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    <!-- Hero: großes Bild mit runden Ecken -->
+    <section class="px-4 pt-6 pb-10 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]">
+          <!-- Background image -->
+          <img
+            src="/images/showroom.webp"
+            alt="Vehicle showroom – Contact Vehicle Imagery"
+            class="absolute inset-0 h-full w-full object-cover"
+            aria-hidden="true"
+          />
+          <!-- Dark overlay for readability -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" aria-hidden="true" />
+          <!-- Accent color overlay -->
+          <div class="absolute inset-0 opacity-30 mix-blend-multiply" style="background: linear-gradient(135deg, #0a0a0a 0%, transparent 40%, rgba(200,40,20,0.4) 100%);" aria-hidden="true" />
+
+          <div class="relative flex min-h-[360px] flex-col justify-end px-8 py-10 sm:min-h-[460px] sm:px-16 sm:py-16 lg:min-h-[500px]">
+            <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl">Contact</h1>
+
+            <!-- Breadcrumb: smooth floating island -->
+            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
+              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
+                <p class="text-[13px] tracking-wide text-black/80">
+                  <a href="/es" class="transition-colors hover:text-black">Home</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <span class="font-medium text-black">Contact</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Large ghost text -->
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[25%] -rotate-90 origin-center pointer-events-none select-none" aria-hidden="true">
+              <span class="text-[140px] sm:text-[180px] font-extralight tracking-tighter text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.12);">Contact</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-column content: 1. Text, 2. Form -->
+    <section class="mx-auto max-w-7xl px-6 pb-24 pt-8 sm:px-12 lg:px-16">
+      <div class="grid gap-16 lg:grid-cols-[1fr_1fr] lg:gap-24 items-start">
+        <!-- Left: Text & Info -->
+        <div class="pt-4">
+          <p class="text-[11px] font-medium text-black/50 mb-6">/ get in touch /</p>
+          <h2 class="text-4xl sm:text-5xl font-normal leading-[1.1] text-black tracking-tight mb-8">
+            We are always ready to help you and answer your questions
+          </h2>
+          <p class="text-sm leading-relaxed text-black/60 mb-12 max-w-md">
+            Questions about the API, pricing, or integration? Our team is here for you. Get your API key, request a demo, or reach out for enterprise solutions.
+          </p>
+
+          <div class="grid grid-cols-2 gap-y-10 gap-x-8">
+            <div>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Office</h3>
+              <p class="text-[13px] text-black/70 mb-1">Vehicle Imagery HQ</p>
+              <p class="text-[13px] text-black/70">Germany</p>
+            </div>
+            <div>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Email</h3>
+              <p class="text-[13px] text-black/70"><a href="mailto:info@vehicleimagery.com" class="hover:text-black transition-colors">info@vehicleimagery.com</a></p>
+            </div>
+            <div>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Social network</h3>
+              <div class="flex gap-4">
+                <a href="https://twitter.com/vehicleimagery" target="_blank" rel="noopener noreferrer" class="text-[13px] text-black hover:text-black/70 transition-colors font-medium" aria-label="X">X</a>
+                <a href="https://linkedin.com/company/vehicleimagery" target="_blank" rel="noopener noreferrer" class="text-[13px] text-black hover:text-black/70 transition-colors font-medium" aria-label="LinkedIn">in</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div id="contact-form-wrapper" class="rounded-[2rem] bg-[#f4f4f5] p-8 sm:p-12 transition-all duration-700 ease-out">
+          <!-- Form Content -->
+          <div id="contact-form-content">
+            <h3 class="text-2xl font-normal text-black mb-4">Get in Touch</h3>
+            <p class="text-[13px] text-black/60 mb-10 max-w-sm leading-relaxed">
+              Define your goals and identify areas where we can add value to your business
+            </p>
+
+            <form id="contact-form" class="space-y-6">
+              <input type="hidden" name="subject" value="Contact Form – Vehicle Imagery" />
+              
+              <div class="relative">
+                <input type="text" name="name" required placeholder="Full name" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
+              </div>
+              
+              <div class="relative">
+                <input type="email" name="email" required placeholder="Email" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
+              </div>
+              
+              <div class="relative">
+                <input type="text" name="subject_line" placeholder="Subject" class="w-full border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors" />
+              </div>
+              
+              <div class="relative">
+                <textarea name="message" rows={1} placeholder="Message" class="w-full resize-none border-b border-black/10 bg-transparent px-0 py-3 text-[13px] text-black placeholder-black/40 focus:border-black focus:outline-none transition-colors"></textarea>
+              </div>
+              
+              <div class="pt-6">
+                <button type="submit" id="contact-submit-btn" class="inline-flex items-center justify-center gap-3 rounded-full bg-[#2d2d2d] px-6 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-black">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="rotate-[-45deg]">
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Send a message
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Success State -->
+          <div id="contact-success" class="hidden flex-col items-center justify-center text-center py-12">
+            <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
+              <svg id="checkmark-svg" class="h-10 w-10" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="26" cy="26" r="24" stroke="white" stroke-width="2.5" fill="none"
+                  stroke-dasharray="150.8" stroke-dashoffset="150.8" class="checkmark-circle" />
+                <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                  fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="checkmark-check" />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-normal text-white mb-3">Message Sent!</h3>
+            <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">
+              Thank you for reaching out. We'll get back to you within 24 hours.
+            </p>
+          </div>
+        </div>
+
+        <style>
+          @keyframes draw-circle {
+            to { stroke-dashoffset: 0; }
+          }
+          @keyframes draw-check {
+            to { stroke-dashoffset: 0; }
+          }
+          #contact-form-wrapper.success .checkmark-circle {
+            animation: draw-circle 0.6s ease-out 0.2s forwards;
+          }
+          #contact-form-wrapper.success .checkmark-check {
+            animation: draw-check 0.4s ease-out 0.7s forwards;
+          }
+        </style>
+
+        <script>
+          const form = document.getElementById('contact-form');
+          const wrapper = document.getElementById('contact-form-wrapper');
+          const formContent = document.getElementById('contact-form-content');
+          const successEl = document.getElementById('contact-success');
+
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(form).entries());
+            fetch('https://submit-form.com/v6dFS1FAS', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
+
+            formContent.style.opacity = '0';
+            formContent.style.transform = 'scale(0.95)';
+            formContent.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+
+            setTimeout(() => {
+              formContent.classList.add('hidden');
+              wrapper.classList.add('success');
+              wrapper.style.backgroundColor = '#16a34a';
+              successEl.classList.remove('hidden');
+              successEl.classList.add('flex');
+              successEl.style.opacity = '0';
+              successEl.style.transform = 'scale(0.95)';
+              requestAnimationFrame(() => {
+                successEl.style.transition = 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s';
+                successEl.style.opacity = '1';
+                successEl.style.transform = 'scale(1)';
+              });
+            }, 300);
+          });
+        </script>
+      </div>
+    </section>
+
+    <!-- How We Work -->
+    <section class="border-t border-black/10 py-24 sm:py-32">
+      <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+        <div class="grid gap-16 lg:grid-cols-[1fr_1fr] lg:gap-24 items-start">
+          <div>
+            <p class="text-[11px] font-medium text-black/50 mb-6">/ how it works /</p>
+            <h2 class="text-4xl sm:text-5xl font-normal leading-[1.1] text-black tracking-tight mb-8">
+              From first contact to production in days, not months
+            </h2>
+            <p class="text-sm leading-relaxed text-black/60 max-w-md">
+              We've streamlined every step so you can focus on building your product while we handle the imagery infrastructure.
+            </p>
+          </div>
+
+          <div class="space-y-0">
+            {[
+              { step: "01", title: "Reach Out", desc: "Tell us about your project and requirements. We'll respond within 24 hours with a tailored solution." },
+              { step: "02", title: "Get Your API Key", desc: "Receive your credentials and access our full documentation. Test with our sandbox environment at no cost." },
+              { step: "03", title: "Integrate & Launch", desc: "Drop our API into your existing stack. Most teams go live within a single sprint." },
+            ].map((item) => (
+              <div class="group flex gap-6 py-8 border-b border-black/5 first:border-t first:border-black/5">
+                <span class="text-[11px] font-mono text-black/30 pt-1 shrink-0">{item.step}</span>
+                <div>
+                  <h3 class="text-[15px] font-semibold text-black mb-2 group-hover:text-[rgb(200,90,70)] transition-colors">{item.title}</h3>
+                  <p class="text-[13px] text-black/60 leading-relaxed max-w-sm">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CTA Banner -->
+    <section class="py-24 sm:py-32">
+      <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] px-8 py-16 sm:px-16 sm:py-20" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+            <div class="max-w-xl">
+              <h2 class="text-3xl sm:text-4xl font-normal tracking-tight text-white leading-[1.15] mb-4">
+                Ready to elevate your vehicle imagery?
+              </h2>
+              <p class="text-[14px] text-white/60 leading-relaxed">
+                Join hundreds of automotive companies already using our API. Start with a free trial — no credit card required.
+              </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 shrink-0">
+              <a href="/es/trial" class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-[13px] font-medium text-black transition-colors hover:bg-[rgb(200,90,70)] hover:text-white">
+                Start Free Trial
+              </a>
+              <a href="/es/documentation" class="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-white/10">
+                View Documentation
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

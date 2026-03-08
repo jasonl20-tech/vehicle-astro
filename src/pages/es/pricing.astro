@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const faqs = [
+  { q: 'How does pricing work?', a: 'Our custom plan is priced on request and tailored to your specific usage and requirements. Contact us and we\'ll put together a quote within 24 hours.' },
+  { q: 'Is the Trial really free?', a: 'Yes. The Trial gives you full API access with up to 500 requests at standard resolution. No credit card required — just request access and start testing.' },
+  { q: 'Can I upgrade at any time?', a: 'Absolutely. Move from Trial to a custom plan whenever you\'re ready. We\'ll work with you to find the right fit.' },
+  { q: 'What payment methods do you accept?', a: 'We accept bank transfers and all major credit cards. Custom plans can be invoiced monthly or annually.' },
+  { q: 'Is there a long-term contract?', a: 'No lock-in. Plans are typically month-to-month. Annual options with better rates are available on request.' },
+  { q: 'How fast is the API?', a: 'Average response time is ~50ms. All images are served via a global CDN with signed URLs valid for 7 days.' },
+];
+---
+
+<BaseLayout
+  title="Pricing | Vehicle Imagery API"
+  description="Pricing plans for the Vehicle Imagery API. Free Trial and custom plans on request. No hidden fees."
+  canonicalUrl="/es/pricing"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+
+    <!-- Hero Header -->
+    <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
+      <div class="max-w-3xl">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Pricing</p>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
+          Two plans.<br/>Zero surprises.
+        </h1>
+        <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
+          Start free. Scale when you're ready. Every plan is transparent, every quote is custom.
+        </p>
+        <p class="mt-6 text-[13px] text-black/40">
+          <a href="/es/pricing/startups" class="hover:text-[rgb(200,90,70)] transition-colors">Startup? We offer better starting conditions →</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Plans: Trial small left, Custom large right -->
+    <section id="plans" class="mx-auto max-w-[1400px] px-6 pt-16 pb-32 sm:px-12 lg:px-16 scroll-mt-24">
+      <div class="grid gap-8 lg:grid-cols-[1fr_2fr] items-stretch">
+
+        <!-- Trial (compact) -->
+        <div class="group relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white transition-all duration-500 hover:border-black/10 hover:shadow-2xl hover:shadow-black/5 flex flex-col">
+          <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/15 via-black/5 to-transparent"></div>
+          <div class="p-10 sm:p-12 flex flex-col flex-1">
+            <div class="flex items-center justify-between mb-16">
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-black/25">01</span>
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full">Free</span>
+            </div>
+
+            <h2 class="text-5xl sm:text-6xl font-light text-black tracking-tight leading-none mb-6">Trial</h2>
+            <p class="text-[14px] text-black/45 leading-relaxed mb-8">
+              Full API access with real imagery. No credit card, no commitment. Up to 500 requests.
+            </p>
+
+            <div class="mt-auto">
+              <div class="border-t border-black/5 pt-8">
+                <a href="/es/trial" class="group/btn inline-flex items-center gap-3 text-[13px] font-medium text-black transition-colors hover:text-[rgb(200,90,70)]">
+                  <span>Request Trial</span>
+                  <svg class="w-4 h-4 transform group-hover/btn:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom / On Request (large, dominant) -->
+        <div class="group relative rounded-[2rem] overflow-hidden transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(10,43,49,0.35)]" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[rgb(200,90,70)] via-[rgb(200,90,70)]/40 to-transparent"></div>
+          <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+          <div class="absolute -bottom-48 -left-24 w-72 h-72 rounded-full opacity-[0.03] pointer-events-none" style="background: radial-gradient(circle, rgba(200,90,70,1) 0%, transparent 60%);" aria-hidden="true"></div>
+
+          <div class="relative p-10 sm:p-14 flex flex-col">
+            <div class="flex items-center justify-between mb-12">
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">02</span>
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-[rgb(200,90,70)] px-3 py-1.5 rounded-full border border-white/10">Custom Plan</span>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
+              <!-- Left: Plan info -->
+              <div>
+                <h2 class="text-6xl sm:text-7xl lg:text-8xl font-light text-white tracking-tight leading-[0.9] mb-6">
+                  On<br/>Request
+                </h2>
+                <p class="text-[15px] text-white/40 leading-relaxed mb-10 max-w-sm">
+                  Volume, features, support — everything configured to your exact needs. We build the plan around your business.
+                </p>
+
+                <!-- Mini stats inside card -->
+                <div class="grid grid-cols-3 gap-6 pt-8 border-t border-white/[0.06]">
+                  <div>
+                    <p class="text-2xl font-light text-white mb-1">50ms</p>
+                    <p class="text-[10px] text-white/30 uppercase tracking-wider">Latency</p>
+                  </div>
+                  <div>
+                    <p class="text-2xl font-light text-white mb-1">99.9%</p>
+                    <p class="text-[10px] text-white/30 uppercase tracking-wider">Uptime</p>
+                  </div>
+                  <div>
+                    <p class="text-2xl font-light text-white mb-1">50+</p>
+                    <p class="text-[10px] text-white/30 uppercase tracking-wider">Brands</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Contact form -->
+              <div id="pricing-form-wrapper" class="transition-all duration-700 ease-out">
+                <div id="pricing-form-content">
+                  <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-white/30 mb-6">Get a custom quote</p>
+                  <form id="pricing-form" class="space-y-5">
+                    <input type="hidden" name="subject" value="Pricing – Custom Plan Request" />
+
+                    <div>
+                      <input type="text" name="name" required placeholder="Your name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    </div>
+                    <div>
+                      <input type="email" name="email" required placeholder="Work email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    </div>
+                    <div>
+                      <input type="text" name="company" placeholder="Company" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    </div>
+                    <div>
+                      <textarea name="message" rows="2" placeholder="Tell us about your project" class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
+                    </div>
+
+                    <div class="pt-4">
+                      <button type="submit" id="pricing-submit-btn" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white w-full sm:w-auto">
+                        <span>Get Quote</span>
+                        <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div id="pricing-success" class="hidden flex-col items-center justify-center text-center py-12">
+                  <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
+                    <svg class="h-10 w-10" viewBox="0 0 52 52" fill="none">
+                      <circle cx="26" cy="26" r="24" stroke="white" stroke-width="2.5" fill="none" stroke-dasharray="150.8" stroke-dashoffset="150.8" class="pricing-circle" />
+                      <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="pricing-check" />
+                    </svg>
+                  </div>
+                  <h3 class="text-2xl font-normal text-white mb-3">Quote Requested!</h3>
+                  <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">We'll get back to you within 24 hours.</p>
+                </div>
+              </div>
+
+              <style>
+                @keyframes pricing-draw-circle { to { stroke-dashoffset: 0; } }
+                @keyframes pricing-draw-check { to { stroke-dashoffset: 0; } }
+                #pricing-form-wrapper.success .pricing-circle { animation: pricing-draw-circle 0.6s ease-out 0.2s forwards; }
+                #pricing-form-wrapper.success .pricing-check { animation: pricing-draw-check 0.4s ease-out 0.7s forwards; }
+              </style>
+
+              <script>
+                (function() {
+                  const form = document.getElementById('pricing-form');
+                  const wrapper = document.getElementById('pricing-form-wrapper');
+                  const formContent = document.getElementById('pricing-form-content');
+                  const successEl = document.getElementById('pricing-success');
+                  form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const data = Object.fromEntries(new FormData(form).entries());
+                    fetch('https://submit-form.com/v6dFS1FAS', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
+                    formContent.style.opacity = '0'; formContent.style.transform = 'scale(0.95)'; formContent.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    setTimeout(() => { formContent.classList.add('hidden'); wrapper.classList.add('success'); successEl.classList.remove('hidden'); successEl.classList.add('flex'); successEl.style.opacity = '0'; successEl.style.transform = 'scale(0.95)'; requestAnimationFrame(() => { successEl.style.transition = 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s'; successEl.style.opacity = '1'; successEl.style.transform = 'scale(1)'; }); }, 300);
+                  });
+                })();
+              </script>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Stats (full width, large) -->
+    <section class="py-24 sm:py-32 bg-[#fafafa]">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-16 text-center">Trusted Performance</p>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+          {[
+            { value: '50ms', label: 'Avg. API Latency' },
+            { value: '99.9%', label: 'Uptime SLA' },
+            { value: '7 days', label: 'Signed URL Expiry' },
+            { value: '50+', label: 'Brands Covered' },
+          ].map((stat) => (
+            <div class="text-center">
+              <p class="text-5xl sm:text-6xl lg:text-7xl font-extralight text-black tracking-tight mb-3">{stat.value}</p>
+              <p class="text-[11px] text-black/40 uppercase tracking-[0.15em]">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-24 sm:py-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="grid gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-24 items-start">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">FAQ</p>
+            <h2 class="text-4xl sm:text-5xl font-light leading-[1.05] text-black tracking-tight mb-6">
+              Questions<br/>& answers
+            </h2>
+            <p class="text-[14px] text-black/50 leading-relaxed">
+              Can't find what you're looking for?<br/><a href="/es/contact" class="text-black underline underline-offset-4 hover:text-[rgb(200,90,70)] transition-colors">Reach out to us</a>
+            </p>
+          </div>
+
+          <div class="space-y-0">
+            {faqs.map((faq) => (
+              <details class="group border-b border-black/[0.06] first:border-t">
+                <summary class="flex items-center justify-between gap-6 py-7 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <span class="text-[15px] font-medium text-black group-hover:text-[rgb(200,90,70)] transition-colors">{faq.q}</span>
+                  <svg class="w-5 h-5 shrink-0 text-black/20 group-open:rotate-45 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path>
+                  </svg>
+                </summary>
+                <div class="pb-7 pr-16">
+                  <p class="text-[13px] text-black/50 leading-relaxed">{faq.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="pb-24 sm:pb-32">
+      <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] px-8 py-20 sm:px-16 sm:py-24" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
+          <div class="relative z-10 text-center max-w-2xl mx-auto">
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Ready?</p>
+            <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white leading-[1.05] mb-6">
+              Start building today
+            </h2>
+            <p class="text-[14px] text-white/45 leading-relaxed mb-12 max-w-md mx-auto">
+              Free Trial or custom quote — we'll get back to you within 24 hours.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/es/contact" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
+                Contact Sales
+              </a>
+              <a href="/es/documentation" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
+                Documentation
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
