@@ -6,43 +6,43 @@ import Footer from '../../components/Footer.astro';
 const BASE_URL = 'https://api.vehicleimagery.com';
 
 const endpoints = [
-  { id: 'brands', method: 'GET', path: '/api/brands', title: 'List Brands', desc: 'Returns all available vehicle brands in the database.', params: [], query: [{ name: 'format', default: 'png', desc: 'Image format filter (png, webp, etc.)' }, { name: 'resolution', default: 'default', desc: 'Resolution filter (default, high, etc.)' }], response: '{\n  "brands": [\n    "Audi",\n    "BMW",\n    "Mercedes-Benz",\n    "Volkswagen",\n    ...\n  ]\n}' },
-  { id: 'models', method: 'GET', path: '/api/{brand}', title: 'List Models', desc: 'Returns all available models for a given brand.', params: [{ name: 'brand', type: 'string', desc: 'Brand name (e.g. BMW, Audi)' }], query: [{ name: 'format', default: 'png', desc: 'Image format filter' }, { name: 'resolution', default: 'default', desc: 'Resolution filter' }], response: '{\n  "brand": "BMW",\n  "resolution": "default",\n  "format": "png",\n  "models": [\n    "1 Series",\n    "3 Series",\n    "X5",\n    ...\n  ]\n}' },
-  { id: 'years', method: 'GET', path: '/api/{brand}/{model}', title: 'List Years', desc: 'Returns all available model years for a specific brand and model combination.', params: [{ name: 'brand', type: 'string', desc: 'Brand name' }, { name: 'model', type: 'string', desc: 'Model name (e.g. X5, A4)' }], query: [{ name: 'format', default: 'png', desc: 'Image format filter' }, { name: 'resolution', default: 'default', desc: 'Resolution filter' }], response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "resolution": "default",\n  "format": "png",\n  "years": [2020, 2021, 2022, 2023, 2024]\n}]' },
-  { id: 'variants', method: 'GET', path: '/api/{brand}/{model}/{year}', title: 'List Variants', desc: 'Returns all body variants (e.g. Sedan, SUV, Wagon) available for a specific model year.', params: [{ name: 'brand', type: 'string', desc: 'Brand name' }, { name: 'model', type: 'string', desc: 'Model name' }, { name: 'year', type: 'number', desc: 'Model year (e.g. 2024)' }], query: [{ name: 'format', default: 'png', desc: 'Image format filter' }, { name: 'resolution', default: 'default', desc: 'Resolution filter' }], response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "resolution": "default",\n  "format": "png",\n  "variants": ["SUV"]\n}]' },
-  { id: 'trims', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}', title: 'List Trims', desc: 'Returns all available trims for a specific variant.', params: [{ name: 'brand', type: 'string', desc: 'Brand name' }, { name: 'model', type: 'string', desc: 'Model name' }, { name: 'year', type: 'number', desc: 'Model year' }, { name: 'variant', type: 'string', desc: 'Body variant (e.g. SUV, Sedan)' }], query: [{ name: 'format', default: 'png', desc: 'Image format filter' }, { name: 'resolution', default: 'default', desc: 'Resolution filter' }], response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "resolution": "default",\n  "format": "png",\n  "trims": ["xDrive40i", "M60i"]\n}]' },
-  { id: 'views', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}/{trim}', title: 'List Views', desc: 'Returns all available camera angles/views for a specific vehicle configuration. Views marked as "not_allowed" are not included in your current plan.', params: [{ name: 'brand', type: 'string', desc: 'Brand name' }, { name: 'model', type: 'string', desc: 'Model name' }, { name: 'year', type: 'number', desc: 'Model year' }, { name: 'variant', type: 'string', desc: 'Body variant' }, { name: 'trim', type: 'string', desc: 'Trim level' }], query: [{ name: 'format', default: 'png', desc: 'Image format filter' }, { name: 'resolution', default: 'default', desc: 'Resolution filter' }], response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "views": {\n    "front": true,\n    "front-left": true,\n    "side-left": true,\n    "rear": true,\n    "cockpit": "not_allowed"\n  }\n}]' },
-  { id: 'colors', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}/{trim}/colors', title: 'List Colors', desc: 'Returns all available colors for a specific vehicle configuration. Only colors allowed by your plan are included.', params: [{ name: 'brand', type: 'string', desc: 'Brand name' }, { name: 'model', type: 'string', desc: 'Model name' }, { name: 'year', type: 'number', desc: 'Model year' }, { name: 'variant', type: 'string', desc: 'Body variant' }, { name: 'trim', type: 'string', desc: 'Trim level' }], query: [{ name: 'format', default: 'png', desc: 'Image format filter' }, { name: 'resolution', default: 'default', desc: 'Resolution filter' }], response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "colors": ["default", "Blue", "Black", "White", "Silver"]\n}]' },
-  { id: 'features', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}/{trim}/features', title: 'List Features', desc: 'Returns available image features (shadow, transparency) for a configuration. Features marked "not_allowed" are not included in your plan.', params: [{ name: 'brand', type: 'string', desc: 'Brand name' }, { name: 'model', type: 'string', desc: 'Model name' }, { name: 'year', type: 'number', desc: 'Model year' }, { name: 'variant', type: 'string', desc: 'Body variant' }, { name: 'trim', type: 'string', desc: 'Trim level' }], query: [{ name: 'format', default: 'png', desc: 'Image format filter' }, { name: 'resolution', default: 'default', desc: 'Resolution filter' }], response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "features": {\n    "shadow": true,\n    "transparent": true,\n    "shadow_and_transparent": true\n  }\n}]' },
-  { id: 'image', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}/{trim}/{view}', title: 'Get Image', desc: 'Returns a signed CDN URL for a specific vehicle image. This is the main endpoint for retrieving vehicle imagery. The returned URL is valid for 7 days by default.', params: [{ name: 'brand', type: 'string', desc: 'Brand name' }, { name: 'model', type: 'string', desc: 'Model name' }, { name: 'year', type: 'number', desc: 'Model year' }, { name: 'variant', type: 'string', desc: 'Body variant' }, { name: 'trim', type: 'string', desc: 'Trim level' }, { name: 'view', type: 'string', desc: 'Camera angle (e.g. front, front-left, side-left, rear, cockpit)' }], query: [{ name: 'format', default: 'png', desc: 'Image format (png, webp)' }, { name: 'resolution', default: 'default', desc: 'Image resolution' }, { name: 'color', default: 'default', desc: 'Vehicle color (e.g. Blue, Black, White)' }, { name: 'shadow', default: 'false', desc: 'Include ground shadow (plan-dependent)' }, { name: 'transparency', default: 'false', desc: 'Transparent background (plan-dependent)' }], response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "view": "front-left",\n  "resolution": "default",\n  "format": "png",\n  "settings": {\n    "color": "Blue",\n    "shadow": true,\n    "transparency": false,\n    "watermark": false\n  },\n  "image_url": "https://cdn.vehicle.pics/v1/png/default/BMW/X5/...",\n  "errornotes": []\n}]' },
-  { id: 'resolutions', method: 'GET', path: '/api/resolutions', title: 'List Resolutions', desc: 'Returns all available image resolutions. Filtered by your plan permissions.', params: [], query: [], response: '{\n  "resolutions": ["default", "high", "ultra"]\n}' },
-  { id: 'formats', method: 'GET', path: '/api/formats', title: 'List Formats', desc: 'Returns all available image formats. Filtered by your plan permissions.', params: [], query: [], response: '{\n  "formats": ["png", "webp"]\n}' },
-  { id: 'getall', method: 'GET', path: '/api/getall', title: 'Get All Configurations', desc: 'Returns every vehicle configuration in the database, expanded by year. Requires special "getall" permission on your API key. Useful for building local caches or catalogs.', params: [], query: [], response: '[\n  {\n    "brand": "BMW",\n    "model": "X5",\n    "variant": "SUV",\n    "trim": "xDrive40i",\n    "year": 2024,\n    "resolution": "default",\n    "format": "png",\n    "color": "default"\n  },\n  ...\n]' },
+  { id: 'brands', method: 'GET', path: '/api/brands', title: 'Listar marcas', desc: 'Devuelve todas las marcas de vehículos disponibles en la base de datos.', params: [], query: [{ name: 'format', default: 'png', desc: 'Filtro de formato de imagen (png, webp, etc.)' }, { name: 'resolution', default: 'default', desc: 'Filtro de resolución (default, high, etc.)' }], response: '{\n  "brands": [\n    "Audi",\n    "BMW",\n    "Mercedes-Benz",\n    "Volkswagen",\n    ...\n  ]\n}' },
+  { id: 'models', method: 'GET', path: '/api/{brand}', title: 'Listar modelos', desc: 'Devuelve todos los modelos disponibles para una marca determinada.', params: [{ name: 'brand', type: 'string', desc: 'Nombre de la marca (ej. BMW, Audi)' }], query: [{ name: 'format', default: 'png', desc: 'Filtro de formato de imagen' }, { name: 'resolution', default: 'default', desc: 'Filtro de resolución' }], response: '{\n  "brand": "BMW",\n  "resolution": "default",\n  "format": "png",\n  "models": [\n    "1 Series",\n    "3 Series",\n    "X5",\n    ...\n  ]\n}' },
+  { id: 'years', method: 'GET', path: '/api/{brand}/{model}', title: 'Listar años', desc: 'Devuelve todos los años de modelo disponibles para una combinación específica de marca y modelo.', params: [{ name: 'brand', type: 'string', desc: 'Nombre de la marca' }, { name: 'model', type: 'string', desc: 'Nombre del modelo (ej. X5, A4)' }], query: [{ name: 'format', default: 'png', desc: 'Filtro de formato de imagen' }, { name: 'resolution', default: 'default', desc: 'Filtro de resolución' }], response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "resolution": "default",\n  "format": "png",\n  "years": [2020, 2021, 2022, 2023, 2024]\n}]' },
+  { id: 'variants', method: 'GET', path: '/api/{brand}/{model}/{year}', title: 'Listar variantes', desc: 'Devuelve todas las variantes de carrocería (ej. Sedán, SUV, Wagon) disponibles para un año de modelo específico.', params: [{ name: 'brand', type: 'string', desc: 'Nombre de la marca' }, { name: 'model', type: 'string', desc: 'Nombre del modelo' }, { name: 'year', type: 'number', desc: 'Año del modelo (ej. 2024)' }], query: [{ name: 'format', default: 'png', desc: 'Filtro de formato de imagen' }, { name: 'resolution', default: 'default', desc: 'Filtro de resolución' }], response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "resolution": "default",\n  "format": "png",\n  "variants": ["SUV"]\n}]' },
+  { id: 'trims', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}', title: 'Listar acabados', desc: 'Devuelve todos los acabados disponibles para una variante específica.', params: [{ name: 'brand', type: 'string', desc: 'Nombre de la marca' }, { name: 'model', type: 'string', desc: 'Nombre del modelo' }, { name: 'year', type: 'number', desc: 'Año del modelo' }, { name: 'variant', type: 'string', desc: 'Variante de carrocería (ej. SUV, Sedán)' }], query: [{ name: 'format', default: 'png', desc: 'Filtro de formato de imagen' }, { name: 'resolution', default: 'default', desc: 'Filtro de resolución' }], response: '[{\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "resolution": "default",\n  "format": "png",\n  "trims": ["xDrive40i", "M60i"]\n}]' },
+  { id: 'views', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}/{trim}', title: 'Listar vistas', desc: 'Devuelve todos los ángulos de cámara/vistas disponibles para una configuración de vehículo específica. Las vistas marcadas como "not_allowed" no están incluidas en su plan actual.', params: [{ name: 'brand', type: 'string', desc: 'Nombre de la marca' }, { name: 'model', type: 'string', desc: 'Nombre del modelo' }, { name: 'year', type: 'number', desc: 'Año del modelo' }, { name: 'variant', type: 'string', desc: 'Variante de carrocería' }, { name: 'trim', type: 'string', desc: 'Nivel de acabado' }], query: [{ name: 'format', default: 'png', desc: 'Filtro de formato de imagen' }, { name: 'resolution', default: 'default', desc: 'Filtro de resolución' }], response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "views": {\n    "front": true,\n    "front-left": true,\n    "side-left": true,\n    "rear": true,\n    "cockpit": "not_allowed"\n  }\n}]' },
+  { id: 'colors', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}/{trim}/colors', title: 'Listar colores', desc: 'Devuelve todos los colores disponibles para una configuración de vehículo específica. Solo se incluyen los colores permitidos por su plan.', params: [{ name: 'brand', type: 'string', desc: 'Nombre de la marca' }, { name: 'model', type: 'string', desc: 'Nombre del modelo' }, { name: 'year', type: 'number', desc: 'Año del modelo' }, { name: 'variant', type: 'string', desc: 'Variante de carrocería' }, { name: 'trim', type: 'string', desc: 'Nivel de acabado' }], query: [{ name: 'format', default: 'png', desc: 'Filtro de formato de imagen' }, { name: 'resolution', default: 'default', desc: 'Filtro de resolución' }], response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "colors": ["default", "Blue", "Black", "White", "Silver"]\n}]' },
+  { id: 'features', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}/{trim}/features', title: 'Listar características', desc: 'Devuelve las características de imagen disponibles (sombra, transparencia) para una configuración. Las características marcadas como "not_allowed" no están incluidas en su plan.', params: [{ name: 'brand', type: 'string', desc: 'Nombre de la marca' }, { name: 'model', type: 'string', desc: 'Nombre del modelo' }, { name: 'year', type: 'number', desc: 'Año del modelo' }, { name: 'variant', type: 'string', desc: 'Variante de carrocería' }, { name: 'trim', type: 'string', desc: 'Nivel de acabado' }], query: [{ name: 'format', default: 'png', desc: 'Filtro de formato de imagen' }, { name: 'resolution', default: 'default', desc: 'Filtro de resolución' }], response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "resolution": "default",\n  "format": "png",\n  "features": {\n    "shadow": true,\n    "transparent": true,\n    "shadow_and_transparent": true\n  }\n}]' },
+  { id: 'image', method: 'GET', path: '/api/{brand}/{model}/{year}/{variant}/{trim}/{view}', title: 'Obtener imagen', desc: 'Devuelve una URL de CDN firmada para una imagen de vehículo específica. Este es el endpoint principal para obtener imágenes de vehículos. La URL devuelta es válida por 7 días de forma predeterminada.', params: [{ name: 'brand', type: 'string', desc: 'Nombre de la marca' }, { name: 'model', type: 'string', desc: 'Nombre del modelo' }, { name: 'year', type: 'number', desc: 'Año del modelo' }, { name: 'variant', type: 'string', desc: 'Variante de carrocería' }, { name: 'trim', type: 'string', desc: 'Nivel de acabado' }, { name: 'view', type: 'string', desc: 'Ángulo de cámara (ej. front, front-left, side-left, rear, cockpit)' }], query: [{ name: 'format', default: 'png', desc: 'Formato de imagen (png, webp)' }, { name: 'resolution', default: 'default', desc: 'Resolución de imagen' }, { name: 'color', default: 'default', desc: 'Color del vehículo (ej. Blue, Black, White)' }, { name: 'shadow', default: 'false', desc: 'Incluir sombra de suelo (depende del plan)' }, { name: 'transparency', default: 'false', desc: 'Fondo transparente (depende del plan)' }], response: '[{\n  "id": "a1b2c3d4e5f6",\n  "brand": "BMW",\n  "model": "X5",\n  "year": 2024,\n  "variant": "SUV",\n  "trim": "xDrive40i",\n  "view": "front-left",\n  "resolution": "default",\n  "format": "png",\n  "settings": {\n    "color": "Blue",\n    "shadow": true,\n    "transparency": false,\n    "watermark": false\n  },\n  "image_url": "https://cdn.vehicle.pics/v1/png/default/BMW/X5/...",\n  "errornotes": []\n}]' },
+  { id: 'resolutions', method: 'GET', path: '/api/resolutions', title: 'Listar resoluciones', desc: 'Devuelve todas las resoluciones de imagen disponibles. Filtrado según los permisos de su plan.', params: [], query: [], response: '{\n  "resolutions": ["default", "high", "ultra"]\n}' },
+  { id: 'formats', method: 'GET', path: '/api/formats', title: 'Listar formatos', desc: 'Devuelve todos los formatos de imagen disponibles. Filtrado según los permisos de su plan.', params: [], query: [], response: '{\n  "formats": ["png", "webp"]\n}' },
+  { id: 'getall', method: 'GET', path: '/api/getall', title: 'Obtener todas las configuraciones', desc: 'Devuelve cada configuración de vehículo en la base de datos, expandida por año. Requiere el permiso especial "getall" en su API key. Útil para construir cachés locales o catálogos.', params: [], query: [], response: '[\n  {\n    "brand": "BMW",\n    "model": "X5",\n    "variant": "SUV",\n    "trim": "xDrive40i",\n    "year": 2024,\n    "resolution": "default",\n    "format": "png",\n    "color": "default"\n  },\n  ...\n]' },
 ];
 
 const errorCodes = [
-  { code: '401', description: 'Missing x-api-key header. Include your API key in the request.' },
-  { code: '403', description: 'Invalid API key, expired key, or the requested resource is not allowed by your plan.' },
-  { code: '404', description: 'The requested brand, model, year, variant, trim, view, or color was not found.' },
-  { code: '400', description: 'Invalid request parameter (e.g. non-numeric year).' },
-  { code: '500', description: 'Internal server error. Contact support if this persists.' },
+  { code: '401', description: 'Falta el header x-api-key. Incluya su API key en la solicitud.' },
+  { code: '403', description: 'API key inválida, clave expirada, o el recurso solicitado no está permitido por su plan.' },
+  { code: '404', description: 'La marca, modelo, año, variante, acabado, vista o color solicitado no fue encontrado.' },
+  { code: '400', description: 'Parámetro de solicitud inválido (ej. año no numérico).' },
+  { code: '500', description: 'Error interno del servidor. Contacte a soporte si esto persiste.' },
 ];
 
 const errornotes = [
-  { code: 'P11', description: 'Requested format or resolution not allowed by plan — automatically fell back to your plan default.' },
-  { code: 'F04', description: 'Requested color not found — fell back to default color.' },
-  { code: 'C09', description: 'Requested color blocked by plan — fell back to default color.' },
-  { code: 'R08', description: 'Requested resolution not available for this car — fell back to nearest allowed resolution.' },
-  { code: 'S05', description: 'Shadow requested but not available or not allowed — returned without shadow.' },
-  { code: 'S12', description: 'Non-shadow version not available — shadow version returned instead.' },
-  { code: 'T06', description: 'Transparency requested but not available or not allowed — returned without transparency.' },
-  { code: 'T13', description: 'Non-transparent version not available — transparent version returned instead.' },
+  { code: 'P11', description: 'Formato o resolución solicitados no permitidos por el plan — se utilizó automáticamente el valor predeterminado de su plan.' },
+  { code: 'F04', description: 'Color solicitado no encontrado — se utilizó el color predeterminado.' },
+  { code: 'C09', description: 'Color solicitado bloqueado por el plan — se utilizó el color predeterminado.' },
+  { code: 'R08', description: 'Resolución solicitada no disponible para este vehículo — se utilizó la resolución permitida más cercana.' },
+  { code: 'S05', description: 'Sombra solicitada pero no disponible o no permitida — devuelto sin sombra.' },
+  { code: 'S12', description: 'Versión sin sombra no disponible — se devolvió la versión con sombra.' },
+  { code: 'T06', description: 'Transparencia solicitada pero no disponible o no permitida — devuelto sin transparencia.' },
+  { code: 'T13', description: 'Versión no transparente no disponible — se devolvió la versión transparente.' },
 ];
 ---
 
 <BaseLayout
-  title="API Documentation | Vehicle Imagery"
-  description="Complete API reference for the Vehicle Imagery API. Endpoints, authentication, parameters, and response formats."
+  title="Documentación de la API | Vehicle Imagery"
+  description="Referencia completa de la API de Vehicle Imagery. Endpoints, autenticación, parámetros y formatos de respuesta."
   canonicalUrl="/es/documentation"
 >
   <Header />
@@ -54,18 +54,18 @@ const errornotes = [
         <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]" style="background-color: rgb(10, 43, 49);">
           <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
           <div class="relative flex min-h-[320px] flex-col justify-end px-8 py-10 sm:min-h-[400px] sm:px-16 sm:py-16 lg:min-h-[440px]">
-            <p class="text-[11px] font-medium text-white/40 mb-4 uppercase tracking-widest">API Reference v1</p>
-            <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl">Documentation</h1>
+            <p class="text-[11px] font-medium text-white/40 mb-4 uppercase tracking-widest">Referencia de la API v1</p>
+            <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl">Documentación</h1>
             <p class="mt-4 text-white/60 text-base sm:text-lg max-w-xl leading-relaxed">
-              Everything you need to integrate studio-quality vehicle imagery into your application.
+              Todo lo que necesita para integrar imágenes de vehículos de calidad de estudio en su aplicación.
             </p>
 
             <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
               <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
                 <p class="text-[13px] tracking-wide text-black/80">
-                  <a href="/es" class="transition-colors hover:text-black">Home</a>
+                  <a href="/es" class="transition-colors hover:text-black">Inicio</a>
                   <span class="mx-2.5 text-black/20">/</span>
-                  <span class="font-medium text-black">Documentation</span>
+                  <span class="font-medium text-black">Documentación</span>
                 </p>
               </div>
             </div>
@@ -85,12 +85,12 @@ const errornotes = [
         <!-- Sidebar Navigation -->
         <aside class="w-full lg:w-64 shrink-0 order-2 lg:order-1">
           <nav class="lg:sticky lg:top-24 rounded-2xl bg-[#f4f4f5] p-6 border border-black/[0.06] h-fit">
-            <h3 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-4">Quick Navigation</h3>
+            <h3 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-4">Navegación rápida</h3>
             <ul class="space-y-0.5" id="doc-nav">
-              <li><a href="#authentication" data-doc-link="authentication" class="doc-nav-link active block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Authentication</a></li>
+              <li><a href="#authentication" data-doc-link="authentication" class="doc-nav-link active block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Autenticación</a></li>
               <li><a href="#base-url" data-doc-link="base-url" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Base URL</a></li>
-              <li><a href="#query-params" data-doc-link="query-params" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Global Parameters</a></li>
-              <li><a href="#hierarchy" data-doc-link="hierarchy" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">API Hierarchy</a></li>
+              <li><a href="#query-params" data-doc-link="query-params" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Parámetros globales</a></li>
+              <li><a href="#hierarchy" data-doc-link="hierarchy" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Jerarquía de la API</a></li>
               <li class="pt-4 mt-2 border-t border-black/5">
                 <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest">Endpoints</span>
               </li>
@@ -103,11 +103,11 @@ const errornotes = [
                 </li>
               ))}
               <li class="pt-4 mt-2 border-t border-black/5">
-                <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest">Reference</span>
+                <span class="block py-2 px-3 text-[10px] font-medium text-black/40 uppercase tracking-widest">Referencia</span>
               </li>
-              <li><a href="#errors" data-doc-link="errors" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Error Codes</a></li>
-              <li><a href="#errornotes" data-doc-link="errornotes" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Error Notes</a></li>
-              <li><a href="#rate-limits" data-doc-link="rate-limits" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Rate Limits</a></li>
+              <li><a href="#errors" data-doc-link="errors" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Códigos de error</a></li>
+              <li><a href="#errornotes" data-doc-link="errornotes" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Notas de error</a></li>
+              <li><a href="#rate-limits" data-doc-link="rate-limits" class="doc-nav-link block py-2.5 px-3 text-[13px] text-black/70 hover:text-black hover:bg-white rounded-lg transition-colors border border-transparent hover:border-black/5">Límites de solicitudes</a></li>
             </ul>
           </nav>
         </aside>
@@ -122,12 +122,12 @@ const errornotes = [
 
           <!-- Authentication -->
           <section id="authentication" data-doc-section="authentication" class="doc-section active mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ authentication /</p>
+            <p class="text-[11px] font-medium text-black/50 mb-4">/ autenticación /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              API Key Authentication
+              Autenticación con API Key
             </h2>
             <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              All API requests require an API key sent via the <code class="text-[13px] bg-[#f4f4f5] px-2 py-1 rounded text-black font-mono">x-api-key</code> header. You can obtain your key through our dashboard or by contacting sales.
+              Todas las solicitudes a la API requieren una API key enviada a través del header <code class="text-[13px] bg-[#f4f4f5] px-2 py-1 rounded text-black font-mono">x-api-key</code>. Puede obtener su clave a través de nuestro panel de control o contactando al equipo de ventas.
             </p>
             <div class="rounded-xl bg-[#1e1e1e] overflow-hidden">
               <div class="flex items-center px-5 py-3 bg-[#252526] border-b border-white/5">
@@ -143,7 +143,7 @@ const errornotes = [
             </div>
             <div class="mt-6 p-4 border border-amber-200 bg-amber-50 rounded-xl">
               <p class="text-[13px] text-amber-900 leading-relaxed">
-                <strong>Keep your API key secret.</strong> Never expose it in client-side code. Use server-side requests or a proxy to keep your key secure.
+                <strong>Mantenga su API key en secreto.</strong> Nunca la exponga en código del lado del cliente. Use solicitudes del lado del servidor o un proxy para mantener su clave segura.
               </p>
             </div>
           </section>
@@ -155,59 +155,59 @@ const errornotes = [
               Base URL
             </h2>
             <p class="text-[14px] text-black/60 leading-relaxed mb-6">
-              All API endpoints are accessed relative to the following base URL:
+              Todos los endpoints de la API se acceden en relación con la siguiente base URL:
             </p>
             <div class="rounded-xl bg-[#f4f4f5] p-5 flex items-center gap-3">
               <code class="text-[15px] font-mono text-black font-medium">{BASE_URL}</code>
             </div>
             <p class="mt-4 text-[13px] text-black/50 leading-relaxed">
-              All responses are returned as JSON with <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">Content-Type: application/json</code>. CORS is enabled for all origins.
+              Todas las respuestas se devuelven como JSON con <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">Content-Type: application/json</code>. CORS está habilitado para todos los orígenes.
             </p>
           </section>
 
           <!-- Global Query Parameters -->
           <section id="query-params" data-doc-section="query-params" class="doc-section mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ parameters /</p>
+            <p class="text-[11px] font-medium text-black/50 mb-4">/ parámetros /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              Global Query Parameters
+              Parámetros de consulta globales
             </h2>
             <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              These parameters can be appended to most endpoints to filter results.
+              Estos parámetros se pueden agregar a la mayoría de los endpoints para filtrar resultados.
             </p>
             <div class="border border-black/10 rounded-xl overflow-hidden">
               <table class="w-full text-left">
                 <thead>
                   <tr class="bg-[#f4f4f5]">
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Parameter</th>
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Default</th>
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Description</th>
+                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Parámetro</th>
+                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Predeterminado</th>
+                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Descripción</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-black/5">
                   <tr>
                     <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">format</code></td>
                     <td class="px-5 py-3.5 text-[13px] text-black/50">png</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Image format. Available options depend on your plan.</td>
+                    <td class="px-5 py-3.5 text-[13px] text-black/60">Formato de imagen. Las opciones disponibles dependen de su plan.</td>
                   </tr>
                   <tr>
                     <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">resolution</code></td>
                     <td class="px-5 py-3.5 text-[13px] text-black/50">default</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Image resolution. Higher resolutions may require a higher-tier plan.</td>
+                    <td class="px-5 py-3.5 text-[13px] text-black/60">Resolución de imagen. Las resoluciones más altas pueden requerir un plan de nivel superior.</td>
                   </tr>
                   <tr>
                     <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">color</code></td>
                     <td class="px-5 py-3.5 text-[13px] text-black/50">default</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Vehicle color. Only used on the image endpoint.</td>
+                    <td class="px-5 py-3.5 text-[13px] text-black/60">Color del vehículo. Solo se utiliza en el endpoint de imagen.</td>
                   </tr>
                   <tr>
                     <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">shadow</code></td>
                     <td class="px-5 py-3.5 text-[13px] text-black/50">false</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Add ground shadow to the image. Requires plan permission.</td>
+                    <td class="px-5 py-3.5 text-[13px] text-black/60">Agregar sombra de suelo a la imagen. Requiere permiso del plan.</td>
                   </tr>
                   <tr>
                     <td class="px-5 py-3.5"><code class="text-[12px] font-mono text-black bg-[#f4f4f5] px-1.5 py-0.5 rounded">transparency</code></td>
                     <td class="px-5 py-3.5 text-[13px] text-black/50">false</td>
-                    <td class="px-5 py-3.5 text-[13px] text-black/60">Return image with transparent background. Requires plan permission.</td>
+                    <td class="px-5 py-3.5 text-[13px] text-black/60">Devolver imagen con fondo transparente. Requiere permiso del plan.</td>
                   </tr>
                 </tbody>
               </table>
@@ -216,15 +216,15 @@ const errornotes = [
 
           <!-- API Hierarchy -->
           <section id="hierarchy" data-doc-section="hierarchy" class="doc-section mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ data model /</p>
+            <p class="text-[11px] font-medium text-black/50 mb-4">/ modelo de datos /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              API Hierarchy
+              Jerarquía de la API
             </h2>
             <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              The Vehicle Imagery API follows a hierarchical structure. Navigate step-by-step from brand to image:
+              La API de Vehicle Imagery sigue una estructura jerárquica. Navegue paso a paso desde la marca hasta la imagen:
             </p>
             <div class="flex flex-wrap gap-2 items-center text-[13px] font-mono">
-              {['Brands', 'Models', 'Years', 'Variants', 'Trims', 'Views / Colors / Features', 'Image'].map((step, i) => (
+              {['Marcas', 'Modelos', 'Años', 'Variantes', 'Acabados', 'Vistas / Colores / Características', 'Imagen'].map((step, i) => (
                 <>
                   <span class="bg-[#f4f4f5] text-black px-3 py-1.5 rounded-lg">{step}</span>
                   {i < 6 && <span class="text-black/30">→</span>}
@@ -245,7 +245,7 @@ const errornotes = [
 
               {ep.params.length > 0 && (
                 <div class="mb-8">
-                  <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Path Parameters</h4>
+                  <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Parámetros de ruta</h4>
                   <div class="space-y-2">
                     {ep.params.map((p) => (
                       <div class="flex items-start gap-3 py-2.5 px-4 bg-[#f4f4f5] rounded-lg">
@@ -260,7 +260,7 @@ const errornotes = [
 
               {ep.query.length > 0 && (
                 <div class="mb-8">
-                  <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Query Parameters</h4>
+                  <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Parámetros de consulta</h4>
                   <div class="space-y-2">
                     {ep.query.map((q) => (
                       <div class="flex items-start gap-3 py-2.5 px-4 bg-[#f4f4f5] rounded-lg">
@@ -274,7 +274,7 @@ const errornotes = [
               )}
 
               <div>
-                <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Example Response</h4>
+                <h4 class="text-[11px] font-medium text-black/40 uppercase tracking-widest mb-3">Respuesta de ejemplo</h4>
                 <div class="rounded-xl bg-[#1e1e1e] overflow-hidden">
                   <div class="flex items-center px-5 py-3 bg-[#252526] border-b border-white/5">
                     <div class="flex space-x-1.5 mr-3">
@@ -292,19 +292,19 @@ const errornotes = [
 
           <!-- Error Codes -->
           <section id="errors" data-doc-section="errors" class="doc-section mb-20 scroll-mt-24">
-            <p class="text-[11px] font-medium text-black/50 mb-4">/ reference /</p>
+            <p class="text-[11px] font-medium text-black/50 mb-4">/ referencia /</p>
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              HTTP Status Codes
+              Códigos de estado HTTP
             </h2>
             <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              The API uses standard HTTP status codes. Every error response includes a JSON body with an <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">error</code> field describing the issue.
+              La API utiliza códigos de estado HTTP estándar. Cada respuesta de error incluye un cuerpo JSON con un campo <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">error</code> que describe el problema.
             </p>
             <div class="border border-black/10 rounded-xl overflow-hidden">
               <table class="w-full text-left">
                 <thead>
                   <tr class="bg-[#f4f4f5]">
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider w-24">Code</th>
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Description</th>
+                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider w-24">Código</th>
+                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Descripción</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-black/5">
@@ -322,17 +322,17 @@ const errornotes = [
           <!-- Error Notes -->
           <section id="errornotes" data-doc-section="errornotes" class="doc-section mb-20 scroll-mt-24">
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              Error Notes (Fallback Codes)
+              Notas de error (Códigos de respaldo)
             </h2>
             <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              When the API can't fulfill your exact request but finds a suitable fallback, it returns the image along with an <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">errornotes</code> array explaining what was changed. This only applies when fallbacks are enabled in your plan.
+              Cuando la API no puede cumplir su solicitud exacta pero encuentra un respaldo adecuado, devuelve la imagen junto con un array <code class="text-[12px] bg-[#f4f4f5] px-1.5 py-0.5 rounded text-black font-mono">errornotes</code> que explica lo que se cambió. Esto solo aplica cuando los respaldos están habilitados en su plan.
             </p>
             <div class="border border-black/10 rounded-xl overflow-hidden">
               <table class="w-full text-left">
                 <thead>
                   <tr class="bg-[#f4f4f5]">
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider w-24">Code</th>
-                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Description</th>
+                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider w-24">Código</th>
+                    <th class="px-5 py-3 text-[11px] font-medium text-black/50 uppercase tracking-wider">Descripción</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-black/5">
@@ -350,39 +350,39 @@ const errornotes = [
           <!-- Rate Limits -->
           <section id="rate-limits" data-doc-section="rate-limits" class="doc-section mb-20 scroll-mt-24">
             <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">
-              Rate Limits & Caching
+              Límites de solicitudes y caché
             </h2>
             <p class="text-[14px] text-black/60 leading-relaxed mb-8">
-              Rate limits depend on your plan. All image URLs are served through a global CDN and signed with a time-limited token (default 7 days). Cache these URLs on your end for optimal performance.
+              Los límites de solicitudes dependen de su plan. Todas las URLs de imágenes se sirven a través de un CDN global y están firmadas con un token de tiempo limitado (7 días por defecto). Almacene estas URLs en caché para un rendimiento óptimo.
             </p>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="p-6 bg-[#f4f4f5] rounded-xl">
                 <p class="text-2xl font-normal text-black mb-1">50ms</p>
-                <p class="text-[12px] text-black/50 uppercase tracking-wider">Avg. Latency</p>
+                <p class="text-[12px] text-black/50 uppercase tracking-wider">Latencia prom.</p>
               </div>
               <div class="p-6 bg-[#f4f4f5] rounded-xl">
                 <p class="text-2xl font-normal text-black mb-1">99.9%</p>
-                <p class="text-[12px] text-black/50 uppercase tracking-wider">Uptime SLA</p>
+                <p class="text-[12px] text-black/50 uppercase tracking-wider">SLA de disponibilidad</p>
               </div>
               <div class="p-6 bg-[#f4f4f5] rounded-xl">
-                <p class="text-2xl font-normal text-black mb-1">7 days</p>
-                <p class="text-[12px] text-black/50 uppercase tracking-wider">URL Expiry</p>
+                <p class="text-2xl font-normal text-black mb-1">7 días</p>
+                <p class="text-[12px] text-black/50 uppercase tracking-wider">Expiración de URL</p>
               </div>
             </div>
           </section>
 
           <!-- CTA -->
           <section class="rounded-2xl p-8 sm:p-12 text-center" style="background-color: rgb(10, 43, 49);">
-            <h2 class="text-2xl sm:text-3xl font-normal text-white tracking-tight mb-3">Ready to get started?</h2>
+            <h2 class="text-2xl sm:text-3xl font-normal text-white tracking-tight mb-3">¿Listo para comenzar?</h2>
             <p class="text-[14px] text-white/60 mb-8 max-w-md mx-auto leading-relaxed">
-              Get your API key and start integrating studio-quality vehicle imagery today.
+              Obtenga su API key y comience a integrar imágenes de vehículos de calidad de estudio hoy.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/es/contact" class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-[13px] font-medium text-black transition-colors hover:bg-[rgb(200,90,70)] hover:text-white">
-                Get API Key
+                Obtener API Key
               </a>
               <a href="/es/contact" class="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-white/10">
-                Contact Sales
+                Contactar ventas
               </a>
             </div>
           </section>

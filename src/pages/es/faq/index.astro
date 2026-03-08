@@ -20,20 +20,20 @@ try {
   }
 
   const categoryMeta: Record<string, { label: string; desc: string }> = {
-    general: { label: 'General', desc: 'Common questions about Vehicle Imagery and our services.' },
-    api: { label: 'API', desc: 'Technical questions about endpoints, authentication, and integration.' },
-    billing: { label: 'Billing', desc: 'Pricing, invoices, plans, and payment-related questions.' },
-    support: { label: 'Support', desc: 'Get help with your account, technical issues, and more.' },
-    account: { label: 'Account', desc: 'Account management, settings, and access.' },
-    coverage: { label: 'Coverage', desc: 'Available brands, models, and regional support.' },
-    integration: { label: 'Integration', desc: 'SDKs, webhooks, and third-party integrations.' },
+    general: { label: 'General', desc: 'Preguntas frecuentes sobre Vehicle Imagery y nuestros servicios.' },
+    api: { label: 'API', desc: 'Preguntas técnicas sobre endpoints, autenticación e integración.' },
+    billing: { label: 'Facturación', desc: 'Precios, facturas, planes y preguntas relacionadas con pagos.' },
+    support: { label: 'Soporte', desc: 'Obtén ayuda con tu cuenta, problemas técnicos y más.' },
+    account: { label: 'Cuenta', desc: 'Gestión de cuenta, configuración y acceso.' },
+    coverage: { label: 'Cobertura', desc: 'Marcas disponibles, modelos y soporte regional.' },
+    integration: { label: 'Integración', desc: 'SDKs, webhooks e integraciones de terceros.' },
   };
 
   categories = Array.from(catMap.entries()).map(([slug, count]) => ({
     slug,
     label: categoryMeta[slug]?.label ?? slug.charAt(0).toUpperCase() + slug.slice(1),
     count,
-    desc: categoryMeta[slug]?.desc ?? `Frequently asked questions about ${slug}.`,
+    desc: categoryMeta[slug]?.desc ?? `Preguntas frecuentes sobre ${slug}.`,
   }));
 
   categories.sort((a, b) => a.label.localeCompare(b.label));
@@ -45,8 +45,8 @@ const displayCategories = categories;
 ---
 
 <BaseLayout
-  title="FAQ | Vehicle Imagery API"
-  description="Frequently asked questions about Vehicle Imagery API – general, technical, billing, and more."
+  title="Preguntas frecuentes | Vehicle Imagery API"
+  description="Preguntas frecuentes sobre la API de Vehicle Imagery: general, técnico, facturación y más."
   canonicalUrl="/es/faq"
 >
   <Header />
@@ -61,7 +61,7 @@ const displayCategories = categories;
             <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
               <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
                 <p class="text-[13px] tracking-wide text-black/80">
-                  <a href="/es" class="transition-colors hover:text-black">Home</a>
+                  <a href="/es" class="transition-colors hover:text-black">Inicio</a>
                   <span class="mx-2.5 text-black/20">/</span>
                   <span class="font-medium text-black">FAQ</span>
                 </p>
@@ -91,14 +91,14 @@ const displayCategories = categories;
                 <h2 class="text-3xl sm:text-4xl font-black text-black tracking-tight mb-3">{cat.label}</h2>
                 <p class="text-[14px] text-black/40 leading-relaxed max-w-md">{cat.desc}</p>
                 {cat.count > 0 && (
-                  <p class="mt-4 text-[11px] font-medium text-black/25">{cat.count} {cat.count === 1 ? 'question' : 'questions'}</p>
+                  <p class="mt-4 text-[11px] font-medium text-black/25">{cat.count} {cat.count === 1 ? 'pregunta' : 'preguntas'}</p>
                 )}
               </a>
             ))}
           </div>
         ) : (
           <div class="text-center py-20">
-            <p class="text-black/40 text-sm">No FAQ categories found. Add FAQ entries in Contentful to see categories here.</p>
+            <p class="text-black/40 text-sm">No se encontraron categorías de FAQ. Añade entradas de FAQ en Contentful para ver las categorías aquí.</p>
           </div>
         )}
       </div>

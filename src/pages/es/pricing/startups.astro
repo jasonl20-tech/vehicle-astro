@@ -4,15 +4,15 @@ import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
 
 const benefits = [
-  { title: 'Startup-friendly rates', desc: 'Pricing that scales with you. We offer better starting conditions so you can grow without upfront cost.' },
-  { title: 'Flexible terms', desc: 'No long lock-in. Month-to-month options and volume tiers that adapt as your usage grows.' },
-  { title: 'Dedicated onboarding', desc: 'Quick integration support and technical guidance so you can go live faster.' },
+  { title: 'Tarifas para startups', desc: 'Precios que escalan contigo. Ofrecemos mejores condiciones iniciales para que puedas crecer sin costes iniciales.' },
+  { title: 'Condiciones flexibles', desc: 'Sin permanencia prolongada. Opciones mes a mes y niveles de volumen que se adaptan a medida que crece tu uso.' },
+  { title: 'Onboarding dedicado', desc: 'Soporte de integración rápido y orientación técnica para que puedas empezar a funcionar más rápido.' },
 ];
 ---
 
 <BaseLayout
-  title="Pricing for Startups | Vehicle Imagery API"
-  description="Custom plan for startups with better starting conditions. Startup-friendly rates, flexible terms, and dedicated onboarding. Request your quote."
+  title="Precios para Startups | Vehicle Imagery API"
+  description="Plan personalizado para startups con mejores condiciones iniciales. Tarifas para startups, condiciones flexibles y onboarding dedicado. Solicita tu presupuesto."
   canonicalUrl="/es/pricing/startups"
 >
   <Header />
@@ -21,15 +21,15 @@ const benefits = [
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Pricing</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Precios</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Built for<br/>Startups
+          Diseñado para<br/>Startups
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          A custom plan designed for early-stage teams: better starting conditions, flexible terms, and pricing that grows with you — no big upfront commitment.
+          Un plan personalizado diseñado para equipos en etapa inicial: mejores condiciones iniciales, términos flexibles y precios que crecen contigo — sin grandes compromisos iniciales.
         </p>
         <p class="mt-6 text-[13px] text-black/40">
-          <a href="/es/pricing" class="hover:text-[rgb(200,90,70)] transition-colors">← Back to Pricing</a>
+          <a href="/es/pricing" class="hover:text-[rgb(200,90,70)] transition-colors">← Volver a Precios</a>
         </p>
       </div>
     </section>
@@ -41,12 +41,12 @@ const benefits = [
         <!-- Left: Plan info & benefits -->
         <div>
           <div class="rounded-[2rem] overflow-hidden border border-black/[0.06] bg-[#fafafa] p-10 sm:p-12 mb-12">
-            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-[rgb(200,90,70)] mb-4 block">Startup Plan</span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-[rgb(200,90,70)] mb-4 block">Plan Startup</span>
             <h2 class="text-4xl sm:text-5xl font-light text-black tracking-tight leading-[1.05] mb-6">
-              Custom plan on request
+              Plan personalizado bajo solicitud
             </h2>
             <p class="text-[14px] text-black/50 leading-relaxed mb-8 max-w-md">
-              Tell us about your stage and usage. We'll put together a plan with startup-friendly rates, flexible volume, and support that fits your timeline.
+              Cuéntanos sobre tu etapa y uso. Crearemos un plan con tarifas para startups, volumen flexible y soporte que se ajuste a tus plazos.
             </p>
             <ul class="space-y-4">
               {benefits.map((b) => (
@@ -66,15 +66,15 @@ const benefits = [
           <div class="grid grid-cols-3 gap-6">
             <div>
               <p class="text-2xl font-light text-black tracking-tight">24h</p>
-              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Quote turnaround</p>
+              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Tiempo de respuesta</p>
             </div>
             <div>
               <p class="text-2xl font-light text-black tracking-tight">Flex</p>
-              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Payment terms</p>
+              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Condiciones de pago</p>
             </div>
             <div>
-              <p class="text-2xl font-light text-black tracking-tight">Same API</p>
-              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Full access</p>
+              <p class="text-2xl font-light text-black tracking-tight">Misma API</p>
+              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Acceso completo</p>
             </div>
           </div>
         </div>
@@ -84,12 +84,12 @@ const benefits = [
           <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
           <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[rgb(200,90,70)] via-[rgb(200,90,70)]/40 to-transparent"></div>
           <div class="relative p-10 sm:p-14">
-            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 mb-4 block">Request your quote</span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 mb-4 block">Solicita tu presupuesto</span>
             <h3 class="text-3xl sm:text-4xl font-light text-white tracking-tight leading-[1.05] mb-4">
-              Get startup conditions
+              Obtén condiciones startup
             </h3>
             <p class="text-[14px] text-white/40 leading-relaxed mb-10 max-w-sm">
-              We'll reply within 24 hours with a tailored offer and next steps.
+              Te responderemos en 24 horas con una oferta personalizada y los próximos pasos.
             </p>
 
             <div id="startups-form-wrapper" class="transition-all duration-700 ease-out">
@@ -98,21 +98,21 @@ const benefits = [
                   <input type="hidden" name="subject" value="Pricing – Startup Plan Request" />
 
                   <div>
-                    <input type="text" name="name" required placeholder="Your name" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="name" required placeholder="Tu nombre" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="email" name="email" required placeholder="Work email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="email" name="email" required placeholder="Correo de trabajo" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <input type="text" name="company" placeholder="Company / Product" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="text" name="company" placeholder="Empresa / Producto" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <textarea name="message" rows="3" placeholder="Tell us about your stage, expected usage, and what you're building..." class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
+                    <textarea name="message" rows="3" placeholder="Cuéntanos sobre tu etapa, uso esperado y lo que estás construyendo..." class="w-full resize-none border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors"></textarea>
                   </div>
 
                   <div class="pt-4">
                     <button type="submit" id="startups-submit-btn" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white w-full sm:w-auto">
-                      <span>Request Startup Quote</span>
+                      <span>Solicitar presupuesto startup</span>
                       <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                       </svg>
@@ -128,8 +128,8 @@ const benefits = [
                     <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="startups-check" />
                   </svg>
                 </div>
-                <h3 class="text-2xl font-normal text-white mb-3">Quote Requested!</h3>
-                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">We'll reply within 24 hours with a tailored offer.</p>
+                <h3 class="text-2xl font-normal text-white mb-3">¡Presupuesto solicitado!</h3>
+                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">Te responderemos en 24 horas con una oferta personalizada.</p>
               </div>
             </div>
 
@@ -167,20 +167,20 @@ const benefits = [
           <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
           <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
             <div class="max-w-xl">
-              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Other options</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Otras opciones</p>
               <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-white leading-[1.05] mb-4">
-                Free Trial or standard custom plan
+                Prueba gratuita o plan personalizado estándar
               </h2>
               <p class="text-[14px] text-white/40 leading-relaxed">
-                Not a startup? Check out our main pricing: free trial or a custom plan on request.
+                ¿No eres una startup? Consulta nuestros precios principales: prueba gratuita o un plan personalizado bajo solicitud.
               </p>
             </div>
             <div class="flex flex-col sm:flex-row gap-4 shrink-0">
               <a href="/es/pricing" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
-                View Pricing
+                Ver precios
               </a>
               <a href="/es/contact" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
-                Contact
+                Contacto
               </a>
             </div>
           </div>

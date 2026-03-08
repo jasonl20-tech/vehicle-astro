@@ -64,7 +64,7 @@ try {
       };
     }) => ({
       slug: item.fields!.slug!,
-      title: item.fields?.title ?? 'Untitled',
+      title: item.fields?.title ?? 'Sin título',
       date: item.fields?.publishedAt,
       excerpt: item.fields?.excerpt ? richTextToPlainText(item.fields.excerpt, 160) : undefined,
       category: item.fields?.category,
@@ -77,13 +77,13 @@ try {
       tags: item.fields?.tags,
     }));
 } catch {
-  // Contentful nicht konfiguriert oder keine Einträge
+  // Contentful no configurado o sin entradas
 }
 ---
 
 <BaseLayout
   title="Blog | Vehicle Imagery API"
-  description="Updates, API tips, and insights – Vehicle Imagery Blog. Studio quality standards for developers and product teams."
+  description="Actualizaciones, consejos de API e información – Blog de Vehicle Imagery. Estándares de calidad de estudio para desarrolladores y equipos de producto."
   ogImage="/images/hero-car.webp"
   canonicalUrl="/es/blog"
 >
@@ -95,7 +95,7 @@ try {
         <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Vehicle Imagery</p>
         <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">Blog</h1>
         <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
-          Updates, API tips, and insights. Studio quality standards for developers and product teams.
+          Actualizaciones, consejos de API e información. Estándares de calidad de estudio para desarrolladores y equipos de producto.
         </p>
       </div>
     </section>
@@ -142,7 +142,7 @@ try {
                       {post.authorAvatarUrl && (
                         <img
                           src={post.authorAvatarUrl.startsWith('http') ? post.authorAvatarUrl : `https:${post.authorAvatarUrl}`}
-                          alt={post.authorName ? `${post.authorName} avatar` : ''}
+                          alt={post.authorName ? `Avatar de ${post.authorName}` : ''}
                           class="h-9 w-9 rounded-full object-cover ring-2 ring-white"
                           width="36"
                           height="36"
@@ -152,11 +152,11 @@ try {
                         {post.authorName && <span class="font-medium text-[#1C2B32]/80">{post.authorName}</span>}
                         {post.date && (
                           <time datetime={post.date}>
-                            {new Date(post.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            {new Date(post.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                           </time>
                         )}
                         {post.readingTimeMinutes != null && (
-                          <span>{post.readingTimeMinutes} min</span>
+                          <span>{post.readingTimeMinutes} min de lectura</span>
                         )}
                       </div>
                     </div>
@@ -177,9 +177,9 @@ try {
         </ul>
       ) : (
         <div class="rounded-none border border-[#1C2B32]/10 bg-white p-16 text-center">
-          <p class="text-[#1C2B32]/60">Keine Blog-Posts vorhanden. Contentful mit Content-Type „blogPost“ befüllen.</p>
+          <p class="text-[#1C2B32]/60">No hay entradas de blog disponibles.</p>
           <a href="/es" class="mt-6 inline-block border border-[#1C2B32] px-6 py-3 text-sm font-bold uppercase tracking-widest text-[#1C2B32] transition-colors hover:bg-[#1C2B32] hover:text-cream">
-            Zur Startseite
+            Volver al inicio
           </a>
         </div>
       )}
