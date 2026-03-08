@@ -4,15 +4,15 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
 const benefits = [
-  { title: 'No request limit', desc: 'Unlimited API calls during your trial. Test as much as you need within the trial scope.' },
-  { title: 'Limited catalog', desc: 'A small set of vehicles and models, with restricted options (e.g. colors). Enough to integrate and validate the API.' },
-  { title: '1 week key', desc: 'Your trial API key is valid for 7 days. No credit card required — no commitment, no auto-charge.' },
+  { title: 'Sin límite de solicitudes', desc: 'Llamadas API ilimitadas durante tu prueba. Prueba todo lo que necesites dentro del alcance de la prueba.' },
+  { title: 'Catálogo limitado', desc: 'Un conjunto reducido de vehículos y modelos, con opciones restringidas (ej. colores). Suficiente para integrar y validar la API.' },
+  { title: 'Clave de 1 semana', desc: 'Tu clave API de prueba es válida durante 7 días. Sin tarjeta de crédito — sin compromiso, sin cargos automáticos.' },
 ];
 ---
 
 <BaseLayout
-  title="Free Trial | Vehicle Imagery API"
-  description="Request your free Vehicle Imagery API trial. Limited vehicles and options, 1 week key, no request limit, no credit card. Get started in minutes."
+  title="Prueba gratuita | Vehicle Imagery API"
+  description="Solicita tu prueba gratuita de la API de Vehicle Imagery. Vehículos y opciones limitados, clave de 1 semana, sin límite de solicitudes, sin tarjeta de crédito. Comienza en minutos."
   canonicalUrl="/es/trial"
 >
   <Header />
@@ -21,15 +21,15 @@ const benefits = [
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Try Now</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Pruébalo ahora</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Free Trial
+          Prueba gratuita
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Get your trial API key in minutes. Limited vehicles and options to test the API — no request limit, key valid for 1 week, no credit card required.
+          Obtén tu clave API de prueba en minutos. Vehículos y opciones limitados para probar la API — sin límite de solicitudes, clave válida por 1 semana, sin tarjeta de crédito.
         </p>
         <p class="mt-6 text-[13px] text-black/40">
-          <a href="/es/pricing" class="hover:text-[rgb(200,90,70)] transition-colors">View all plans →</a>
+          <a href="/es/pricing" class="hover:text-[rgb(200,90,70)] transition-colors">Ver todos los planes →</a>
         </p>
       </div>
     </section>
@@ -41,12 +41,12 @@ const benefits = [
         <!-- Left: What you get -->
         <div>
           <div class="rounded-[2rem] overflow-hidden border border-black/[0.06] bg-[#fafafa] p-10 sm:p-12 mb-12">
-            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full inline-block mb-6">Free</span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full inline-block mb-6">Gratis</span>
             <h2 class="text-4xl sm:text-5xl font-light text-black tracking-tight leading-[1.05] mb-6">
-              What's included
+              Qué incluye
             </h2>
             <p class="text-[14px] text-black/50 leading-relaxed mb-10 max-w-md">
-              A focused trial: limited vehicles and models, restricted options (e.g. colors). Same API, same quality — ideal to integrate and test.
+              Una prueba enfocada: vehículos y modelos limitados, opciones restringidas (ej. colores). La misma API, la misma calidad — ideal para integrar y probar.
             </p>
             <ul class="space-y-4">
               {benefits.map((b) => (
@@ -65,16 +65,16 @@ const benefits = [
 
           <div class="grid grid-cols-3 gap-6">
             <div>
-              <p class="text-2xl font-light text-black tracking-tight">7 days</p>
-              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Key validity</p>
+              <p class="text-2xl font-light text-black tracking-tight">7 días</p>
+              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Validez de clave</p>
             </div>
             <div>
-              <p class="text-2xl font-light text-black tracking-tight">No limit</p>
-              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Requests</p>
+              <p class="text-2xl font-light text-black tracking-tight">Sin límite</p>
+              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Solicitudes</p>
             </div>
             <div>
-              <p class="text-2xl font-light text-black tracking-tight">No CC</p>
-              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Required</p>
+              <p class="text-2xl font-light text-black tracking-tight">Sin tarjeta</p>
+              <p class="text-[10px] text-black/40 uppercase tracking-wider mt-1">Requerida</p>
             </div>
           </div>
         </div>
@@ -84,12 +84,12 @@ const benefits = [
           <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
           <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[rgb(200,90,70)] via-[rgb(200,90,70)]/40 to-transparent"></div>
           <div class="relative p-10 sm:p-14">
-            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 mb-4 block">Request access</span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 mb-4 block">Solicitar acceso</span>
             <h3 class="text-3xl sm:text-4xl font-light text-white tracking-tight leading-[1.05] mb-4">
-              Get your API key
+              Obtén tu clave API
             </h3>
             <p class="text-[14px] text-white/40 leading-relaxed mb-10 max-w-sm">
-              Enter your email and we'll send you the trial details and your API key.
+              Ingresa tu correo electrónico y te enviaremos los detalles de la prueba y tu clave API.
             </p>
 
             <div id="trial-form-wrapper" class="transition-all duration-700 ease-out">
@@ -98,12 +98,12 @@ const benefits = [
                   <input type="hidden" name="subject" value="Free Trial Request" />
 
                   <div>
-                    <input type="email" name="email" required placeholder="Work email" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
+                    <input type="email" name="email" required placeholder="Correo de trabajo" class="w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors" />
                   </div>
 
                   <div class="pt-4">
                     <button type="submit" id="trial-submit-btn" class="group/btn inline-flex items-center justify-center rounded-full px-8 py-4 text-[13px] font-medium transition-all duration-300 bg-white text-black hover:bg-[rgb(200,90,70)] hover:text-white w-full sm:w-auto">
-                      <span>Request Free Trial</span>
+                      <span>Solicitar prueba gratuita</span>
                       <svg class="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                       </svg>
@@ -119,8 +119,8 @@ const benefits = [
                     <path d="M15 27L23 35L37 19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="40" stroke-dashoffset="40" class="trial-check" />
                   </svg>
                 </div>
-                <h3 class="text-2xl font-normal text-white mb-3">Request Sent!</h3>
-                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">We'll send your trial details shortly.</p>
+                <h3 class="text-2xl font-normal text-white mb-3">¡Solicitud enviada!</h3>
+                <p class="text-[14px] text-white/70 max-w-xs leading-relaxed">Te enviaremos los detalles de tu prueba en breve.</p>
               </div>
             </div>
 
@@ -158,23 +158,23 @@ const benefits = [
           <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
           <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
             <div class="max-w-xl">
-              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Next steps</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Próximos pasos</p>
               <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-white leading-[1.05] mb-4">
-                Need the full catalog?
+                ¿Necesitas el catálogo completo?
               </h2>
               <p class="text-[14px] text-white/40 leading-relaxed">
-                Get access to all vehicles, models, and options. Check our pricing or book a call to discuss your needs.
+                Accede a todos los vehículos, modelos y opciones. Consulta nuestros precios o reserva una llamada para discutir tus necesidades.
               </p>
             </div>
             <div class="flex flex-col sm:flex-row gap-4 shrink-0">
               <a href="/es/pricing" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
-                View Pricing
+                Ver precios
               </a>
               <a href="/es/documentation" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
-                Documentation
+                Documentación
               </a>
               <a href="/es/book-a-call" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
-                Book a Call
+                Reservar llamada
               </a>
             </div>
           </div>

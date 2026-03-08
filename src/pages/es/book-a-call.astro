@@ -4,15 +4,15 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
 const benefits = [
-  { num: '01', title: 'Live Demo', desc: 'See the API in action with your specific use case. We\'ll walk you through endpoints, image quality, and integration flow.' },
-  { num: '02', title: 'Custom Assessment', desc: 'We\'ll analyze your requirements — volume, vehicle types, regions — and recommend the right plan.' },
-  { num: '03', title: 'Technical Q&A', desc: 'Bring your engineering team. We\'ll answer architecture questions and help plan your integration.' },
+  { num: '01', title: 'Demo en vivo', desc: 'Mira la API en acción con tu caso de uso específico. Te guiaremos por los endpoints, calidad de imagen y flujo de integración.' },
+  { num: '02', title: 'Evaluación personalizada', desc: 'Analizaremos tus requisitos — volumen, tipos de vehículos, regiones — y recomendaremos el plan adecuado.' },
+  { num: '03', title: 'Preguntas técnicas', desc: 'Trae a tu equipo de ingeniería. Responderemos preguntas de arquitectura y ayudaremos a planificar tu integración.' },
 ];
 ---
 
 <BaseLayout
-  title="Book a Call | Vehicle Imagery API"
-  description="Schedule a call with the Vehicle Imagery team. Get a live demo, discuss your requirements, and find the right plan for your business."
+  title="Reservar llamada | Vehicle Imagery API"
+  description="Programa una llamada con el equipo de Vehicle Imagery. Obtén una demo en vivo, discute tus requisitos y encuentra el plan adecuado para tu negocio."
   canonicalUrl="/es/book-a-call"
 >
   <Header />
@@ -21,12 +21,12 @@ const benefits = [
     <!-- Hero -->
     <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
       <div class="max-w-3xl">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Schedule</p>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Programar</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Book a Call
+          Reservar llamada
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Talk to our team directly. Whether you need a demo, want to discuss pricing, or have technical questions — we're here to help.
+          Habla con nuestro equipo directamente. Ya sea que necesites una demo, quieras discutir precios o tengas preguntas técnicas — estamos aquí para ayudarte.
         </p>
       </div>
     </section>
@@ -44,7 +44,7 @@ const benefits = [
                 <span class="absolute inset-0 rounded-full border-2 border-black/10"></span>
                 <span class="absolute inset-0 rounded-full border-2 border-transparent border-t-[rgb(200,90,70)] animate-spin"></span>
               </div>
-              <p class="text-[13px] font-medium text-black/60">Loading calendar…</p>
+              <p class="text-[13px] font-medium text-black/60">Cargando calendario…</p>
             </div>
             <div class="flex gap-2">
               <span class="w-2 h-2 rounded-full bg-black/15 animate-bounce" style="animation-delay: 0ms;"></span>
@@ -63,12 +63,12 @@ const benefits = [
 
         <!-- Right: Info -->
         <div class="pt-4">
-          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">What to Expect</p>
+          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-6">Qué esperar</p>
           <h2 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight mb-6">
-            30 minutes that save you weeks
+            30 minutos que te ahorran semanas
           </h2>
           <p class="text-[14px] text-black/50 leading-relaxed max-w-md mb-16">
-            Our calls are focused and tailored to your needs. No sales pitch — just honest answers and a clear path forward.
+            Nuestras llamadas son enfocadas y adaptadas a tus necesidades. Sin discurso de ventas — solo respuestas honestas y un camino claro hacia adelante.
           </p>
 
           <div class="space-y-0">
@@ -87,15 +87,15 @@ const benefits = [
           <div class="grid grid-cols-3 gap-6 mt-16">
             <div>
               <p class="text-3xl sm:text-4xl font-light text-black tracking-tight">24h</p>
-              <p class="text-[11px] text-black/40 mt-1">Response time</p>
+              <p class="text-[11px] text-black/40 mt-1">Tiempo de respuesta</p>
             </div>
             <div>
               <p class="text-3xl sm:text-4xl font-light text-black tracking-tight">30m</p>
-              <p class="text-[11px] text-black/40 mt-1">Call duration</p>
+              <p class="text-[11px] text-black/40 mt-1">Duración de llamada</p>
             </div>
             <div>
-              <p class="text-3xl sm:text-4xl font-light text-black tracking-tight">Free</p>
-              <p class="text-[11px] text-black/40 mt-1">No obligations</p>
+              <p class="text-3xl sm:text-4xl font-light text-black tracking-tight">Gratis</p>
+              <p class="text-[11px] text-black/40 mt-1">Sin compromiso</p>
             </div>
           </div>
         </div>
@@ -110,20 +110,20 @@ const benefits = [
           <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
           <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
             <div class="max-w-xl">
-              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">Prefer Self-Service?</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/25 mb-6">¿Prefieres autoservicio?</p>
               <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-white leading-[1.05] mb-4">
-                Start your free trial right now
+                Comienza tu prueba gratuita ahora
               </h2>
               <p class="text-[14px] text-white/40 leading-relaxed">
-                No call needed. Sign up, get your API key, and start integrating in minutes.
+                Sin necesidad de llamada. Regístrate, obtén tu clave API y comienza a integrar en minutos.
               </p>
             </div>
             <div class="flex flex-col sm:flex-row gap-4 shrink-0">
               <a href="/es/pricing" class="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white">
-                View Plans
+                Ver planes
               </a>
               <a href="/es/documentation" class="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-[13px] font-medium text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white">
-                Documentation
+                Documentación
               </a>
             </div>
           </div>
