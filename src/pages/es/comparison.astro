@@ -14,25 +14,27 @@ interface ComparisonItem {
 
 let items: ComparisonItem[] = [];
 
-try {
-  const res = await getEntries({ content_type: 'dynamicPage-2', limit: 500, include: 2, locale: 'es' });
-  for (const item of res.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    const category = ((f.category as string) || '').toLowerCase();
-    if (!category.includes('comparison')) continue;
-    const slug = f.slug as string;
-    const prefix = f.urlPrefix as string | undefined;
-    const href = prefix ? `/es/${prefix}/${slug}` : `/es/${slug}`;
-    const title = (f.title as string) || slug;
-    const desc = f.description
-      ? (typeof f.description === 'string' ? f.description.slice(0, 160) : richTextToPlainText(f.description, 160))
-      : undefined;
-    const label = f.label as string | undefined;
-    items.push({ href, title, description: desc, label });
-  }
-  items.sort((a, b) => a.title.localeCompare(b.title));
-} catch {}
+for (const ct of ['dynamicPage-2', 'landingPage'] as const) {
+  try {
+    const res = await getEntries({ content_type: ct, limit: 500, include: 2, locale: 'es' });
+    for (const item of res.items as any[]) {
+      const f = item.fields;
+      if (!f?.slug) continue;
+      const category = ((f.category as string) || '').toLowerCase();
+      if (!category.includes('comparison')) continue;
+      const slug = f.slug as string;
+      const prefix = f.urlPrefix as string | undefined;
+      const href = prefix ? `/es/${prefix}/${slug}` : `/es/${slug}`;
+      const title = (f.title as string) || slug;
+      const desc = f.description
+        ? (typeof f.description === 'string' ? f.description.slice(0, 160) : richTextToPlainText(f.description, 160))
+        : undefined;
+      const label = f.label as string | undefined;
+      items.push({ href, title, description: desc, label });
+    }
+  } catch {}
+}
+items.sort((a, b) => a.title.localeCompare(b.title));
 ---
 
 <BaseLayout title="Comparaciones | Vehicle Imagery API" description="Descubre cómo Vehicle Imagery se compara con proveedores alternativos de imágenes de vehículos. Comparaciones detalladas lado a lado." canonicalUrl="/es/comparison">

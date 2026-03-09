@@ -25,11 +25,14 @@ let dynamicByCategory = new Map<string, DynamicLink[]>();
 let extraCategories: DynamicCategory[] = [];
 
 try {
-  const res = await getEntries({ content_type: 'dynamicPage-2', limit: 500, locale: cfLocale });
-  const footerItems = (res.items as any[]).filter((item) => item.fields?.footer === true);
+  const allFooterItems: any[] = [];
+  for (const ct of ['dynamicPage-2', 'landingPage'] as const) {
+    const res = await getEntries({ content_type: ct, limit: 500, locale: cfLocale });
+    allFooterItems.push(...(res.items as any[]).filter((item) => item.fields?.footer === true));
+  }
 
   const catMap = new Map<string, DynamicLink[]>();
-  for (const item of footerItems) {
+  for (const item of allFooterItems) {
     const f = item.fields;
     const category = (f.category as string) || 'Other';
     const slug = f.slug as string;

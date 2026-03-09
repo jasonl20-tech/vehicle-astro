@@ -44,22 +44,24 @@ const staticPages: SiteLink[] = [
 
 let dynamicPages: SiteLink[] = [];
 
-try {
-  const dpRes = await getEntries({ content_type: 'dynamicPage-2', limit: 500, include: 2, locale: 'es' });
-  for (const item of dpRes.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    const slug = f.slug as string;
-    const prefix = f.urlPrefix as string | undefined;
-    const href = prefix ? `/es/${prefix}/${slug}` : `/es/${slug}`;
-    const label = (f.title as string) || slug;
-    const desc = f.description
-      ? (typeof f.description === 'string' ? f.description.slice(0, 120) : richTextToPlainText(f.description, 120))
-      : undefined;
-    const category = (f.category as string) || 'Otros';
-    dynamicPages.push({ href, label, description: desc, category });
-  }
-} catch {}
+for (const ct of ['dynamicPage-2', 'landingPage'] as const) {
+  try {
+    const dpRes = await getEntries({ content_type: ct, limit: 500, include: 2, locale: 'es' });
+    for (const item of dpRes.items as any[]) {
+      const f = item.fields;
+      if (!f?.slug) continue;
+      const slug = f.slug as string;
+      const prefix = f.urlPrefix as string | undefined;
+      const href = prefix ? `/es/${prefix}/${slug}` : `/es/${slug}`;
+      const label = (f.title as string) || slug;
+      const desc = f.description
+        ? (typeof f.description === 'string' ? f.description.slice(0, 120) : richTextToPlainText(f.description, 120))
+        : undefined;
+      const category = (f.category as string) || 'Otros';
+      dynamicPages.push({ href, label, description: desc, category });
+    }
+  } catch {}
+}
 
 try {
   const blogRes = await getEntries({ content_type: 'blogPost', limit: 200, order: '-fields.publishedAt', locale: 'es' });

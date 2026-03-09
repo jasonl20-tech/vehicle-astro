@@ -32,21 +32,23 @@ export async function getStaticPaths() {
       }
     } catch {}
 
-    try {
-      const dpRes = await getEntries({ content_type: 'dynamicPage-2', limit: 500, include: 2, locale: cfLocale });
-      const assetMap = buildAssetMap(dpRes.includes as any);
-      for (const item of dpRes.items as any[]) {
-        if (item.fields?.slug) {
-          const slug = item.fields.slug as string;
-          const urlPrefix = item.fields.urlPrefix as string | undefined;
-          const path = urlPrefix ? `${urlPrefix}/${slug}` : slug;
-          paths.push({
-            params: { slug: `${prefix}${path}` },
-            props: { entry: item, type: 'dynamicPage', assetMap, locale },
-          });
+    for (const ct of ['dynamicPage-2', 'landingPage'] as const) {
+      try {
+        const dpRes = await getEntries({ content_type: ct, limit: 500, include: 2, locale: cfLocale });
+        const assetMap = buildAssetMap(dpRes.includes as any);
+        for (const item of dpRes.items as any[]) {
+          if (item.fields?.slug) {
+            const slug = item.fields.slug as string;
+            const urlPrefix = item.fields.urlPrefix as string | undefined;
+            const path = urlPrefix ? `${urlPrefix}/${slug}` : slug;
+            paths.push({
+              params: { slug: `${prefix}${path}` },
+              props: { entry: item, type: 'dynamicPage', assetMap, locale },
+            });
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }
   }
 
   return paths;
