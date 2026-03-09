@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { getEntries } from '../../../lib/contentful';
+import { renderRichText, richTextToPlainText, buildAssetMap } from '../../../lib/contentful-rich-text';
+
+export async function getStaticPaths() {
+  try {
+    const res = await getEntries({ content_type: 'caseStudy', include: 2, limit: 200, locale: 'es' });
+    const includes = res.includes ?? {};
+    return res.items.filter((i: any) => i.fields?.slug).map((i: any) => ({ params: { slug: i.fields.slug }, props: { entry: i, includes } }));
+  } catch { return []; }
+}
+
+const { entry, includes } = Astro.props;
+const f = entry?.fields ?? {};
+const title = (f.title as string) ?? 'Caso de Estudio';
+const excerpt = f.excerpt as import('@contentful/rich-text-types').Document | undefined;
+const body = f.body as import('@contentful/rich-text-types').Document | undefined;
+const featuredImage = f.featuredImage as any;
+const featuredImageAlt = (f.featuredImageAlt as string) ?? '';
+const publishedAt = f.publishedAt as string | undefined;
+const company = (f.company as string) ?? '';
+const industry = (f.industry as string) ?? '';
+const seoTitle = (f.seoTitle as string) ?? '';
+const seoDescription = f.seoDescription as import('@contentful/rich-text-types').Document | undefined;
+const ogImageField = f.ogImage as any;
+const noIndex = (f.noIndex as boolean) ?? false;
+
+const assetMap = buildAssetMap(includes as any);
+const url = (a: any): string => { if (!a) return ''; if (a.fields?.file?.url) { const u = a.fields.file.url; return u.startsWith('//') ? `https:${u}` : u; } const id = a.sys?.id; if (!id) return ''; const r = assetMap[id]; if (!r?.fields?.file?.url) return ''; const u2 = r.fields.file.url; return u2.startsWith('//') ? `https:${u2}` : u2; };
+
+const pageTitle = seoTitle || title;
+const metaDescription = seoDescription ? richTextToPlainText(seoDescription, 160) : richTextToPlainText(excerpt, 160) || undefined;
+const ogImageUrl = url(ogImageField ?? featuredImage);
+const siteUrl = Astro.url.origin;
+const ogImageFull = ogImageUrl ? (ogImageUrl.startsWith('http') ? ogImageUrl : `${siteUrl}${ogImageUrl.startsWith('/') ? '' : '/'}${ogImageUrl}`) : undefined;
+const bodyHtml = body ? renderRichText(body, assetMap) : '';
+const excerptHtml = excerpt ? renderRichText(excerpt, assetMap) : '';
+const featuredImageUrl = url(featuredImage);
+const articleUrl = `${siteUrl}/es/case-studies/${f.slug}`;
+
+const articleSchema = { '@context': 'https://schema.org', '@type': 'Article', headline: pageTitle, description: metaDescription || title, url: articleUrl, inLanguage: 'es', ...(ogImageFull && { image: ogImageFull }), ...(publishedAt && { datePublished: publishedAt }), author: { '@type': 'Organization', name: 'Vehicle Imagery' }, publisher: { '@type': 'Organization', name: 'Vehicle Imagery', logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.svg` } } };
+const breadcrumbSchema = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Inicio', item: `${siteUrl}/es` }, { '@type': 'ListItem', position: 2, name: 'Casos de Estudio', item: `${siteUrl}/es/case-studies` }, { '@type': 'ListItem', position: 3, name: pageTitle, item: articleUrl }] };
+---
+
+<BaseLayout title={pageTitle} description={metaDescription} ogImage={ogImageFull} ogImageAlt={featuredImageAlt} canonicalUrl={`/es/case-studies/${f.slug}`} noIndex={noIndex}>
+  <Header />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <main class="min-h-screen bg-cream">
+    <header class="relative">
+      {featuredImageUrl && (
+        <div class="relative h-[50vh] min-h-[320px] max-h-[560px] w-full overflow-hidden bg-[#1C2B32]">
+          <img src={featuredImageUrl.startsWith('http') ? featuredImageUrl : `https:${featuredImageUrl}`} alt={featuredImageAlt} class="h-full w-full object-cover" width="1600" height="900" fetchpriority="high" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1C2B32]/95 via-[#1C2B32]/40 to-transparent" aria-hidden="true" />
+        </div>
+      )}
+      <div class={`mx-auto max-w-6xl px-6 sm:px-12 lg:px-16 ${featuredImageUrl ? '-mt-32 relative z-10 pb-16' : 'pt-16 pb-12'}`}>
+        <div class="rounded-none border border-white/10 bg-white p-8 shadow-xl sm:p-10 md:p-12">
+          <div class="flex flex-wrap items-center gap-3">
+            {company && <span class="inline-block text-xs font-bold uppercase tracking-[0.2em] text-accent">{company}</span>}
+            {industry && <span class="inline-block rounded-none bg-[#1C2B32]/[0.06] px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-[#1C2B32]/60">{industry}</span>}
+          </div>
+          <h1 class="mt-3 text-3xl font-black leading-tight tracking-tight text-[#1C2B32] sm:text-4xl md:text-5xl">{title}</h1>
+          {publishedAt && (
+            <div class="mt-8 border-t border-[#1C2B32]/10 pt-8">
+              <time datetime={publishedAt} class="text-sm text-[#1C2B32]/60">{new Date(publishedAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+    {excerptHtml && (
+      <div class="mx-auto max-w-6xl px-6 sm:px-12 lg:px-16">
+        <div class="border-l-4 border-accent bg-[#1C2B32]/[0.03] py-4 pl-6 pr-6">
+          <div class="blog-prose blog-prose--lead text-lg leading-relaxed text-[#1C2B32]/85" set:html={excerptHtml} />
+        </div>
+      </div>
+    )}
+    <div class="mx-auto max-w-6xl px-6 pb-16 pt-12 sm:px-12 lg:px-16">
+      <article class="min-w-0">
+        <a href="/es/case-studies" class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-[#1C2B32]/60 transition-colors hover:text-accent"><span aria-hidden="true">&larr;</span> Volver a casos de estudio</a>
+        {bodyHtml ? <div class="blog-prose blog-article-body mt-8" set:html={bodyHtml} /> : <p class="mt-8 text-[#1C2B32]/60">Sin contenido.</p>}
+      </article>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

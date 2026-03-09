@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getEntries } from '../../lib/contentful';
+import { richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
+
+type CSItem = { slug: string; title: string; date?: string; excerpt?: string; company?: string; industry?: string; featuredImageUrl?: string; featuredImageAlt?: string };
+let items: CSItem[] = [];
+
+try {
+  const res = await getEntries({ content_type: 'caseStudy', order: '-fields.publishedAt', limit: 100, include: 2 });
+  const assetMap = buildAssetMap(res.includes as any);
+  const url = (a: any): string => { if (!a) return ''; if (a.fields?.file?.url) { const u = a.fields.file.url; return u.startsWith('//') ? `https:${u}` : u; } const id = a.sys?.id; if (!id) return ''; const r = assetMap[id]; if (!r?.fields?.file?.url) return ''; const u2 = r.fields.file.url; return u2.startsWith('//') ? `https:${u2}` : u2; };
+  items = res.items.filter((i: any) => i.fields?.slug).map((i: any) => ({
+    slug: i.fields.slug, title: i.fields.title ?? 'Untitled', date: i.fields.publishedAt,
+    excerpt: i.fields.excerpt ? richTextToPlainText(i.fields.excerpt, 160) : undefined,
+    company: i.fields.company, industry: i.fields.industry,
+    featuredImageUrl: url(i.fields.featuredImage) || undefined, featuredImageAlt: i.fields.featuredImageAlt,
+  }));
+} catch {}
+---
+
+<BaseLayout title="Case Studies | Vehicle Imagery API" description="See how companies use the Vehicle Imagery API. Real-world case studies from automotive dealerships, leasing platforms, and more." canonicalUrl="/case-studies">
+  <Header />
+  <main class="min-h-screen bg-cream">
+    <section class="border-b border-[#1C2B32]/10 bg-[#1C2B32] px-6 py-20 sm:px-12 lg:px-16">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Vehicle Imagery</p>
+        <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">Case Studies</h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">Real-world examples of how companies use Vehicle Imagery to power their automotive platforms.</p>
+      </div>
+    </section>
+    <section class="mx-auto max-w-7xl px-6 py-16 sm:px-12 lg:px-16">
+      {items.length > 0 ? (
+        <ul class="grid gap-12 sm:gap-16 md:grid-cols-2 lg:gap-20">
+          {items.map((cs) => (
+            <li>
+              <a href={`/case-studies/${cs.slug}`} class="group block">
+                <div class="overflow-hidden rounded-none border border-[#1C2B32]/10 bg-white shadow-[0_4px_24px_-4px_rgba(28,43,50,0.08)] transition-all duration-300 hover:border-[#1C2B32]/20 hover:shadow-[0_12px_40px_-8px_rgba(28,43,50,0.15)]">
+                  {cs.featuredImageUrl ? (
+                    <div class="aspect-[16/10] overflow-hidden bg-[#1C2B32]/5">
+                      <img src={cs.featuredImageUrl.startsWith('http') ? cs.featuredImageUrl : `https:${cs.featuredImageUrl}`} alt={cs.featuredImageAlt || cs.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" width={640} height={400} loading="lazy" />
+                    </div>
+                  ) : (
+                    <div class="aspect-[16/10] flex items-center justify-center bg-[#1C2B32]/[0.06]"><span class="text-6xl font-black text-[#1C2B32]/10">CS</span></div>
+                  )}
+                  <div class="p-6 sm:p-8">
+                    <div class="flex flex-wrap items-center gap-3">
+                      {cs.company && <span class="inline-block text-xs font-bold uppercase tracking-[0.15em] text-accent">{cs.company}</span>}
+                      {cs.industry && <span class="inline-block rounded-none bg-[#1C2B32]/[0.06] px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-[#1C2B32]/60">{cs.industry}</span>}
+                    </div>
+                    <h2 class="mt-3 text-xl font-bold leading-tight text-[#1C2B32] transition-colors group-hover:text-accent sm:text-2xl">{cs.title}</h2>
+                    {cs.excerpt && <p class="mt-3 line-clamp-3 text-[15px] leading-relaxed text-[#1C2B32]/70">{cs.excerpt}</p>}
+                    {cs.date && (
+                      <div class="mt-6 border-t border-[#1C2B32]/10 pt-5">
+                        <time datetime={cs.date} class="text-sm text-[#1C2B32]/60">{new Date(cs.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</time>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="rounded-none border border-[#1C2B32]/10 bg-white p-16 text-center">
+          <p class="text-[#1C2B32]/60">No case studies available yet. Check back soon!</p>
+          <a href="/" class="mt-6 inline-block border border-[#1C2B32] px-6 py-3 text-sm font-bold uppercase tracking-widest text-[#1C2B32] transition-colors hover:bg-[#1C2B32] hover:text-cream">Back to Home</a>
+        </div>
+      )}
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

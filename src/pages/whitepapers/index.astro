@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getEntries } from '../../lib/contentful';
+import { richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
+
+type WPItem = { slug: string; title: string; date?: string; excerpt?: string; category?: string; featuredImageUrl?: string; featuredImageAlt?: string };
+let items: WPItem[] = [];
+
+try {
+  const res = await getEntries({ content_type: 'whitepaper', order: '-fields.publishedAt', limit: 100, include: 2 });
+  const assetMap = buildAssetMap(res.includes as any);
+  const url = (a: any): string => { if (!a) return ''; if (a.fields?.file?.url) { const u = a.fields.file.url; return u.startsWith('//') ? `https:${u}` : u; } const id = a.sys?.id; if (!id) return ''; const r = assetMap[id]; if (!r?.fields?.file?.url) return ''; const u2 = r.fields.file.url; return u2.startsWith('//') ? `https:${u2}` : u2; };
+  items = res.items.filter((i: any) => i.fields?.slug).map((i: any) => ({
+    slug: i.fields.slug, title: i.fields.title ?? 'Untitled', date: i.fields.publishedAt,
+    excerpt: i.fields.excerpt ? richTextToPlainText(i.fields.excerpt, 160) : undefined,
+    category: i.fields.category, featuredImageUrl: url(i.fields.featuredImage) || undefined, featuredImageAlt: i.fields.featuredImageAlt,
+  }));
+} catch {}
+---
+
+<BaseLayout title="Whitepapers | Vehicle Imagery API" description="In-depth whitepapers on vehicle imagery, automotive technology, and API best practices." canonicalUrl="/whitepapers">
+  <Header />
+  <main class="min-h-screen bg-cream">
+    <section class="border-b border-[#1C2B32]/10 bg-[#1C2B32] px-6 py-20 sm:px-12 lg:px-16">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Vehicle Imagery</p>
+        <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">Whitepapers</h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">In-depth research and insights on vehicle imagery, automotive technology, and API integration.</p>
+      </div>
+    </section>
+    <section class="mx-auto max-w-7xl px-6 py-16 sm:px-12 lg:px-16">
+      {items.length > 0 ? (
+        <ul class="grid gap-12 sm:gap-16 md:grid-cols-2 lg:gap-20">
+          {items.map((wp) => (
+            <li>
+              <a href={`/whitepapers/${wp.slug}`} class="group block">
+                <div class="overflow-hidden rounded-none border border-[#1C2B32]/10 bg-white shadow-[0_4px_24px_-4px_rgba(28,43,50,0.08)] transition-all duration-300 hover:border-[#1C2B32]/20 hover:shadow-[0_12px_40px_-8px_rgba(28,43,50,0.15)]">
+                  {wp.featuredImageUrl ? (
+                    <div class="aspect-[16/10] overflow-hidden bg-[#1C2B32]/5">
+                      <img src={wp.featuredImageUrl.startsWith('http') ? wp.featuredImageUrl : `https:${wp.featuredImageUrl}`} alt={wp.featuredImageAlt || wp.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" width={640} height={400} loading="lazy" />
+                    </div>
+                  ) : (
+                    <div class="aspect-[16/10] flex items-center justify-center bg-[#1C2B32]/[0.06]"><span class="text-6xl font-black text-[#1C2B32]/10">WP</span></div>
+                  )}
+                  <div class="p-6 sm:p-8">
+                    {wp.category && <span class="inline-block text-xs font-bold uppercase tracking-[0.15em] text-accent">{wp.category}</span>}
+                    <h2 class="mt-3 text-xl font-bold leading-tight text-[#1C2B32] transition-colors group-hover:text-accent sm:text-2xl">{wp.title}</h2>
+                    {wp.excerpt && <p class="mt-3 line-clamp-3 text-[15px] leading-relaxed text-[#1C2B32]/70">{wp.excerpt}</p>}
+                    {wp.date && (
+                      <div class="mt-6 border-t border-[#1C2B32]/10 pt-5">
+                        <time datetime={wp.date} class="text-sm text-[#1C2B32]/60">{new Date(wp.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</time>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="rounded-none border border-[#1C2B32]/10 bg-white p-16 text-center">
+          <p class="text-[#1C2B32]/60">No whitepapers available yet. Check back soon!</p>
+          <a href="/" class="mt-6 inline-block border border-[#1C2B32] px-6 py-3 text-sm font-bold uppercase tracking-widest text-[#1C2B32] transition-colors hover:bg-[#1C2B32] hover:text-cream">Back to Home</a>
+        </div>
+      )}
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
