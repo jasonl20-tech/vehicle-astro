@@ -87,9 +87,9 @@ const stats = await getSiteStats();
 
             <div class="space-y-0">
               {[
-                { step: '01', title: 'Adquisición de modelos 3D', desc: 'Modelos 3D de alta fidelidad obtenidos de datos OEM con geometría, materiales y proporciones precisas.' },
+                { step: '01', title: 'Adquisición de modelos 3D', desc: 'Modelos 3D de alta fidelidad con geometría, materiales y proporciones precisas — creados para reflejar el vehículo real con la mayor exactitud posible.' },
                 { step: '02', title: 'Configuración de iluminación de estudio', desc: 'El entorno de iluminación HDRI estandarizado garantiza reflejos, brillos y comportamiento de sombras consistentes en todos los vehículos.' },
-                { step: '03', title: 'Calibración de color', desc: 'Cada color de pintura se ajusta cuidadosamente a la especificación oficial de color del fabricante.' },
+                { step: '03', title: 'Calibración de color', desc: 'Cada color de pintura se calibra cuidadosamente en tono, saturación y acabado — desde sólido hasta metalizado y mate.' },
                 { step: '04', title: 'Renderizado multiángulo', desc: `Hasta ${stats.cameraAngles} posiciones de cámara por configuración — vistas exteriores, interiores y de detalle renderizadas a resolución de hasta ${stats.maxResolution}.` },
                 { step: '05', title: 'Postproducción y control de calidad', desc: 'Controles de calidad automáticos y manuales para artefactos, consistencia de color, transparencia y precisión de sombras.' },
                 { step: '06', title: 'Entrega por CDN', desc: `URLs firmadas servidas a través de CDN global con latencia media de ~${stats.latency}. Formatos PNG y WebP con transparencia opcional.` },
@@ -127,7 +127,7 @@ const stats = await getSiteStats();
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { title: 'Iluminación consistente', desc: 'El HDRI de estudio estandarizado garantiza que cada vehículo se vea como si hubiera sido fotografiado en el mismo entorno profesional de estudio.' },
-            { title: 'Colores precisos', desc: 'Colores ajustados a las especificaciones del fabricante. Acabados metalizados, mate, perlados y de edición especial renderizados con fidelidad.' },
+            { title: 'Colores precisos', desc: 'Colores de pintura cuidadosamente calibrados en todos los acabados — metalizados, mate, perlados y ediciones especiales renderizados con fidelidad de color consistente.' },
             { title: 'Fondos transparentes', desc: 'Recortes limpios sin artefactos. Perfectos para configuradores, listados y materiales de marketing.' },
             { title: 'Sombras de suelo', desc: 'Sombras de suelo naturales y suaves que anclan el vehículo. Disponibles por separado o compuestas.' },
             { title: 'Alta resolución', desc: `Desde resolución web estándar hasta ${stats.maxResolution}. Detalles nítidos a cualquier nivel de zoom — texturas de llantas, emblemas y reflejos.` },
@@ -156,7 +156,7 @@ const stats = await getSiteStats();
           <div class="space-y-0">
             {[
               { aspect: 'Iluminación', stock: 'Varía según el fotógrafo, la ubicación y la hora del día. Inconsistente entre listados.', api: 'Entorno de estudio HDRI estandarizado. Cada vehículo renderizado bajo condiciones idénticas.' },
-              { aspect: 'Precisión de color', stock: 'Sujeto al balance de blancos, estilos de edición y diferencias del sensor de la cámara.', api: 'Colores ajustados a las especificaciones del fabricante. Consistente en todas las marcas y modelos.' },
+              { aspect: 'Precisión de color', stock: 'Sujeto al balance de blancos, estilos de edición y diferencias del sensor de la cámara.', api: 'Colores de pintura calibrados con tono y acabado consistente. Fidelidad de color uniforme en todas las marcas y modelos.' },
               { aspect: 'Ángulos', stock: 'Ángulos aleatorios, a menudo sin vistas clave. Sin garantía de frontal, trasera o interior.', api: `Hasta ${stats.cameraAngles} posiciones de cámara estandarizadas por configuración. Cada ángulo, cada vez.` },
               { aspect: 'Fondo', stock: 'Estacionamientos, calles, concesionarios. Distractores e inconsistentes.', api: 'Fondos blancos limpios o transparentes. Listos para cualquier diseño o configurador.' },
               { aspect: 'Disponibilidad', stock: 'Nuevos modelos con retraso de semanas o meses. Ediciones especiales a menudo ausentes.', api: 'Nuevos modelos disponibles en semanas desde el lanzamiento. Restylings y ediciones especiales incluidos.' },
