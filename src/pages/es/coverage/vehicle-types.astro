@@ -2,54 +2,56 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
+import { getSiteStats } from '../../../lib/contentful';
 
+const stats = await getSiteStats();
 const vehicleTypes = [
   {
     title: 'Sedanes y berlinas',
     desc: 'Desde sedanes compactos urbanos hasta berlinas de lujo de tamaño completo. Cada acabado, cada color, cada ángulo.',
-    count: '18.000+',
+    count: stats.sedans,
     examples: 'BMW 3 Series, Mercedes C-Class, Audi A4, Toyota Camry, Honda Civic',
   },
   {
     title: 'SUVs y crossovers',
     desc: 'Desde crossovers compactos hasta SUVs de lujo de gran tamaño. El segmento de mayor crecimiento con la cobertura más completa.',
-    count: '15.000+',
+    count: stats.suvs,
     examples: 'BMW X5, Range Rover, Porsche Cayenne, Toyota RAV4, Volkswagen Tiguan',
   },
   {
     title: 'Deportivos y superdeportivos',
     desc: 'Vehículos de alto rendimiento desde cada ángulo — detalles aerodinámicos, alerones y difusores renderizados con precisión.',
-    count: '4.500+',
+    count: stats.sportsCars,
     examples: 'Ferrari 296 GTB, Porsche 911, Lamborghini Huracán, McLaren 750S, Aston Martin Vantage',
   },
   {
     title: 'Hatchbacks y familiares',
     desc: 'Favoritos europeos y vehículos prácticos del día a día. Variantes Estate, Avant, Touring y Sportback incluidas.',
-    count: '8.000+',
+    count: stats.hatchbacks,
     examples: 'Volkswagen Golf, BMW 3 Series Touring, Audi A4 Avant, Ford Focus, Peugeot 308',
   },
   {
     title: 'Coupés y descapotables',
     desc: 'Coupés de dos puertas, cabriolets y roadsters. Configuraciones con capota abierta y cerrada cuando están disponibles.',
-    count: '3.500+',
+    count: stats.coupes,
     examples: 'BMW 4 Series, Mercedes E-Class Coupé, Porsche 718 Boxster, Audi TT, Ford Mustang',
   },
   {
     title: 'Camionetas pickup',
     desc: 'Camionetas de tamaño completo y mediano. Configuraciones de cabina simple, cabina doble y chasis cabina.',
-    count: '2.800+',
+    count: stats.trucks,
     examples: 'Ford F-150, RAM 1500, Chevrolet Silverado, Toyota Hilux, GMC Sierra',
   },
   {
     title: 'Furgonetas y monovolúmenes',
     desc: 'Furgonetas comerciales, de pasajeros y vehículos multiusos. Variantes de furgón de carga y furgón de tripulación.',
-    count: '3.200+',
+    count: stats.vans,
     examples: 'Mercedes Sprinter, Ford Transit, Volkswagen Transporter, Peugeot Expert, Renault Master',
   },
   {
     title: 'Vehículos eléctricos',
     desc: 'Plataformas EV dedicadas y variantes eléctricas. Detalles de configuración de batería y posición del puerto de carga incluidos.',
-    count: '5.000+',
+    count: stats.electric,
     examples: 'Tesla Model 3, Porsche Taycan, BMW iX, Mercedes EQS, Hyundai Ioniq 5',
   },
 ];
@@ -80,10 +82,10 @@ const vehicleTypes = [
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '8', label: 'Segmentos' },
-          { value: '65.000+', label: 'Configuraciones' },
-          { value: '36', label: 'Vistas por config.' },
-          { value: 'Semanal', label: 'Nuevas adiciones' },
+          { value: stats.segments, label: 'Segmentos' },
+          { value: stats.configurations, label: 'Configuraciones' },
+          { value: stats.viewsPerConfig, label: 'Vistas por config.' },
+          { value: stats.newAdditions, label: 'Nuevas adiciones' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -142,10 +144,10 @@ const vehicleTypes = [
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { title: 'Vistas exteriores', desc: 'Frontal, frontal-izquierdo, lateral, trasero, trasero-izquierdo y cenital. Hasta 36 posiciones para cobertura premium.' },
+            { title: 'Vistas exteriores', desc: `Frontal, frontal-izquierdo, lateral, trasero, trasero-izquierdo y cenital. Hasta ${stats.viewsPerConfig} posiciones para cobertura premium.` },
             { title: 'Vistas interiores', desc: 'Cabina, salpicadero, asientos traseros y maletero. Panorámicas de 360° para modelos compatibles.' },
             { title: 'Todos los niveles de acabado', desc: 'Acabados básico, medio y superior. M-Package, AMG-Line, S-Line y variantes deportivas.' },
-            { title: 'Múltiples formatos', desc: 'PNG y WebP con fondos transparentes opcionales y sombras de suelo. Desde resolución web hasta 2K.' },
+            { title: 'Múltiples formatos', desc: `PNG y WebP con fondos transparentes opcionales y sombras de suelo. Desde resolución web hasta ${stats.maxResolution}.` },
             { title: 'Metadatos del vehículo', desc: 'Datos de marca, modelo, año, variante, acabado y color incluidos en cada respuesta de la API.' },
           ].map((item) => (
             <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">

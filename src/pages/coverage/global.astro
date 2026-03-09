@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { getSiteStats } from '../../lib/contentful';
 
 const regions = [
   {
@@ -29,11 +30,13 @@ const regions = [
     brands: '30+',
   },
 ];
+
+const stats = await getSiteStats();
 ---
 
 <BaseLayout
   title="Global Coverage | Vehicle Imagery API"
-  description="Vehicle imagery coverage spanning Europe, North America, Asia Pacific, and the Middle East. 140+ brands across all major automotive markets."
+  description={`Vehicle imagery coverage spanning Europe, North America, Asia Pacific, and the Middle East. ${stats.brands} brands across all major automotive markets.`}
   canonicalUrl="/coverage/global"
 >
   <Header />
@@ -56,10 +59,10 @@ const regions = [
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '140+', label: 'Brands' },
+          { value: stats.brands, label: 'Brands' },
           { value: '4', label: 'Regions' },
           { value: '40+', label: 'Countries' },
-          { value: '65,000+', label: 'Models' },
+          { value: stats.models, label: 'Models' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>

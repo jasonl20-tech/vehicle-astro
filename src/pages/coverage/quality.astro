@@ -2,6 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { getSiteStats } from '../../lib/contentful';
+
+const stats = await getSiteStats();
 ---
 
 <BaseLayout
@@ -20,7 +23,7 @@ import Footer from '../../components/Footer.astro';
           Every pixel.<br />Every angle.
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Consistent, studio-grade imagery across 140+ brands. No compromises on lighting, color accuracy, or resolution.
+          Consistent, studio-grade imagery across {stats.brands} brands. No compromises on lighting, color accuracy, or resolution.
         </p>
       </div>
     </section>
@@ -29,8 +32,8 @@ import Footer from '../../components/Footer.astro';
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '36', label: 'Camera Angles' },
-          { value: '2K', label: 'Max Resolution' },
+          { value: stats.cameraAngles, label: 'Camera Angles' },
+          { value: stats.maxResolution, label: 'Max Resolution' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -87,9 +90,9 @@ import Footer from '../../components/Footer.astro';
                 { step: '01', title: '3D Model Acquisition', desc: 'High-fidelity 3D models sourced from OEM data with accurate geometry, materials, and proportions.' },
                 { step: '02', title: 'Studio Lighting Setup', desc: 'Standardized HDRI lighting environment ensures consistent highlights, reflections, and shadow behavior across all vehicles.' },
                 { step: '03', title: 'Color Calibration', desc: 'Each paint color is carefully matched to the manufacturer\'s official color specification.' },
-                { step: '04', title: 'Multi-Angle Rendering', desc: 'Up to 36 camera positions per configuration — exterior, interior, and detail views rendered at up to 2K resolution.' },
+                { step: '04', title: 'Multi-Angle Rendering', desc: `Up to ${stats.cameraAngles} camera positions per configuration — exterior, interior, and detail views rendered at up to ${stats.maxResolution} resolution.` },
                 { step: '05', title: 'Post-Processing & QA', desc: 'Automated and manual quality checks for artifacts, color consistency, transparency, and shadow accuracy.' },
-                { step: '06', title: 'CDN Delivery', desc: 'Signed URLs served via global CDN with ~50ms average latency. PNG and WebP formats with optional transparency.' },
+                { step: '06', title: 'CDN Delivery', desc: `Signed URLs served via global CDN with ~${stats.latency} average latency. PNG and WebP formats with optional transparency.` },
               ].map((item) => (
                 <div class="flex gap-6 py-6 border-b border-white/[0.06] first:border-t">
                   <span class="text-[11px] font-bold text-white/15 mt-0.5 shrink-0">{item.step}</span>
@@ -127,7 +130,7 @@ import Footer from '../../components/Footer.astro';
             { title: 'Accurate Colors', desc: 'Colors matched to manufacturer specifications. Metallic, matte, pearl, and special edition finishes rendered faithfully.' },
             { title: 'Transparent Backgrounds', desc: 'Clean cutouts with no artifacts. Perfect for configurators, listings, and marketing materials.' },
             { title: 'Ground Shadows', desc: 'Natural, soft ground shadows that anchor the vehicle. Available separately or composited.' },
-            { title: 'High Resolution', desc: 'From standard web resolution to 2K. Crisp details at any zoom level — wheel textures, badges, and reflections.' },
+            { title: 'High Resolution', desc: `From standard web resolution to ${stats.maxResolution}. Crisp details at any zoom level — wheel textures, badges, and reflections.` },
             { title: 'Interior Coverage', desc: '360° cockpit panoramas, dashboard close-ups, and rear-seat views with material-accurate rendering.' },
           ].map((feature) => (
             <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">
@@ -154,7 +157,7 @@ import Footer from '../../components/Footer.astro';
             {[
               { aspect: 'Lighting', stock: 'Varies by photographer, location, and time of day. Inconsistent across listings.', api: 'Standardized HDRI studio environment. Every vehicle rendered under identical conditions.' },
               { aspect: 'Color Accuracy', stock: 'Subject to white balance, editing styles, and camera sensor differences.', api: 'Colors matched to manufacturer specifications. Consistent across every brand and model.' },
-              { aspect: 'Angles', stock: 'Random angles, often missing key views. No guarantee of front, rear, or interior.', api: 'Up to 36 standardized camera positions per configuration. Every angle, every time.' },
+              { aspect: 'Angles', stock: 'Random angles, often missing key views. No guarantee of front, rear, or interior.', api: `Up to ${stats.cameraAngles} standardized camera positions per configuration. Every angle, every time.` },
               { aspect: 'Background', stock: 'Parking lots, streets, showrooms. Distracting and inconsistent.', api: 'Clean white or transparent backgrounds. Ready for any layout or configurator.' },
               { aspect: 'Availability', stock: 'New models delayed weeks or months. Special editions often missing.', api: 'New models available within weeks of launch. Facelifts and special editions included.' },
             ].map((row) => (

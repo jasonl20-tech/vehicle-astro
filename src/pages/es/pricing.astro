@@ -2,6 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { getSiteStats } from '../../lib/contentful';
+
+const stats = await getSiteStats();
 
 const faqs = [
   { q: '¿Cómo funcionan los precios?', a: 'Nuestro plan personalizado se cotiza bajo solicitud y se adapta a tu uso y requisitos específicos. Contáctanos y te enviaremos un presupuesto en 24 horas.' },
@@ -9,7 +12,7 @@ const faqs = [
   { q: '¿Puedo actualizar en cualquier momento?', a: 'Por supuesto. Pasa de la prueba a un plan personalizado cuando estés listo. Trabajaremos contigo para encontrar la opción ideal.' },
   { q: '¿Qué métodos de pago aceptan?', a: 'Aceptamos transferencias bancarias y todas las tarjetas de crédito principales. Los planes personalizados se pueden facturar mensual o anualmente.' },
   { q: '¿Hay contrato a largo plazo?', a: 'Sin permanencia. Los planes son normalmente mes a mes. Opciones anuales con mejores tarifas están disponibles bajo solicitud.' },
-  { q: '¿Qué tan rápida es la API?', a: 'El tiempo de respuesta promedio es de ~50ms. Todas las imágenes se sirven a través de un CDN global con URLs firmadas válidas por 7 días.' },
+  { q: '¿Qué tan rápida es la API?', a: `El tiempo de respuesta promedio es de ~${stats.latency}. Todas las imágenes se sirven a través de un CDN global con URLs firmadas válidas por ${stats.signedUrlExpiry}.` },
 ];
 ---
 
@@ -94,15 +97,15 @@ const faqs = [
                 <!-- Mini stats inside card -->
                 <div class="grid grid-cols-3 gap-6 pt-8 border-t border-white/[0.06]">
                   <div>
-                    <p class="text-2xl font-light text-white mb-1">50ms</p>
+                    <p class="text-2xl font-light text-white mb-1">{stats.latency}</p>
                     <p class="text-[10px] text-white/30 uppercase tracking-wider">Latencia</p>
                   </div>
                   <div>
-                    <p class="text-2xl font-light text-white mb-1">99.9%</p>
+                    <p class="text-2xl font-light text-white mb-1">{stats.uptime}</p>
                     <p class="text-[10px] text-white/30 uppercase tracking-wider">Disponibilidad</p>
                   </div>
                   <div>
-                    <p class="text-2xl font-light text-white mb-1">50+</p>
+                    <p class="text-2xl font-light text-white mb-1">{stats.brands}</p>
                     <p class="text-[10px] text-white/30 uppercase tracking-wider">Marcas</p>
                   </div>
                 </div>
@@ -186,10 +189,10 @@ const faqs = [
         <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-16 text-center">Rendimiento confiable</p>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {[
-            { value: '50ms', label: 'Latencia promedio de API' },
-            { value: '99.9%', label: 'SLA de disponibilidad' },
-            { value: '7 días', label: 'Expiración de URL firmada' },
-            { value: '50+', label: 'Marcas cubiertas' },
+            { value: stats.latency, label: 'Latencia promedio de API' },
+            { value: stats.uptime, label: 'SLA de disponibilidad' },
+            { value: stats.signedUrlExpiry, label: 'Expiración de URL firmada' },
+            { value: stats.brands, label: 'Marcas cubiertas' },
           ].map((stat) => (
             <div class="text-center">
               <p class="text-5xl sm:text-6xl lg:text-7xl font-extralight text-black tracking-tight mb-3">{stat.value}</p>

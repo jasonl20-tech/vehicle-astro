@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { getSiteStats } from '../../lib/contentful';
 
 const benefits = [
   { num: '01', title: 'Reparto de ingresos', desc: 'Gana comisiones por cada cliente que traigas. Seguimiento transparente, pagos mensuales.' },
@@ -9,6 +10,8 @@ const benefits = [
   { num: '03', title: 'Acceso prioritario', desc: 'Acceso anticipado a nuevas funciones, endpoints de API dedicados y programas beta.' },
   { num: '04', title: 'Soporte técnico', desc: 'Ingeniero de integración dedicado y canal de soporte prioritario para tu equipo.' },
 ];
+
+const stats = await getSiteStats();
 ---
 
 <BaseLayout
@@ -67,10 +70,10 @@ const benefits = [
       <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {[
-            { value: '50+', label: 'Marcas cubiertas' },
-            { value: '50ms', label: 'Latencia prom.' },
-            { value: '99.9%', label: 'SLA de disponibilidad' },
-            { value: '24h', label: 'Tiempo de respuesta' },
+            { value: stats.brands, label: 'Marcas cubiertas' },
+            { value: stats.latency, label: 'Latencia prom.' },
+            { value: stats.uptime, label: 'SLA de disponibilidad' },
+            { value: stats.responseTime, label: 'Tiempo de respuesta' },
           ].map((stat) => (
             <div class="text-center">
               <p class="text-5xl sm:text-6xl lg:text-7xl font-extralight text-black tracking-tight mb-3">{stat.value}</p>

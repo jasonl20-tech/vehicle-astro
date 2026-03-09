@@ -18,4 +18,76 @@ export function getLocalizedEntries(locale: Locale, params?: Record<string, unkn
   return getEntries({ ...params, locale: getContentfulLocale(locale) });
 }
 
+export interface SiteStats {
+  brands: string;
+  models: string;
+  assets: string;
+  colors: string;
+  uptime: string;
+  latency: string;
+  requests: string;
+  cameraAngles: string;
+  maxResolution: string;
+  trialRequests: string;
+  signedUrlExpiry: string;
+  responseTime: string;
+  segments: string;
+  configurations: string;
+  viewsPerConfig: string;
+  newAdditions: string;
+  sedans: string;
+  suvs: string;
+  sportsCars: string;
+  hatchbacks: string;
+  coupes: string;
+  trucks: string;
+  vans: string;
+  electric: string;
+}
+
+const defaultStats: SiteStats = {
+  brands: '140+',
+  models: '65,000+',
+  assets: '40k+',
+  colors: '1,000+',
+  uptime: '99.9%',
+  latency: '50ms',
+  requests: '2.5M',
+  cameraAngles: '36',
+  maxResolution: '2K',
+  trialRequests: '500',
+  signedUrlExpiry: '7 days',
+  responseTime: '24h',
+  segments: '8',
+  configurations: '65,000+',
+  viewsPerConfig: '36',
+  newAdditions: 'Weekly',
+  sedans: '18,000+',
+  suvs: '15,000+',
+  sportsCars: '4,500+',
+  hatchbacks: '8,000+',
+  coupes: '3,500+',
+  trucks: '2,800+',
+  vans: '3,200+',
+  electric: '5,000+',
+};
+
+let cachedStats: SiteStats | null = null;
+
+export async function getSiteStats(): Promise<SiteStats> {
+  if (cachedStats) return cachedStats;
+  try {
+    const res = await getEntries({ content_type: 'statistics', limit: 1 });
+    const fields = res.items?.[0]?.fields as Record<string, string> | undefined;
+    if (!fields) return defaultStats;
+    cachedStats = { ...defaultStats };
+    for (const key of Object.keys(defaultStats) as (keyof SiteStats)[]) {
+      if (fields[key]) cachedStats[key] = fields[key];
+    }
+    return cachedStats;
+  } catch {
+    return defaultStats;
+  }
+}
+
 export { type Locale };

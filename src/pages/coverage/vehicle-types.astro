@@ -2,54 +2,56 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { getSiteStats } from '../../lib/contentful';
 
+const stats = await getSiteStats();
 const vehicleTypes = [
   {
     title: 'Sedans & Saloons',
     desc: 'From compact city sedans to full-size luxury saloons. Every trim, every color, every angle.',
-    count: '18,000+',
+    count: stats.sedans,
     examples: 'BMW 3 Series, Mercedes C-Class, Audi A4, Toyota Camry, Honda Civic',
   },
   {
     title: 'SUVs & Crossovers',
     desc: 'Compact crossovers to full-size luxury SUVs. The fastest-growing segment with the most comprehensive coverage.',
-    count: '15,000+',
+    count: stats.suvs,
     examples: 'BMW X5, Range Rover, Porsche Cayenne, Toyota RAV4, Volkswagen Tiguan',
   },
   {
     title: 'Sports Cars & Supercars',
     desc: 'High-performance vehicles from every angle — aerodynamic details, spoilers, and diffusers rendered with precision.',
-    count: '4,500+',
+    count: stats.sportsCars,
     examples: 'Ferrari 296 GTB, Porsche 911, Lamborghini Huracán, McLaren 750S, Aston Martin Vantage',
   },
   {
     title: 'Hatchbacks & Wagons',
     desc: 'European favorites and practical everyday vehicles. Estate, Avant, Touring, and Sportback variants included.',
-    count: '8,000+',
+    count: stats.hatchbacks,
     examples: 'Volkswagen Golf, BMW 3 Series Touring, Audi A4 Avant, Ford Focus, Peugeot 308',
   },
   {
     title: 'Coupés & Convertibles',
     desc: 'Two-door coupés, cabriolets, and roadsters. Roof-up and roof-down configurations where available.',
-    count: '3,500+',
+    count: stats.coupes,
     examples: 'BMW 4 Series, Mercedes E-Class Coupé, Porsche 718 Boxster, Audi TT, Ford Mustang',
   },
   {
     title: 'Pickup Trucks',
     desc: 'Full-size and mid-size trucks. Single cab, crew cab, and chassis cab configurations.',
-    count: '2,800+',
+    count: stats.trucks,
     examples: 'Ford F-150, RAM 1500, Chevrolet Silverado, Toyota Hilux, GMC Sierra',
   },
   {
     title: 'Vans & MPVs',
     desc: 'Commercial vans, passenger vans, and multi-purpose vehicles. Panel van and crew van variants.',
-    count: '3,200+',
+    count: stats.vans,
     examples: 'Mercedes Sprinter, Ford Transit, Volkswagen Transporter, Peugeot Expert, Renault Master',
   },
   {
     title: 'Electric Vehicles',
     desc: 'Dedicated EV platforms and electric variants. Battery configuration details and charge port positioning included.',
-    count: '5,000+',
+    count: stats.electric,
     examples: 'Tesla Model 3, Porsche Taycan, BMW iX, Mercedes EQS, Hyundai Ioniq 5',
   },
 ];
@@ -80,10 +82,10 @@ const vehicleTypes = [
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '8', label: 'Segments' },
-          { value: '65,000+', label: 'Configurations' },
-          { value: '36', label: 'Views per Config' },
-          { value: 'Weekly', label: 'New Additions' },
+          { value: stats.segments, label: 'Segments' },
+          { value: stats.configurations, label: 'Configurations' },
+          { value: stats.viewsPerConfig, label: 'Views per Config' },
+          { value: stats.newAdditions, label: 'New Additions' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -142,10 +144,10 @@ const vehicleTypes = [
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { title: 'Exterior Views', desc: 'Front, front-left, side, rear, rear-left, and top-down angles. Up to 36 positions for premium coverage.' },
+            { title: 'Exterior Views', desc: `Front, front-left, side, rear, rear-left, and top-down angles. Up to ${stats.viewsPerConfig} positions for premium coverage.` },
             { title: 'Interior Views', desc: 'Cockpit, dashboard, rear seats, and trunk. 360° panoramas for supported models.' },
             { title: 'All Trim Levels', desc: 'Base, mid-range, and top-tier trims. M-Package, AMG-Line, S-Line, and sport variants.' },
-            { title: 'Multiple Formats', desc: 'PNG and WebP with optional transparent backgrounds and ground shadows. From web to 2K resolution.' },
+            { title: 'Multiple Formats', desc: `PNG and WebP with optional transparent backgrounds and ground shadows. From web to ${stats.maxResolution} resolution.` },
             { title: 'Vehicle Metadata', desc: 'Brand, model, year, variant, trim, and color data returned with every API response.' },
           ].map((item) => (
             <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">

@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import AnnouncementBar from '../components/AnnouncementBar.astro';
-import { getEntries } from '../lib/contentful';
+import { getEntries, getSiteStats } from '../lib/contentful';
 import { buildAssetMap, richTextToPlainText } from '../lib/contentful-rich-text';
 
 type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; category?: string; type: 'changelog' | 'blog' };
@@ -60,6 +60,7 @@ try {
   announcementBar = null;
 }
 
+const stats = await getSiteStats();
 const siteUrl = Astro.url.origin;
 const homepageStructuredData: unknown[] = [
   {
@@ -68,7 +69,7 @@ const homepageStructuredData: unknown[] = [
     applicationCategory: 'DeveloperApplication',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '150' },
-    description: 'Studio-quality vehicle imagery API with 40k+ car stock photos. CDN-optimized, simple integration for automotive businesses. Alternative to IMAGIN.studio and EVOX Images with better pricing and European coverage.',
+    description: `Studio-quality vehicle imagery API with ${stats.assets} car stock photos. CDN-optimized, simple integration for automotive businesses. Alternative to IMAGIN.studio and EVOX Images with better pricing and European coverage.`,
     url: siteUrl,
     provider: { '@type': 'Organization', name: 'Vehicle Imagery', url: siteUrl },
   },
@@ -101,7 +102,7 @@ const homepageStructuredData: unknown[] = [
         name: 'How many car images are available?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Our database contains over 40,000 studio-quality car stock photos, covering more than 10,000 unique car models.',
+          text: `Our database contains over ${stats.assets} studio-quality car stock photos, covering more than ${stats.models} unique car models.`,
         },
       },
       {
@@ -273,7 +274,7 @@ const homepageStructuredData: unknown[] = [
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-6 tracking-tighter">Developer Experience First</h2>
             <p class="text-lg text-gray-600 mb-8 leading-relaxed">Our API is designed to be intuitive and powerful. Unlike legacy providers, we don&apos;t hide behind complex SDKs or sales calls. You get instant access to clean, RESTful documentation.</p>
             <ul class="space-y-4 mb-10">
-              {["RESTful API architecture", "JSON responses", "Comprehensive error handling", "99.99% Uptime SLA", "Global CDN Delivery"].map((item) => (
+              {["RESTful API architecture", "JSON responses", "Comprehensive error handling", `${stats.uptime} Uptime SLA`, "Global CDN Delivery"].map((item) => (
                 <li class="flex items-center text-gray-300">
                   <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                   {item}
@@ -327,7 +328,7 @@ const homepageStructuredData: unknown[] = [
                   <span class="text-[10px] font-mono uppercase tracking-widest text-gray-700">Technical Memo</span>
                 </div>
                 <p class="text-sm text-gray-600 leading-relaxed font-light">Our <span class="text-black font-medium">Automotive Image API</span> is engineered for speed and precision. Whether you are building a dealership website or a global leasing platform, we provide <span class="text-black font-medium">high-resolution car stock photos</span> that adapt to your brand.</p>
-                <p class="text-sm text-gray-600 leading-relaxed font-light">From <span class="text-black font-medium">transparent PNG backgrounds</span> for seamless UI integration to factory-accurate color representation, our fleet of 40,000+ assets is ready to scale with your business needs.</p>
+                <p class="text-sm text-gray-600 leading-relaxed font-light">From <span class="text-black font-medium">transparent PNG backgrounds</span> for seamless UI integration to factory-accurate color representation, our fleet of {stats.assets} assets is ready to scale with your business needs.</p>
               </div>
             </div>
           </div>
@@ -582,10 +583,10 @@ const homepageStructuredData: unknown[] = [
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12">
             {[
-              { value: "99.9%", label: "Uptime" },
-              { value: "50ms", label: "Latency" },
-              { value: "40k+", label: "Assets" },
-              { value: "2.5M", label: "Requests" }
+              { value: stats.uptime, label: "Uptime" },
+              { value: stats.latency, label: "Latency" },
+              { value: stats.assets, label: "Assets" },
+              { value: stats.requests, label: "Requests" }
             ].map((stat) => (
               <div class="text-center lg:text-left">
                 <div class="text-3xl font-black tracking-tighter text-black">{stat.value}</div>

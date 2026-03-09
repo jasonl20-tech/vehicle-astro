@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
+import { getSiteStats } from '../../../lib/contentful';
 
 const categories = [
   {
@@ -64,11 +65,13 @@ const categories = [
     ],
   },
 ];
+
+const stats = await getSiteStats();
 ---
 
 <BaseLayout
-  title="Cobertura de vehículos | Más de 140 marcas y 65.000+ modelos | Vehicle Imagery API"
-  description="Base de datos completa de imágenes de vehículos que cubre más de 140 marcas automotrices y 65.000+ modelos en todo el mundo."
+  title={`Cobertura de vehículos | ${stats.brands} marcas y ${stats.models} modelos | Vehicle Imagery API`}
+  description={`Base de datos completa de imágenes de vehículos que cubre ${stats.brands} marcas automotrices y ${stats.models} modelos en todo el mundo.`}
   canonicalUrl="/es/coverage"
 >
   <Header />
@@ -79,7 +82,7 @@ const categories = [
       <div class="max-w-3xl">
         <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Cobertura</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          Más de 140 marcas.<br />65K modelos.
+          {stats.brands} marcas.<br />{stats.models} modelos.
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
           Imágenes de vehículos con calidad de estudio para todos los principales fabricantes. Desde superdeportivos hasta vehículos familiares, siempre actualizados.
@@ -91,10 +94,10 @@ const categories = [
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '140+', label: 'Marcas' },
-          { value: '65.000+', label: 'Modelos' },
-          { value: '1.000+', label: 'Colores' },
-          { value: '50ms', label: 'Resp. media' },
+          { value: stats.brands, label: 'Marcas' },
+          { value: stats.models, label: 'Modelos' },
+          { value: stats.colors, label: 'Colores' },
+          { value: stats.latency, label: 'Resp. media' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>

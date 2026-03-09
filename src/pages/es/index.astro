@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import AnnouncementBar from '../../components/AnnouncementBar.astro';
-import { getEntries } from '../../lib/contentful';
+import { getEntries, getSiteStats } from '../../lib/contentful';
 import { buildAssetMap, richTextToPlainText } from '../../lib/contentful-rich-text';
 
 type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; category?: string; type: 'changelog' | 'blog' };
@@ -60,6 +60,7 @@ try {
   announcementBar = null;
 }
 
+const stats = await getSiteStats();
 const siteUrl = Astro.url.origin;
 const homepageStructuredData: unknown[] = [
   {
@@ -273,7 +274,7 @@ const homepageStructuredData: unknown[] = [
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mb-6 tracking-tighter">Experiencia de desarrollo ante todo</h2>
             <p class="text-lg text-gray-600 mb-8 leading-relaxed">Nuestra API está diseñada para ser intuitiva y potente. A diferencia de los proveedores tradicionales, no nos escondemos detrás de SDKs complejos o llamadas de ventas. Obtienes acceso instantáneo a documentación RESTful limpia.</p>
             <ul class="space-y-4 mb-10">
-              {["Arquitectura API RESTful", "Respuestas JSON", "Manejo integral de errores", "SLA de 99,99% de disponibilidad", "Entrega global por CDN"].map((item) => (
+              {["Arquitectura API RESTful", "Respuestas JSON", "Manejo integral de errores", `SLA de ${stats.uptime} de disponibilidad`, "Entrega global por CDN"].map((item) => (
                 <li class="flex items-center text-gray-300">
                   <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                   {item}
@@ -582,10 +583,10 @@ const homepageStructuredData: unknown[] = [
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12">
             {[
-              { value: "99.9%", label: "Disponibilidad" },
-              { value: "50ms", label: "Latencia" },
-              { value: "40k+", label: "Recursos" },
-              { value: "2.5M", label: "Solicitudes" }
+              { value: stats.uptime, label: "Disponibilidad" },
+              { value: stats.latency, label: "Latencia" },
+              { value: stats.assets, label: "Recursos" },
+              { value: stats.requests, label: "Solicitudes" }
             ].map((stat) => (
               <div class="text-center lg:text-left">
                 <div class="text-3xl font-black tracking-tighter text-black">{stat.value}</div>

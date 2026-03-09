@@ -2,14 +2,17 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getSiteStats } from '../lib/contentful';
+
+const stats = await getSiteStats();
 
 const faqs = [
   { q: 'How does pricing work?', a: 'Our custom plan is priced on request and tailored to your specific usage and requirements. Contact us and we\'ll put together a quote within 24 hours.' },
-  { q: 'Is the Trial really free?', a: 'Yes. The Trial gives you full API access with up to 500 requests at standard resolution. No credit card required — just request access and start testing.' },
+  { q: 'Is the Trial really free?', a: `Yes. The Trial gives you full API access with up to ${stats.trialRequests} requests at standard resolution. No credit card required — just request access and start testing.` },
   { q: 'Can I upgrade at any time?', a: 'Absolutely. Move from Trial to a custom plan whenever you\'re ready. We\'ll work with you to find the right fit.' },
   { q: 'What payment methods do you accept?', a: 'We accept bank transfers and all major credit cards. Custom plans can be invoiced monthly or annually.' },
   { q: 'Is there a long-term contract?', a: 'No lock-in. Plans are typically month-to-month. Annual options with better rates are available on request.' },
-  { q: 'How fast is the API?', a: 'Average response time is ~50ms. All images are served via a global CDN with signed URLs valid for 7 days.' },
+  { q: 'How fast is the API?', a: `Average response time is ~${stats.latency}. All images are served via a global CDN with signed URLs valid for ${stats.signedUrlExpiry}.` },
 ];
 ---
 
@@ -52,7 +55,7 @@ const faqs = [
 
             <h2 class="text-5xl sm:text-6xl font-light text-black tracking-tight leading-none mb-6">Trial</h2>
             <p class="text-[14px] text-black/45 leading-relaxed mb-8">
-              Full API access with real imagery. No credit card, no commitment. Up to 500 requests.
+              Full API access with real imagery. No credit card, no commitment. Up to {stats.trialRequests} requests.
             </p>
 
             <div class="mt-auto">
@@ -94,15 +97,15 @@ const faqs = [
                 <!-- Mini stats inside card -->
                 <div class="grid grid-cols-3 gap-6 pt-8 border-t border-white/[0.06]">
                   <div>
-                    <p class="text-2xl font-light text-white mb-1">50ms</p>
+                    <p class="text-2xl font-light text-white mb-1">{stats.latency}</p>
                     <p class="text-[10px] text-white/30 uppercase tracking-wider">Latency</p>
                   </div>
                   <div>
-                    <p class="text-2xl font-light text-white mb-1">99.9%</p>
+                    <p class="text-2xl font-light text-white mb-1">{stats.uptime}</p>
                     <p class="text-[10px] text-white/30 uppercase tracking-wider">Uptime</p>
                   </div>
                   <div>
-                    <p class="text-2xl font-light text-white mb-1">50+</p>
+                    <p class="text-2xl font-light text-white mb-1">{stats.brands}</p>
                     <p class="text-[10px] text-white/30 uppercase tracking-wider">Brands</p>
                   </div>
                 </div>
@@ -186,10 +189,10 @@ const faqs = [
         <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-black/30 mb-16 text-center">Trusted Performance</p>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {[
-            { value: '50ms', label: 'Avg. API Latency' },
-            { value: '99.9%', label: 'Uptime SLA' },
-            { value: '7 days', label: 'Signed URL Expiry' },
-            { value: '50+', label: 'Brands Covered' },
+            { value: stats.latency, label: 'Avg. API Latency' },
+            { value: stats.uptime, label: 'Uptime SLA' },
+            { value: stats.signedUrlExpiry, label: 'Signed URL Expiry' },
+            { value: stats.brands, label: 'Brands Covered' },
           ].map((stat) => (
             <div class="text-center">
               <p class="text-5xl sm:text-6xl lg:text-7xl font-extralight text-black tracking-tight mb-3">{stat.value}</p>

@@ -2,6 +2,9 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
+import { getSiteStats } from '../../../lib/contentful';
+
+const stats = await getSiteStats();
 ---
 
 <BaseLayout
@@ -20,7 +23,7 @@ import Footer from '../../../components/Footer.astro';
           Cada píxel.<br />Cada ángulo.
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
-          Imágenes consistentes con calidad de estudio en más de 140 marcas. Sin compromisos en iluminación, precisión de color o resolución.
+          Imágenes consistentes con calidad de estudio en {stats.brands} marcas. Sin compromisos en iluminación, precisión de color o resolución.
         </p>
       </div>
     </section>
@@ -29,8 +32,8 @@ import Footer from '../../../components/Footer.astro';
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '36', label: 'Ángulos de cámara' },
-          { value: '2K', label: 'Resolución máx.' },
+          { value: stats.cameraAngles, label: 'Ángulos de cámara' },
+          { value: stats.maxResolution, label: 'Resolución máx.' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
@@ -87,9 +90,9 @@ import Footer from '../../../components/Footer.astro';
                 { step: '01', title: 'Adquisición de modelos 3D', desc: 'Modelos 3D de alta fidelidad obtenidos de datos OEM con geometría, materiales y proporciones precisas.' },
                 { step: '02', title: 'Configuración de iluminación de estudio', desc: 'El entorno de iluminación HDRI estandarizado garantiza reflejos, brillos y comportamiento de sombras consistentes en todos los vehículos.' },
                 { step: '03', title: 'Calibración de color', desc: 'Cada color de pintura se ajusta cuidadosamente a la especificación oficial de color del fabricante.' },
-                { step: '04', title: 'Renderizado multiángulo', desc: 'Hasta 36 posiciones de cámara por configuración — vistas exteriores, interiores y de detalle renderizadas a resolución de hasta 2K.' },
+                { step: '04', title: 'Renderizado multiángulo', desc: `Hasta ${stats.cameraAngles} posiciones de cámara por configuración — vistas exteriores, interiores y de detalle renderizadas a resolución de hasta ${stats.maxResolution}.` },
                 { step: '05', title: 'Postproducción y control de calidad', desc: 'Controles de calidad automáticos y manuales para artefactos, consistencia de color, transparencia y precisión de sombras.' },
-                { step: '06', title: 'Entrega por CDN', desc: 'URLs firmadas servidas a través de CDN global con latencia media de ~50ms. Formatos PNG y WebP con transparencia opcional.' },
+                { step: '06', title: 'Entrega por CDN', desc: `URLs firmadas servidas a través de CDN global con latencia media de ~${stats.latency}. Formatos PNG y WebP con transparencia opcional.` },
               ].map((item) => (
                 <div class="flex gap-6 py-6 border-b border-white/[0.06] first:border-t">
                   <span class="text-[11px] font-bold text-white/15 mt-0.5 shrink-0">{item.step}</span>
@@ -127,7 +130,7 @@ import Footer from '../../../components/Footer.astro';
             { title: 'Colores precisos', desc: 'Colores ajustados a las especificaciones del fabricante. Acabados metalizados, mate, perlados y de edición especial renderizados con fidelidad.' },
             { title: 'Fondos transparentes', desc: 'Recortes limpios sin artefactos. Perfectos para configuradores, listados y materiales de marketing.' },
             { title: 'Sombras de suelo', desc: 'Sombras de suelo naturales y suaves que anclan el vehículo. Disponibles por separado o compuestas.' },
-            { title: 'Alta resolución', desc: 'Desde resolución web estándar hasta 2K. Detalles nítidos a cualquier nivel de zoom — texturas de llantas, emblemas y reflejos.' },
+            { title: 'Alta resolución', desc: `Desde resolución web estándar hasta ${stats.maxResolution}. Detalles nítidos a cualquier nivel de zoom — texturas de llantas, emblemas y reflejos.` },
             { title: 'Cobertura interior', desc: 'Panorámicas de cabina de 360°, primeros planos del salpicadero y vistas de asientos traseros con renderizado fiel a los materiales.' },
           ].map((feature) => (
             <div class="relative rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white p-10 sm:p-12">
@@ -154,7 +157,7 @@ import Footer from '../../../components/Footer.astro';
             {[
               { aspect: 'Iluminación', stock: 'Varía según el fotógrafo, la ubicación y la hora del día. Inconsistente entre listados.', api: 'Entorno de estudio HDRI estandarizado. Cada vehículo renderizado bajo condiciones idénticas.' },
               { aspect: 'Precisión de color', stock: 'Sujeto al balance de blancos, estilos de edición y diferencias del sensor de la cámara.', api: 'Colores ajustados a las especificaciones del fabricante. Consistente en todas las marcas y modelos.' },
-              { aspect: 'Ángulos', stock: 'Ángulos aleatorios, a menudo sin vistas clave. Sin garantía de frontal, trasera o interior.', api: 'Hasta 36 posiciones de cámara estandarizadas por configuración. Cada ángulo, cada vez.' },
+              { aspect: 'Ángulos', stock: 'Ángulos aleatorios, a menudo sin vistas clave. Sin garantía de frontal, trasera o interior.', api: `Hasta ${stats.cameraAngles} posiciones de cámara estandarizadas por configuración. Cada ángulo, cada vez.` },
               { aspect: 'Fondo', stock: 'Estacionamientos, calles, concesionarios. Distractores e inconsistentes.', api: 'Fondos blancos limpios o transparentes. Listos para cualquier diseño o configurador.' },
               { aspect: 'Disponibilidad', stock: 'Nuevos modelos con retraso de semanas o meses. Ediciones especiales a menudo ausentes.', api: 'Nuevos modelos disponibles en semanas desde el lanzamiento. Restylings y ediciones especiales incluidos.' },
             ].map((row) => (

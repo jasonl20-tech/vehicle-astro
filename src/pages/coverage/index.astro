@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { getSiteStats } from '../../lib/contentful';
 
 const categories = [
   {
@@ -64,11 +65,13 @@ const categories = [
     ],
   },
 ];
+
+const stats = await getSiteStats();
 ---
 
 <BaseLayout
-  title="Vehicle Coverage | 140+ Brands & 65,000+ Models | Vehicle Imagery API"
-  description="Comprehensive vehicle imagery database covering 140+ automotive brands and 65,000+ models worldwide."
+  title={`Vehicle Coverage | ${stats.brands} Brands & ${stats.models} Models | Vehicle Imagery API`}
+  description={`Comprehensive vehicle imagery database covering ${stats.brands} automotive brands and ${stats.models} models worldwide.`}
   canonicalUrl="/coverage"
 >
   <Header />
@@ -79,7 +82,7 @@ const categories = [
       <div class="max-w-3xl">
         <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">Coverage</p>
         <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-black tracking-tight mb-8">
-          140+ brands.<br />65K models.
+          {stats.brands} brands.<br />{stats.models} models.
         </h1>
         <p class="text-[16px] text-black/50 leading-relaxed max-w-lg">
           Studio-quality vehicle imagery for every major manufacturer. From supercars to family vehicles, always up to date.
@@ -91,10 +94,10 @@ const categories = [
     <section class="mx-auto max-w-[1400px] px-6 pb-16 sm:px-12 lg:px-16">
       <div class="flex gap-12 sm:gap-16 border-t border-black/5 pt-8">
         {[
-          { value: '140+', label: 'Brands' },
-          { value: '65,000+', label: 'Models' },
-          { value: '1,000+', label: 'Colors' },
-          { value: '50ms', label: 'Avg. Response' },
+          { value: stats.brands, label: 'Brands' },
+          { value: stats.models, label: 'Models' },
+          { value: stats.colors, label: 'Colors' },
+          { value: stats.latency, label: 'Avg. Response' },
         ].map((stat) => (
           <div>
             <p class="text-2xl sm:text-3xl font-light text-black tracking-tight">{stat.value}</p>
