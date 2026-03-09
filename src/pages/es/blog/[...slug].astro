@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
-import { getEntries } from '../../../lib/contentful';
+import { getEntries, getCompanyInfo } from '../../../lib/contentful';
 import { renderRichText, richTextToPlainText, buildAssetMap } from '../../../lib/contentful-rich-text';
 import { getContentfulLocale } from '../../../i18n/utils';
 
@@ -93,6 +93,7 @@ const featuredImageUrl = assetUrl(featuredImage);
 const authorAvatarUrl = assetUrl(authorAvatar);
 
 const relatedPosts = relatedPostsFromProps ?? [];
+const company = await getCompanyInfo();
 
 const articleUrl = canonicalUrl ? `${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}` : `${siteUrl}/es/blog/${fields.slug}`;
 const articleImage = ogImageFull || (featuredImageUrl ? (featuredImageUrl.startsWith('http') ? featuredImageUrl : `https:${featuredImageUrl}`) : undefined);
@@ -104,8 +105,8 @@ const articleSchema = {
   url: articleUrl,
   ...(articleImage && { image: articleImage }),
   ...(publishedAt && { datePublished: publishedAt }),
-  author: { '@type': 'Person', name: authorName || 'Vehicle Imagery' },
-  publisher: { '@type': 'Organization', name: 'Vehicle Imagery', logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.svg` } },
+  author: { '@type': 'Person', name: authorName || company.companyName },
+  publisher: { '@type': 'Organization', name: company.companyName, logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.svg` } },
 };
 const breadcrumbSchema = {
   '@context': 'https://schema.org',

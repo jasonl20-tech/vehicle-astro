@@ -2,9 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getSiteStats } from '../lib/contentful';
+import { getSiteStats, getCompanyInfo } from '../lib/contentful';
 
-const BASE_URL = 'https://api.vehicleimagery.com';
+const company = await getCompanyInfo();
+const BASE_URL = company.apiBaseUrl;
 const stats = await getSiteStats();
 
 const endpoints = [

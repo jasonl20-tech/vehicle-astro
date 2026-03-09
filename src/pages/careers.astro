@@ -2,6 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getCompanyInfo } from '../lib/contentful';
+
+const company = await getCompanyInfo();
 ---
 
 <BaseLayout
@@ -54,7 +57,7 @@ import Footer from '../components/Footer.astro';
             <div>
               <h3 class="text-[13px] font-semibold text-black mb-3">Location</h3>
               <p class="text-[13px] text-black/70">Remote-first</p>
-              <p class="text-[13px] text-black/70">HQ in Germany</p>
+              <p class="text-[13px] text-black/70">HQ in {company.headquarters}</p>
             </div>
             <div>
               <h3 class="text-[13px] font-semibold text-black mb-3">Culture</h3>
@@ -68,7 +71,7 @@ import Footer from '../components/Footer.astro';
             </div>
             <div>
               <h3 class="text-[13px] font-semibold text-black mb-3">Apply</h3>
-              <p class="text-[13px] text-black/70"><a href="mailto:careers@vehicleimagery.com" class="hover:text-black transition-colors underline underline-offset-2">careers@vehicleimagery.com</a></p>
+              <p class="text-[13px] text-black/70"><a href={`mailto:${company.emailCareers}`} class="hover:text-black transition-colors underline underline-offset-2">{company.emailCareers}</a></p>
             </div>
           </div>
         </div>
@@ -113,7 +116,7 @@ import Footer from '../components/Footer.astro';
           <p class="text-[13px] text-black/60 leading-relaxed mb-8 max-w-md mx-auto">
             We're always interested in hearing from talented engineers, designers, and product people. Send us your CV and tell us what excites you about Vehicle Imagery.
           </p>
-          <a href="mailto:careers@vehicleimagery.com" class="inline-flex items-center justify-center gap-3 rounded-full bg-[#2d2d2d] px-6 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-black">
+          <a href={`mailto:${company.emailCareers}`} class="inline-flex items-center justify-center gap-3 rounded-full bg-[#2d2d2d] px-6 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-black">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="rotate-[-45deg]">
               <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
