@@ -2,6 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getSiteStats } from '../lib/contentful';
+
+const stats = await getSiteStats();
 
 const channels = [
   {
@@ -34,7 +37,7 @@ const faqs = [
   { q: 'How do I get my API key?', a: 'Contact us via the form below or email support@vehicleimagery.com. We\'ll set up your account and send your key within 24 hours.' },
   { q: 'My API key is not working', a: 'Check that you\'re sending the key via the x-api-key header. If you\'re getting a 403, your key may have expired or the requested resource may not be part of your plan.' },
   { q: 'I\'m getting 404 errors', a: 'Make sure the brand, model, year, variant, and trim all exist in our database. Use the /api/brands endpoint to start and navigate the hierarchy step by step.' },
-  { q: 'Images are loading slowly', a: 'Our average latency is ~50ms. If you\'re experiencing slowness, check your CDN caching. Signed URLs are valid for 7 days — cache them on your end for best performance.' },
+  { q: 'Images are loading slowly', a: `Our average latency is ~${stats.latency}. If you're experiencing slowness, check your CDN caching. Signed URLs are valid for ${stats.signedUrlExpiry} — cache them on your end for best performance.` },
   { q: 'How do I upgrade my plan?', a: 'Contact sales at info@vehicleimagery.com. Plan changes take effect immediately. No downtime.' },
   { q: 'Do you offer on-premise deployment?', a: 'Yes, on-premise and white-label options are available on our custom plans. Contact us for details.' },
 ];

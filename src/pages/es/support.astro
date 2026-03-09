@@ -2,6 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { getSiteStats } from '../../lib/contentful';
+
+const stats = await getSiteStats();
 
 const channels = [
   {
@@ -34,7 +37,7 @@ const faqs = [
   { q: '¿Cómo obtengo mi clave de API?', a: 'Contáctanos a través del formulario a continuación o envía un correo a support@vehicleimagery.com. Configuraremos tu cuenta y te enviaremos tu clave en 24 horas.' },
   { q: 'Mi clave de API no funciona', a: 'Verifica que estés enviando la clave a través del encabezado x-api-key. Si recibes un 403, tu clave puede haber expirado o el recurso solicitado puede no estar incluido en tu plan.' },
   { q: 'Estoy recibiendo errores 404', a: 'Asegúrate de que la marca, modelo, año, variante y acabado existan en nuestra base de datos. Usa el endpoint /api/brands para empezar y navegar la jerarquía paso a paso.' },
-  { q: 'Las imágenes cargan lentamente', a: 'Nuestra latencia promedio es de ~50ms. Si experimentas lentitud, verifica tu caché de CDN. Las URLs firmadas son válidas por 7 días — almacénalas en caché de tu lado para un mejor rendimiento.' },
+  { q: 'Las imágenes cargan lentamente', a: `Nuestra latencia promedio es de ~${stats.latency}. Si experimentas lentitud, verifica tu caché de CDN. Las URLs firmadas son válidas por ${stats.signedUrlExpiry} — almacénalas en caché de tu lado para un mejor rendimiento.` },
   { q: '¿Cómo actualizo mi plan?', a: 'Contacta a ventas en info@vehicleimagery.com. Los cambios de plan entran en vigor de inmediato. Sin tiempo de inactividad.' },
   { q: '¿Ofrecen despliegue on-premise?', a: 'Sí, las opciones on-premise y de marca blanca están disponibles en nuestros planes personalizados. Contáctanos para más detalles.' },
 ];

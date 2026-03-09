@@ -2,8 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getSiteStats } from '../lib/contentful';
 
 const BASE_URL = 'https://api.vehicleimagery.com';
+const stats = await getSiteStats();
 
 const endpoints = [
   { id: 'brands', method: 'GET', path: '/api/brands', title: 'List Brands', desc: 'Returns all available vehicle brands in the database.', params: [], query: [{ name: 'format', default: 'png', desc: 'Image format filter (png, webp, etc.)' }, { name: 'resolution', default: 'default', desc: 'Resolution filter (default, high, etc.)' }], response: '{\n  "brands": [\n    "Audi",\n    "BMW",\n    "Mercedes-Benz",\n    "Volkswagen",\n    ...\n  ]\n}' },
@@ -357,15 +359,15 @@ const errornotes = [
             </p>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="p-6 bg-[#f4f4f5] rounded-xl">
-                <p class="text-2xl font-normal text-black mb-1">50ms</p>
+                <p class="text-2xl font-normal text-black mb-1">{stats.latency}</p>
                 <p class="text-[12px] text-black/50 uppercase tracking-wider">Avg. Latency</p>
               </div>
               <div class="p-6 bg-[#f4f4f5] rounded-xl">
-                <p class="text-2xl font-normal text-black mb-1">99.9%</p>
+                <p class="text-2xl font-normal text-black mb-1">{stats.uptime}</p>
                 <p class="text-[12px] text-black/50 uppercase tracking-wider">Uptime SLA</p>
               </div>
               <div class="p-6 bg-[#f4f4f5] rounded-xl">
-                <p class="text-2xl font-normal text-black mb-1">7 days</p>
+                <p class="text-2xl font-normal text-black mb-1">{stats.signedUrlExpiry}</p>
                 <p class="text-[12px] text-black/50 uppercase tracking-wider">URL Expiry</p>
               </div>
             </div>
