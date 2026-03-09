@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/optimize-images.mjs && astro build && node scripts/copy-sitemap.mjs",
+    "build": "node scripts/optimize-images.mjs && astro build && node scripts/generate-redirects.mjs && node scripts/copy-sitemap.mjs",
     "download-interior": "node scripts/download-interior-images.mjs",
     "contentful:create-changelog": "node scripts/create-changelog-content-type.mjs",
     "contentful:create-blog-post": "node scripts/create-blog-post-content-type.mjs",
