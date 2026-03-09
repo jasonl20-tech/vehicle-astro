@@ -2,15 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getEntries, getSiteStats } from '../lib/contentful';
+import { getEntries, getSiteStats, getCompanyInfo } from '../lib/contentful';
 import { richTextToPlainText } from '../lib/contentful-rich-text';
-
-const facts = [
-  { label: 'Founded', value: '2024' },
-  { label: 'Headquarters', value: 'Germany' },
-  { label: 'Industry', value: 'Automotive SaaS' },
-  { label: 'Product', value: 'Vehicle Imagery API' },
-];
 
 const mediaAssets = [
   { title: 'Logo (Light)', desc: 'Primary logo in vector format. Use on light backgrounds.', file: '/logo.svg', type: 'SVG', bg: 'light' },
@@ -36,6 +29,14 @@ try {
 }
 
 const stats = await getSiteStats();
+const company = await getCompanyInfo();
+
+const facts = [
+  { label: 'Founded', value: company.founded },
+  { label: 'Headquarters', value: company.headquarters },
+  { label: 'Industry', value: company.industry },
+  { label: 'Product', value: company.productName },
+];
 ---
 
 <BaseLayout
@@ -253,11 +254,11 @@ const stats = await getSiteStats();
               <div class="space-y-4">
                 <div>
                   <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">Email</p>
-                  <a href="mailto:press@vehicleimagery.com" class="text-[14px] text-white/70 hover:text-white transition-colors">press@vehicleimagery.com</a>
+                  <a href={`mailto:${company.emailPress}`} class="text-[14px] text-white/70 hover:text-white transition-colors">{company.emailPress}</a>
                 </div>
                 <div>
                   <p class="text-[11px] text-white/25 uppercase tracking-wider mb-1">General</p>
-                  <a href="mailto:info@vehicleimagery.com" class="text-[14px] text-white/70 hover:text-white transition-colors">info@vehicleimagery.com</a>
+                  <a href={`mailto:${company.emailInfo}`} class="text-[14px] text-white/70 hover:text-white transition-colors">{company.emailInfo}</a>
                 </div>
               </div>
             </div>
