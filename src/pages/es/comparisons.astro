@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getEntries } from '../../lib/contentful';
+import { richTextToPlainText } from '../../lib/contentful-rich-text';
+
+interface ComparisonItem {
+  href: string;
+  title: string;
+  description?: string;
+  label?: string;
+}
+
+let items: ComparisonItem[] = [];
+
+try {
+  const res = await getEntries({ content_type: 'dynamicPage-2', limit: 500, include: 2, locale: 'es' });
+  for (const item of res.items as any[]) {
+    const f = item.fields;
+    if (!f?.slug) continue;
+    const category = ((f.category as string) || '').toLowerCase();
+    if (!category.includes('comparison')) continue;
+    const slug = f.slug as string;
+    const prefix = f.urlPrefix as string | undefined;
+    const href = prefix ? `/es/${prefix}/${slug}` : `/es/${slug}`;
+    const title = (f.title as string) || slug;
+    const desc = f.description
+      ? (typeof f.description === 'string' ? f.description.slice(0, 160) : richTextToPlainText(f.description, 160))
+      : undefined;
+    const label = f.label as string | undefined;
+    items.push({ href, title, description: desc, label });
+  }
+  items.sort((a, b) => a.title.localeCompare(b.title));
+} catch {}
+---
+
+<BaseLayout title="Comparaciones | Vehicle Imagery API" description="Descubre cómo Vehicle Imagery se compara con proveedores alternativos de imágenes de vehículos. Comparaciones detalladas lado a lado." canonicalUrl="/es/comparisons">
+  <Header />
+  <main class="min-h-screen bg-cream">
+    <section class="border-b border-[#1C2B32]/10 bg-[#1C2B32] px-6 py-20 sm:px-12 lg:px-16">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Vehicle Imagery</p>
+        <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">Comparaciones</h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">Descubre cómo Vehicle Imagery se compara con las alternativas. Comparaciones honestas y detalladas para ayudarte a elegir la solución correcta.</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 py-16 sm:px-12 lg:px-16">
+      {items.length > 0 ? (
+        <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((comp) => (
+            <li>
+              <a href={comp.href} class="group flex h-full flex-col border border-[#1C2B32]/10 bg-white p-6 shadow-[0_2px_12px_-2px_rgba(28,43,50,0.06)] transition-all duration-300 hover:border-[#1C2B32]/20 hover:shadow-[0_8px_30px_-6px_rgba(28,43,50,0.12)] sm:p-8">
+                <div class="mb-4 flex h-12 w-12 items-center justify-center bg-[#1C2B32]/[0.06]">
+                  <svg class="h-6 w-6 text-[#1C2B32]/40 transition-colors group-hover:text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                  </svg>
+                </div>
+                {comp.label && <span class="mb-2 inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-accent">{comp.label}</span>}
+                <h2 class="text-lg font-bold leading-tight text-[#1C2B32] transition-colors group-hover:text-accent sm:text-xl">{comp.title}</h2>
+                {comp.description && <p class="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-[#1C2B32]/60">{comp.description}</p>}
+                <div class="mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1C2B32]/40 transition-colors group-hover:text-accent">
+                  <span>Leer comparación</span>
+                  <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="rounded-none border border-[#1C2B32]/10 bg-white p-16 text-center">
+          <p class="text-[#1C2B32]/60">No hay comparaciones disponibles todavía. ¡Vuelve pronto!</p>
+          <a href="/es" class="mt-6 inline-block border border-[#1C2B32] px-6 py-3 text-sm font-bold uppercase tracking-widest text-[#1C2B32] transition-colors hover:bg-[#1C2B32] hover:text-cream">Volver al inicio</a>
+        </div>
+      )}
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 pb-20 sm:px-12 lg:px-16">
+      <div class="border border-[#1C2B32]/10 bg-[#1C2B32]/[0.03] p-8 sm:p-12 lg:flex lg:items-center lg:justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-[#1C2B32] sm:text-2xl">¿No sabes qué solución se adapta mejor?</h2>
+          <p class="mt-2 text-[15px] text-[#1C2B32]/60">Habla con nuestro equipo y obtén una recomendación personalizada.</p>
+        </div>
+        <a href="/es/book-a-call" class="mt-6 inline-block border border-[#1C2B32] bg-[#1C2B32] px-6 py-3 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-[#1C2B32]/90 lg:mt-0">Reservar llamada</a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

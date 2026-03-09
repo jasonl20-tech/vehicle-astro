@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getEntries } from '../../lib/contentful';
+import { richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
+
+interface SiteLink {
+  href: string;
+  label: string;
+  description?: string;
+  category: string;
+}
+
+const staticPages: SiteLink[] = [
+  { href: '/es', label: 'Inicio', description: 'Vehicle Imagery API – Fotografía de vehículos con calidad de estudio.', category: 'Principal' },
+  { href: '/es/coverage', label: 'Cobertura', description: 'Todas las marcas y modelos de vehículos soportados.', category: 'Cobertura' },
+  { href: '/es/coverage/global', label: 'Cobertura Global', description: 'Cobertura y disponibilidad en mercados mundiales.', category: 'Cobertura' },
+  { href: '/es/coverage/vehicle-types', label: 'Tipos de Vehículos', description: 'Coches, camiones, SUVs, motos y más.', category: 'Cobertura' },
+  { href: '/es/coverage/quality', label: 'Calidad de Estudio', description: 'Estándares y especificaciones de calidad fotográfica.', category: 'Cobertura' },
+  { href: '/es/pricing', label: 'Precios', description: 'Planes y precios para cada tamaño de equipo.', category: 'Producto' },
+  { href: '/es/pricing/startups', label: 'Precios para Startups', description: 'Precios especiales para startups y equipos pequeños.', category: 'Producto' },
+  { href: '/es/documentation', label: 'Documentación API', description: 'Referencia completa de la API y guías de integración.', category: 'Producto' },
+  { href: '/es/trial', label: 'Prueba Gratuita', description: 'Obtén tu clave API gratuita y comienza a construir.', category: 'Producto' },
+  { href: '/es/book-a-call', label: 'Reservar Llamada', description: 'Programa una demo con nuestro equipo.', category: 'Producto' },
+  { href: '/es/blog', label: 'Blog', description: 'Actualizaciones, consejos e información del sector.', category: 'Recursos' },
+  { href: '/es/whitepapers', label: 'Informes Técnicos', description: 'Investigación en profundidad e informes técnicos.', category: 'Recursos' },
+  { href: '/es/case-studies', label: 'Casos de Estudio', description: 'Historias reales de éxito de clientes.', category: 'Recursos' },
+  { href: '/es/tutorials', label: 'Tutoriales', description: 'Guías de integración paso a paso.', category: 'Recursos' },
+  { href: '/es/changelog', label: 'Changelog', description: 'Historial de versiones y notas de publicación.', category: 'Recursos' },
+  { href: '/es/faq', label: 'FAQ', description: 'Preguntas frecuentes.', category: 'Recursos' },
+  { href: '/es/faq/general', label: 'FAQ – General', description: 'Preguntas generales sobre Vehicle Imagery.', category: 'Recursos' },
+  { href: '/es/faq/api', label: 'FAQ – API', description: 'Preguntas técnicas sobre la API.', category: 'Recursos' },
+  { href: '/es/faq/billing', label: 'FAQ – Facturación', description: 'Preguntas sobre pagos y facturación.', category: 'Recursos' },
+  { href: '/es/faq/support', label: 'FAQ – Soporte', description: 'Opciones de ayuda y soporte.', category: 'Recursos' },
+  { href: '/es/comparisons', label: 'Comparaciones', description: 'Compara Vehicle Imagery con alternativas.', category: 'Recursos' },
+  { href: '/es/team', label: 'Equipo', description: 'Conoce a las personas detrás de Vehicle Imagery.', category: 'Empresa' },
+  { href: '/es/contact', label: 'Contacto', description: 'Ponte en contacto con nuestro equipo.', category: 'Empresa' },
+  { href: '/es/support', label: 'Soporte', description: 'Centro de ayuda y soporte al cliente.', category: 'Empresa' },
+  { href: '/es/partners', label: 'Socios', description: 'Programa de socios e integraciones.', category: 'Empresa' },
+  { href: '/es/press', label: 'Prensa', description: 'Comunicados de prensa y kit de medios.', category: 'Empresa' },
+  { href: '/es/careers', label: 'Carreras', description: 'Únete a nuestro equipo.', category: 'Empresa' },
+];
+
+let dynamicPages: SiteLink[] = [];
+
+try {
+  const dpRes = await getEntries({ content_type: 'dynamicPage-2', limit: 500, include: 2, locale: 'es' });
+  for (const item of dpRes.items as any[]) {
+    const f = item.fields;
+    if (!f?.slug) continue;
+    const slug = f.slug as string;
+    const prefix = f.urlPrefix as string | undefined;
+    const href = prefix ? `/es/${prefix}/${slug}` : `/es/${slug}`;
+    const label = (f.title as string) || slug;
+    const desc = f.description
+      ? (typeof f.description === 'string' ? f.description.slice(0, 120) : richTextToPlainText(f.description, 120))
+      : undefined;
+    const category = (f.category as string) || 'Otros';
+    dynamicPages.push({ href, label, description: desc, category });
+  }
+} catch {}
+
+try {
+  const blogRes = await getEntries({ content_type: 'blogPost', limit: 200, order: '-fields.publishedAt', locale: 'es' });
+  for (const item of blogRes.items as any[]) {
+    const f = item.fields;
+    if (!f?.slug) continue;
+    dynamicPages.push({ href: `/es/blog/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Blog' });
+  }
+} catch {}
+
+try {
+  const wpRes = await getEntries({ content_type: 'whitepaper', limit: 200, locale: 'es' });
+  for (const item of wpRes.items as any[]) {
+    const f = item.fields;
+    if (!f?.slug) continue;
+    dynamicPages.push({ href: `/es/whitepapers/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Informes Técnicos' });
+  }
+} catch {}
+
+try {
+  const csRes = await getEntries({ content_type: 'caseStudy', limit: 200, locale: 'es' });
+  for (const item of csRes.items as any[]) {
+    const f = item.fields;
+    if (!f?.slug) continue;
+    dynamicPages.push({ href: `/es/case-studies/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Casos de Estudio' });
+  }
+} catch {}
+
+try {
+  const tutRes = await getEntries({ content_type: 'tutorial', limit: 200, locale: 'es' });
+  for (const item of tutRes.items as any[]) {
+    const f = item.fields;
+    if (!f?.slug) continue;
+    dynamicPages.push({ href: `/es/tutorials/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Tutoriales' });
+  }
+} catch {}
+
+try {
+  const clRes = await getEntries({ content_type: 'api', limit: 200, order: '-sys.createdAt', locale: 'es' });
+  for (const item of clRes.items as any[]) {
+    const f = item.fields;
+    if (!f?.slug) continue;
+    dynamicPages.push({ href: `/es/changelog/${f.slug}`, label: (f.title as string) || f.slug, category: 'Changelog' });
+  }
+} catch {}
+
+const existingHrefs = new Set(staticPages.map(p => p.href));
+const allPages = [...staticPages, ...dynamicPages.filter(p => !existingHrefs.has(p.href))];
+
+const grouped = new Map<string, SiteLink[]>();
+const categoryOrder = ['Principal', 'Producto', 'Cobertura', 'Recursos', 'Comparaciones', 'Blog', 'Informes Técnicos', 'Casos de Estudio', 'Tutoriales', 'Changelog', 'Empresa', 'Otros'];
+for (const page of allPages) {
+  if (!grouped.has(page.category)) grouped.set(page.category, []);
+  grouped.get(page.category)!.push(page);
+}
+const sortedCategories = [...grouped.keys()].sort((a, b) => {
+  const ai = categoryOrder.indexOf(a);
+  const bi = categoryOrder.indexOf(b);
+  return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+});
+---
+
+<BaseLayout title="Glosario – Todas las Páginas | Vehicle Imagery" description="Directorio completo de todas las páginas de Vehicle Imagery. Encuentra cada recurso, comparación, guía y herramienta en un solo lugar." canonicalUrl="/es/glossar">
+  <Header />
+  <main class="min-h-screen bg-cream">
+    <section class="border-b border-[#1C2B32]/10 bg-[#1C2B32] px-6 py-20 sm:px-12 lg:px-16">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/50">Vehicle Imagery</p>
+        <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">Glosario del Sitio</h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">Directorio completo de cada página en Vehicle Imagery. {allPages.length} páginas en total.</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 py-16 sm:px-12 lg:px-16">
+      <nav class="mb-12 flex flex-wrap gap-2">
+        {sortedCategories.map((cat) => (
+          <a href={`#${cat.toLowerCase().replace(/\s+/g, '-')}`} class="border border-[#1C2B32]/15 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#1C2B32]/70 transition-colors hover:bg-[#1C2B32] hover:text-white">
+            {cat} <span class="text-[#1C2B32]/40 ml-1">({grouped.get(cat)!.length})</span>
+          </a>
+        ))}
+      </nav>
+
+      {sortedCategories.map((cat) => (
+        <div id={cat.toLowerCase().replace(/\s+/g, '-')} class="mb-14">
+          <h2 class="mb-6 border-b border-[#1C2B32]/10 pb-3 text-sm font-black uppercase tracking-[0.2em] text-[#1C2B32]/50">{cat}</h2>
+          <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {grouped.get(cat)!.map((page) => (
+              <li>
+                <a href={page.href} class="group flex flex-col gap-1 border border-[#1C2B32]/8 bg-white p-4 transition-all duration-200 hover:border-[#1C2B32]/20 hover:shadow-[0_4px_16px_-4px_rgba(28,43,50,0.1)]">
+                  <span class="text-[14px] font-bold text-[#1C2B32] transition-colors group-hover:text-accent">{page.label}</span>
+                  {page.description && <span class="line-clamp-2 text-xs leading-relaxed text-[#1C2B32]/55">{page.description}</span>}
+                  <span class="mt-1 text-[11px] font-medium text-[#1C2B32]/30">{page.href}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
