@@ -2,18 +2,7 @@ import { createClient } from 'contentful';
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 
-const staticRedirects = [
-  '/impressum /legal-notice 301',
-  '/global-coverage /coverage/global 301',
-  '/quality /coverage/quality 301',
-  '/faq/general-why /faq/general 301',
-  '/faq/vehicle-coverage-database /faq/general 301',
-  '/faq/technology-api-vin-matching /faq/api 301',
-  '/faq/visualization-features-360 /faq/general 301',
-  '/faq/pricing-licenses-legal /faq/billing 301',
-  '/faq/competitive-comparison /faq/general 301',
-  '/api-guide /documentation 301',
-];
+const staticRedirects = [];
 
 async function main() {
   const space = process.env.CONTENTFUL_SPACE_ID;
