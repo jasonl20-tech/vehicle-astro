@@ -2,6 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getCompanyInfo } from '../lib/contentful';
+
+const company = await getCompanyInfo();
 ---
 
 <BaseLayout
@@ -66,18 +69,18 @@ import Footer from '../components/Footer.astro';
           <div class="grid grid-cols-2 gap-y-10 gap-x-8">
             <div>
               <h3 class="text-[13px] font-semibold text-black mb-3">Office</h3>
-              <p class="text-[13px] text-black/70 mb-1">Vehicle Imagery HQ</p>
-              <p class="text-[13px] text-black/70">Germany</p>
+              <p class="text-[13px] text-black/70 mb-1">{company.companyName} HQ</p>
+              <p class="text-[13px] text-black/70">{company.headquarters}</p>
             </div>
             <div>
               <h3 class="text-[13px] font-semibold text-black mb-3">Email</h3>
-              <p class="text-[13px] text-black/70"><a href="mailto:info@vehicleimagery.com" class="hover:text-black transition-colors">info@vehicleimagery.com</a></p>
+              <p class="text-[13px] text-black/70"><a href={`mailto:${company.emailInfo}`} class="hover:text-black transition-colors">{company.emailInfo}</a></p>
             </div>
             <div>
               <h3 class="text-[13px] font-semibold text-black mb-3">Social network</h3>
               <div class="flex gap-4">
                 <a href="https://twitter.com/vehicleimagery" target="_blank" rel="noopener noreferrer" class="text-[13px] text-black hover:text-black/70 transition-colors font-medium" aria-label="X">X</a>
-                <a href="https://linkedin.com/company/vehicleimagery" target="_blank" rel="noopener noreferrer" class="text-[13px] text-black hover:text-black/70 transition-colors font-medium" aria-label="LinkedIn">in</a>
+                <a href={company.linkedinUrl} target="_blank" rel="noopener noreferrer" class="text-[13px] text-black hover:text-black/70 transition-colors font-medium" aria-label="LinkedIn">in</a>
               </div>
             </div>
           </div>

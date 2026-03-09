@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import AnnouncementBar from '../../components/AnnouncementBar.astro';
-import { getEntries, getSiteStats } from '../../lib/contentful';
+import { getEntries, getSiteStats, getCompanyInfo } from '../../lib/contentful';
 import { buildAssetMap, richTextToPlainText } from '../../lib/contentful-rich-text';
 
 type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; category?: string; type: 'changelog' | 'blog' };
@@ -61,30 +61,31 @@ try {
 }
 
 const stats = await getSiteStats();
+const company = await getCompanyInfo();
 const siteUrl = Astro.url.origin;
 const homepageStructuredData: unknown[] = [
   {
     '@type': 'SoftwareApplication',
-    name: 'Vehicle Imagery API',
+    name: company.productName,
     applicationCategory: 'DeveloperApplication',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '150' },
-    description: 'API de imágenes de vehículos con calidad de estudio con más de 40.000 fotos de coches. Optimizado para CDN, integración sencilla para empresas automotrices. Alternativa a IMAGIN.studio y EVOX Images con mejor precio y cobertura europea.',
+    description: `API de imágenes de vehículos con calidad de estudio con más de ${stats.assets} fotos de coches. Optimizado para CDN, integración sencilla para empresas automotrices. Alternativa a IMAGIN.studio y EVOX Images con mejor precio y cobertura europea.`,
     url: siteUrl,
-    provider: { '@type': 'Organization', name: 'Vehicle Imagery', url: siteUrl },
+    provider: { '@type': 'Organization', name: company.companyName, url: siteUrl },
   },
   {
     '@type': 'Organization',
-    name: 'Vehicle Imagery',
+    name: company.companyName,
     url: siteUrl,
     logo: `${siteUrl}/logo.svg`,
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+49-151-4798371',
+      telephone: company.phone,
       contactType: 'servicio al cliente',
-      email: 'support@vehicleimagery.com',
+      email: company.emailSupport,
     },
-    sameAs: ['https://x.com/VehicleImagery', 'https://www.facebook.com/profile.php?id=61581800704053'],
+    sameAs: [company.twitterUrl, company.facebookUrl, company.linkedinUrl].filter(Boolean),
   },
   {
     '@type': 'FAQPage',
@@ -482,7 +483,7 @@ const homepageStructuredData: unknown[] = [
                     </div>
                     <div>
                       <h3 class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-1">Correo electrónico</h3>
-                      <a href="mailto:info@vehicleimagery.com" class="text-lg font-bold text-white hover:text-[rgb(200,90,70)] transition-colors">info@vehicleimagery.com</a>
+                      <a href={`mailto:${company.emailInfo}`} class="text-lg font-bold text-white hover:text-[rgb(200,90,70)] transition-colors">{company.emailInfo}</a>
                     </div>
                   </div>
                   <div class="flex items-start space-x-4">

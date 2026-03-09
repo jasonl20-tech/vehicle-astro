@@ -90,4 +90,64 @@ export async function getSiteStats(): Promise<SiteStats> {
   }
 }
 
+export interface CompanyInfo {
+  companyName: string;
+  productName: string;
+  founded: string;
+  headquarters: string;
+  industry: string;
+  phone: string;
+  apiBaseUrl: string;
+  emailInfo: string;
+  emailSupport: string;
+  emailPartners: string;
+  emailPress: string;
+  emailCareers: string;
+  twitterUrl: string;
+  facebookUrl: string;
+  linkedinUrl: string;
+  githubUrl: string;
+  instagramUrl: string;
+  youtubeUrl: string;
+}
+
+const defaultCompanyInfo: CompanyInfo = {
+  companyName: 'Vehicle Imagery',
+  productName: 'Vehicle Imagery API',
+  founded: '2024',
+  headquarters: 'Germany',
+  industry: 'Automotive SaaS',
+  phone: '+49-151-4798371',
+  apiBaseUrl: 'https://api.vehicleimagery.com',
+  emailInfo: 'info@vehicleimagery.com',
+  emailSupport: 'support@vehicleimagery.com',
+  emailPartners: 'partners@vehicleimagery.com',
+  emailPress: 'press@vehicleimagery.com',
+  emailCareers: 'careers@vehicleimagery.com',
+  twitterUrl: 'https://x.com/VehicleImagery',
+  facebookUrl: 'https://www.facebook.com/profile.php?id=61581800704053',
+  linkedinUrl: 'https://linkedin.com/company/vehicleimagery',
+  githubUrl: '',
+  instagramUrl: '',
+  youtubeUrl: '',
+};
+
+let cachedCompanyInfo: CompanyInfo | null = null;
+
+export async function getCompanyInfo(): Promise<CompanyInfo> {
+  if (cachedCompanyInfo) return cachedCompanyInfo;
+  try {
+    const res = await getEntries({ content_type: 'companyInfo', limit: 1 });
+    const fields = res.items?.[0]?.fields as Record<string, string> | undefined;
+    if (!fields) return defaultCompanyInfo;
+    cachedCompanyInfo = { ...defaultCompanyInfo };
+    for (const key of Object.keys(defaultCompanyInfo) as (keyof CompanyInfo)[]) {
+      if (fields[key]) cachedCompanyInfo[key] = fields[key];
+    }
+    return cachedCompanyInfo;
+  } catch {
+    return defaultCompanyInfo;
+  }
+}
+
 export { type Locale };

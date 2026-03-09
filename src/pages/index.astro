@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import AnnouncementBar from '../components/AnnouncementBar.astro';
-import { getEntries, getSiteStats } from '../lib/contentful';
+import { getEntries, getSiteStats, getCompanyInfo } from '../lib/contentful';
 import { buildAssetMap, richTextToPlainText } from '../lib/contentful-rich-text';
 
 type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; category?: string; type: 'changelog' | 'blog' };
@@ -61,30 +61,31 @@ try {
 }
 
 const stats = await getSiteStats();
+const company = await getCompanyInfo();
 const siteUrl = Astro.url.origin;
 const homepageStructuredData: unknown[] = [
   {
     '@type': 'SoftwareApplication',
-    name: 'Vehicle Imagery API',
+    name: company.productName,
     applicationCategory: 'DeveloperApplication',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '150' },
     description: `Studio-quality vehicle imagery API with ${stats.assets} car stock photos. CDN-optimized, simple integration for automotive businesses. Alternative to IMAGIN.studio and EVOX Images with better pricing and European coverage.`,
     url: siteUrl,
-    provider: { '@type': 'Organization', name: 'Vehicle Imagery', url: siteUrl },
+    provider: { '@type': 'Organization', name: company.companyName, url: siteUrl },
   },
   {
     '@type': 'Organization',
-    name: 'Vehicle Imagery',
+    name: company.companyName,
     url: siteUrl,
     logo: `${siteUrl}/logo.svg`,
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+49-151-4798371',
+      telephone: company.phone,
       contactType: 'customer service',
-      email: 'support@vehicleimagery.com',
+      email: company.emailSupport,
     },
-    sameAs: ['https://x.com/VehicleImagery', 'https://www.facebook.com/profile.php?id=61581800704053'],
+    sameAs: [company.twitterUrl, company.facebookUrl, company.linkedinUrl].filter(Boolean),
   },
   {
     '@type': 'FAQPage',
@@ -482,7 +483,7 @@ const homepageStructuredData: unknown[] = [
                     </div>
                     <div>
                       <h3 class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-1">Email</h3>
-                      <a href="mailto:info@vehicleimagery.com" class="text-lg font-bold text-white hover:text-[rgb(200,90,70)] transition-colors">info@vehicleimagery.com</a>
+                      <a href={`mailto:${company.emailInfo}`} class="text-lg font-bold text-white hover:text-[rgb(200,90,70)] transition-colors">{company.emailInfo}</a>
                     </div>
                   </div>
                   <div class="flex items-start space-x-4">
@@ -491,8 +492,8 @@ const homepageStructuredData: unknown[] = [
                     </div>
                     <div>
                       <h3 class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-1">Office</h3>
-                      <p class="text-white font-bold">Vehicle Imagery HQ</p>
-                      <p class="text-gray-600">Germany</p>
+                      <p class="text-white font-bold">{company.companyName} HQ</p>
+                      <p class="text-gray-600">{company.headquarters}</p>
                     </div>
                   </div>
                 </div>
