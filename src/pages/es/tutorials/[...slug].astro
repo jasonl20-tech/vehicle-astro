@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { getEntries } from '../../../lib/contentful';
+import { renderRichText, richTextToPlainText, buildAssetMap } from '../../../lib/contentful-rich-text';
+
+export async function getStaticPaths() {
+  try {
+    const res = await getEntries({ content_type: 'tutorials', include: 2, limit: 200, locale: 'es' });
+    const includes = res.includes ?? {};
+    return res.items
+      .filter((item: { fields?: { slug?: string } }) => item.fields?.slug)
+      .map((item: { fields?: Record<string, unknown> }) => ({
+        params: { slug: item.fields!.slug as string },
+        props: { entry: item, includes },
+      }));
+  } catch {
+    return [];
+  }
+}
+
+const { entry, includes } = Astro.props;
+const fields = entry?.fields ?? {};
+
+const title = (fields.title as string) ?? 'Tutorial';
+const subtitle = (fields.subtitle as string) ?? '';
+const excerpt = fields.excerpt as import('@contentful/rich-text-types').Document | undefined;
+const body = fields.body as import('@contentful/rich-text-types').Document | undefined;
+const featuredImage = fields.featuredImage as { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } | undefined;
+const featuredImageAlt = (fields.featuredImageAlt as string) ?? '';
+const publishedAt = fields.publishedAt as string | undefined;
+const category = (fields.category as string) ?? '';
+const categorySlug = (fields.categorySlug as string) ?? '';
+const tags = (fields.tags as string[] | undefined) ?? [];
+const authorName = (fields.authorName as string) ?? '';
+const authorAvatar = fields.authorAvatar as { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } | undefined;
+const difficulty = (fields.difficulty as string) ?? '';
+const durationMinutes = fields.durationMinutes as number | undefined;
+const seoTitle = (fields.seoTitle as string) ?? '';
+const seoDescription = fields.seoDescription as import('@contentful/rich-text-types').Document | undefined;
+const ogImageField = fields.ogImage as { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } | undefined;
+const noIndex = (fields.noIndex as boolean) ?? false;
+
+const assetMapResolved = buildAssetMap(includes as { Asset?: Array<{ sys: { id: string }; fields?: { file?: { url?: string }; title?: string } }> });
+
+function assetUrl(linkOrAsset: { sys?: { id?: string }; fields?: { file?: { url?: string } } } | null | undefined): string {
+  if (!linkOrAsset) return '';
+  if (linkOrAsset.fields?.file?.url) {
+    const u = linkOrAsset.fields.file.url;
+    return u.startsWith('//') ? `https:${u}` : u;
+  }
+  const id = linkOrAsset.sys?.id;
+  if (!id) return '';
+  const asset = assetMapResolved[id];
+  if (!asset?.fields?.file?.url) return '';
+  const u = asset.fields.file.url;
+  return u.startsWith('//') ? `https:${u}` : u;
+}
+
+const pageTitle = seoTitle || title;
+const metaDescription = seoDescription ? richTextToPlainText(seoDescription, 160) : richTextToPlainText(excerpt, 160) || undefined;
+const ogImageAsset = ogImageField ?? featuredImage;
+const ogImageUrl = assetUrl(ogImageAsset);
+const siteUrl = Astro.url.origin;
+const ogImageFull = ogImageUrl ? (ogImageUrl.startsWith('http') ? ogImageUrl : `${siteUrl}${ogImageUrl.startsWith('/') ? '' : '/'}${ogImageUrl}`) : undefined;
+
+const bodyHtml = body ? renderRichText(body, assetMapResolved) : '';
+const excerptHtml = excerpt ? renderRichText(excerpt, assetMapResolved) : '';
+const featuredImageUrl = assetUrl(featuredImage);
+const authorAvatarUrl = assetUrl(authorAvatar);
+
+const articleUrl = `${siteUrl}/es/tutorials/${fields.slug}`;
+const articleImage = ogImageFull || (featuredImageUrl ? (featuredImageUrl.startsWith('http') ? featuredImageUrl : `https:${featuredImageUrl}`) : undefined);
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: pageTitle,
+  description: metaDescription || title,
+  url: articleUrl,
+  ...(articleImage && { image: articleImage }),
+  ...(publishedAt && { datePublished: publishedAt }),
+  ...(durationMinutes && { timeRequired: `PT${durationMinutes}M` }),
+  ...(difficulty && { proficiencyLevel: difficulty }),
+  author: { '@type': 'Person', name: authorName || 'Vehicle Imagery' },
+  publisher: { '@type': 'Organization', name: 'Vehicle Imagery', logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.svg` } },
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${siteUrl}/es` },
+    { '@type': 'ListItem', position: 2, name: 'Tutoriales', item: `${siteUrl}/es/tutorials` },
+    { '@type': 'ListItem', position: 3, name: pageTitle, item: articleUrl },
+  ],
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={metaDescription}
+  ogImage={ogImageFull}
+  ogImageAlt={featuredImageAlt}
+  canonicalUrl={`/es/tutorials/${fields.slug}`}
+  noIndex={noIndex}
+>
+  <Header />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <main class="min-h-screen bg-cream">
+    <header class="relative">
+      {featuredImageUrl && (
+        <div class="relative h-[50vh] min-h-[320px] max-h-[560px] w-full overflow-hidden bg-[#1C2B32]">
+          <img
+            src={featuredImageUrl.startsWith('http') ? featuredImageUrl : `https:${featuredImageUrl}`}
+            alt={featuredImageAlt}
+            class="h-full w-full object-cover"
+            width="1600"
+            height="900"
+            fetchpriority="high"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1C2B32]/95 via-[#1C2B32]/40 to-transparent" aria-hidden="true" />
+        </div>
+      )}
+      <div class={`mx-auto max-w-6xl px-6 sm:px-12 lg:px-16 ${featuredImageUrl ? '-mt-32 relative z-10 pb-16' : 'pt-16 pb-12'}`}>
+        <div class="rounded-none border border-white/10 bg-white p-8 shadow-xl sm:p-10 md:p-12">
+          <div class="flex flex-wrap items-center gap-2">
+            {category && (
+              <span class="inline-block text-xs font-bold uppercase tracking-[0.2em] text-accent">
+                {category}
+              </span>
+            )}
+            {difficulty && (
+              <span class={`inline-block rounded-none px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
+                difficulty === 'Beginner' ? 'bg-emerald-100 text-emerald-700' :
+                difficulty === 'Intermediate' ? 'bg-amber-100 text-amber-700' :
+                'bg-red-100 text-red-700'
+              }`}>
+                {difficulty}
+              </span>
+            )}
+          </div>
+          <h1 class="mt-3 text-3xl font-black leading-tight tracking-tight text-[#1C2B32] sm:text-4xl md:text-5xl">
+            {title}
+          </h1>
+          {subtitle && (
+            <p class="mt-4 text-xl leading-relaxed text-[#1C2B32]/75">
+              {subtitle}
+            </p>
+          )}
+          <div class="mt-8 flex flex-wrap items-center gap-6 border-t border-[#1C2B32]/10 pt-8">
+            {authorAvatarUrl && (
+              <img
+                src={authorAvatarUrl.startsWith('http') ? authorAvatarUrl : `https:${authorAvatarUrl}`}
+                alt={authorName ? `Avatar de ${authorName}` : ''}
+                class="h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-md"
+                width="48"
+                height="48"
+              />
+            )}
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm">
+              {authorName && <span class="font-semibold text-[#1C2B32]">{authorName}</span>}
+              {publishedAt && (
+                <time datetime={publishedAt} class="text-[#1C2B32]/60">
+                  {new Date(publishedAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </time>
+              )}
+              {durationMinutes != null && (
+                <span class="text-[#1C2B32]/60">{durationMinutes} min</span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {excerptHtml && (
+      <div class="mx-auto max-w-6xl px-6 sm:px-12 lg:px-16">
+        <div class="border-l-4 border-accent bg-[#1C2B32]/[0.03] py-4 pl-6 pr-6">
+          <div class="blog-prose blog-prose--lead text-lg leading-relaxed text-[#1C2B32]/85" set:html={excerptHtml} />
+        </div>
+      </div>
+    )}
+
+    <div class="mx-auto max-w-6xl px-6 pb-16 pt-12 sm:px-12 lg:px-16">
+      <article class="min-w-0">
+        <a href="/es/tutorials" class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-[#1C2B32]/60 transition-colors hover:text-accent">
+          <span aria-hidden="true">&larr;</span> Volver a tutoriales
+        </a>
+        {bodyHtml ? (
+          <div class="blog-prose blog-article-body mt-8" set:html={bodyHtml} />
+        ) : (
+          <p class="mt-8 text-[#1C2B32]/60">Sin contenido.</p>
+        )}
+
+        {tags.length > 0 && (
+          <div class="mt-12 flex flex-wrap items-center gap-2 border-t border-[#1C2B32]/10 pt-10">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#1C2B32]/50">Etiquetas</span>
+            {tags.map((tag: string) => (
+              <span class="rounded-none border border-[#1C2B32]/15 bg-white px-3 py-1.5 text-sm font-medium text-[#1C2B32]/80">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </article>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
