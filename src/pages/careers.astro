@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Careers | Vehicle Imagery API"
+  description="Join Vehicle Imagery – We're building the world's largest automotive imagery API. Explore open positions and shape the future of vehicle technology."
+  canonicalUrl="/careers"
+>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    <section class="px-4 pt-6 pb-10 sm:px-8 lg:px-12">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]">
+          <div class="absolute inset-0 bg-[#1C2B32]" aria-hidden="true" />
+          <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true" />
+
+          <div class="relative flex min-h-[360px] flex-col justify-end px-8 py-10 sm:min-h-[460px] sm:px-16 sm:py-16 lg:min-h-[500px]">
+            <p class="text-[11px] font-medium text-white/40 mb-4 uppercase tracking-[0.2em]">Join our team</p>
+            <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl md:text-8xl">Careers</h1>
+
+            <div class="absolute bottom-0 right-6 sm:right-12 lg:right-16">
+              <div class="rounded-t-2xl bg-white px-7 py-3.5 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.1)]">
+                <p class="text-[13px] tracking-wide text-black/80">
+                  <a href="/" class="transition-colors hover:text-black">Home</a>
+                  <span class="mx-2.5 text-black/20">/</span>
+                  <span class="font-medium text-black">Careers</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[25%] -rotate-90 origin-center pointer-events-none select-none" aria-hidden="true">
+              <span class="text-[140px] sm:text-[180px] font-extralight tracking-tighter text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.12);">Careers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 pb-24 pt-8 sm:px-12 lg:px-16">
+      <div class="grid gap-16 lg:grid-cols-[1fr_1fr] lg:gap-24 items-start">
+        <div class="pt-4">
+          <p class="text-[11px] font-medium text-black/50 mb-6">/ work with us /</p>
+          <h2 class="text-4xl sm:text-5xl font-normal leading-[1.1] text-black tracking-tight mb-8">
+            Build the future of automotive imagery
+          </h2>
+          <p class="text-sm leading-relaxed text-black/60 mb-12 max-w-md">
+            Vehicle Imagery is building the world's largest vehicle image API. We work with customers across the globe — from dealerships and leasing platforms to OEMs and insurtech companies. Join us and help shape the industry.
+          </p>
+
+          <div class="grid grid-cols-2 gap-y-10 gap-x-8">
+            <div>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Location</h3>
+              <p class="text-[13px] text-black/70">Remote-first</p>
+              <p class="text-[13px] text-black/70">HQ in Germany</p>
+            </div>
+            <div>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Culture</h3>
+              <p class="text-[13px] text-black/70">Async work, flat hierarchy</p>
+              <p class="text-[13px] text-black/70">Ship fast, iterate often</p>
+            </div>
+            <div>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Stack</h3>
+              <p class="text-[13px] text-black/70">TypeScript, Astro, Cloudflare</p>
+              <p class="text-[13px] text-black/70">Node.js, Python, REST APIs</p>
+            </div>
+            <div>
+              <h3 class="text-[13px] font-semibold text-black mb-3">Apply</h3>
+              <p class="text-[13px] text-black/70"><a href="mailto:careers@vehicleimagery.com" class="hover:text-black transition-colors underline underline-offset-2">careers@vehicleimagery.com</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-[11px] font-medium text-black/50 mb-8 uppercase tracking-[0.2em]">Why Vehicle Imagery?</h3>
+          <div class="space-y-0">
+            {[
+              { icon: "01", title: "Global Impact", desc: "Our API serves millions of vehicle images worldwide. Your work directly powers platforms used by thousands of companies." },
+              { icon: "02", title: "Remote-First", desc: "Work from anywhere. We believe great work happens when people have the freedom to choose where and how they work best." },
+              { icon: "03", title: "Ownership", desc: "Small team, big responsibility. You'll own features from idea to production — no bureaucracy, no waiting." },
+              { icon: "04", title: "Growth", desc: "We're scaling fast. Early team members shape the company culture, tech stack, and product direction." },
+            ].map((item) => (
+              <div class="group flex gap-6 py-8 border-b border-black/5 first:border-t first:border-black/5">
+                <span class="text-[11px] font-mono text-black/30 pt-1 shrink-0">{item.icon}</span>
+                <div>
+                  <h4 class="text-[15px] font-semibold text-black mb-2 group-hover:text-[rgb(200,90,70)] transition-colors">{item.title}</h4>
+                  <p class="text-[13px] text-black/60 leading-relaxed max-w-sm">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-black/10 py-24 sm:py-32">
+      <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <p class="text-[11px] font-medium text-black/50 mb-6 uppercase tracking-[0.2em]">/ open positions /</p>
+          <h2 class="text-4xl sm:text-5xl font-normal leading-[1.1] text-black tracking-tight mb-6">Open Roles</h2>
+          <p class="text-sm leading-relaxed text-black/60">We're always looking for talented people. Don't see a perfect match? Send us a speculative application.</p>
+        </div>
+
+        <div class="mx-auto max-w-3xl rounded-[2rem] bg-[#f4f4f5] p-8 sm:p-12 text-center">
+          <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#1C2B32]/[0.06] mx-auto">
+            <svg class="h-7 w-7 text-[#1C2B32]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-normal text-black mb-3">No specific openings right now</h3>
+          <p class="text-[13px] text-black/60 leading-relaxed mb-8 max-w-md mx-auto">
+            We're always interested in hearing from talented engineers, designers, and product people. Send us your CV and tell us what excites you about Vehicle Imagery.
+          </p>
+          <a href="mailto:careers@vehicleimagery.com" class="inline-flex items-center justify-center gap-3 rounded-full bg-[#2d2d2d] px-6 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-black">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="rotate-[-45deg]">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Send Application
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 sm:py-32">
+      <div class="mx-auto max-w-7xl px-6 sm:px-12 lg:px-16">
+        <div class="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] px-8 py-16 sm:px-16 sm:py-20" style="background-color: rgb(10, 43, 49);">
+          <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+            <div class="max-w-xl">
+              <h2 class="text-3xl sm:text-4xl font-normal tracking-tight text-white leading-[1.15] mb-4">
+                Not ready to apply yet?
+              </h2>
+              <p class="text-[14px] text-white/60 leading-relaxed">
+                Explore our product, read the docs, or check out the blog to learn more about what we're building.
+              </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 shrink-0">
+              <a href="/documentation" class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-[13px] font-medium text-black transition-colors hover:bg-[rgb(200,90,70)] hover:text-white">
+                View Documentation
+              </a>
+              <a href="/blog" class="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-[13px] font-medium text-white transition-colors hover:bg-white/10">
+                Read the Blog
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
