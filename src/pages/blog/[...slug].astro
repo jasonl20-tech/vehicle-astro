@@ -303,48 +303,48 @@ const breadcrumbSchema = {
 
 <style is:global>
   /* Blog prose: article body + excerpt + author bio */
-  .blog-prose :global(p) {
+  .blog-prose p {
     margin-top: 0;
     margin-bottom: 1em;
   }
-  .blog-prose :global(p:last-child) {
+  .blog-prose p:last-child {
     margin-bottom: 0;
   }
-  .blog-prose :global(a) {
+  .blog-prose a {
     color: var(--color-accent);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
-  .blog-prose :global(a:hover) {
+  .blog-prose a:hover {
     color: var(--color-accent-hover);
   }
-  .blog-prose :global(strong) {
+  .blog-prose strong {
     font-weight: 700;
     color: #1C2B32;
   }
-  .blog-prose :global(em) {
+  .blog-prose em {
     font-style: italic;
   }
-  .blog-prose :global(ul) {
+  .blog-prose ul {
     margin-top: 1.25em;
     margin-bottom: 1.25em;
     padding-left: 1.5em;
     list-style-type: disc;
   }
-  .blog-prose :global(ol) {
+  .blog-prose ol {
     margin-top: 1.25em;
     margin-bottom: 1.25em;
     padding-left: 1.5em;
     list-style-type: decimal;
   }
-  .blog-prose :global(li) {
+  .blog-prose li {
     margin-bottom: 0.5em;
     padding-left: 0.25em;
   }
-  .blog-prose :global(li::marker) {
+  .blog-prose li::marker {
     color: var(--color-accent);
   }
-  .blog-prose :global(blockquote) {
+  .blog-prose blockquote {
     margin: 2em 0;
     padding: 1em 0 1em 1.25em;
     border-left: 4px solid var(--color-accent);
@@ -352,10 +352,21 @@ const breadcrumbSchema = {
     font-style: italic;
     color: #1C2B32;
   }
-  .blog-prose :global(blockquote p:last-child) {
+  .blog-prose blockquote p:last-child {
     margin-bottom: 0;
   }
-  .blog-prose :global(h2) {
+  .blog-prose h1 {
+    margin-top: 2.25em;
+    margin-bottom: 0.8em;
+    font-size: 1.9rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: #1C2B32;
+  }
+  .blog-prose h1:first-child {
+    margin-top: 0;
+  }
+  .blog-prose h2 {
     margin-top: 2em;
     margin-bottom: 0.75em;
     font-size: 1.5rem;
@@ -363,51 +374,51 @@ const breadcrumbSchema = {
     line-height: 1.25;
     color: #1C2B32;
   }
-  .blog-prose :global(h2:first-child) {
+  .blog-prose h2:first-child {
     margin-top: 0;
   }
-  .blog-prose :global(h3) {
+  .blog-prose h3 {
     margin-top: 1.75em;
     margin-bottom: 0.5em;
     font-size: 1.25rem;
     font-weight: 700;
     color: #1C2B32;
   }
-  .blog-prose :global(h4) {
+  .blog-prose h4 {
     margin-top: 1.5em;
     margin-bottom: 0.5em;
     font-size: 1.1rem;
     font-weight: 700;
     color: #1C2B32;
   }
-  .blog-prose :global(hr) {
+  .blog-prose hr {
     margin: 2.5em 0;
     border: none;
     border-top: 1px solid rgba(28, 43, 50, 0.12);
   }
-  .blog-prose :global(figure) {
+  .blog-prose figure {
     margin: 2em 0;
   }
-  .blog-prose :global(figure img) {
+  .blog-prose figure img {
     width: 100%;
     height: auto;
     border-radius: 0;
     border: 1px solid rgba(28, 43, 50, 0.08);
   }
-  .blog-prose :global(figcaption) {
+  .blog-prose figcaption {
     margin-top: 0.75em;
     font-size: 0.875rem;
     color: #1C2B32;
     opacity: 0.7;
   }
-  .blog-prose :global(code) {
+  .blog-prose code {
     font-size: 0.9em;
     padding: 0.15em 0.4em;
     background: rgba(28, 43, 50, 0.08);
     border: 1px solid rgba(28, 43, 50, 0.1);
     font-family: ui-monospace, monospace;
   }
-  .blog-prose :global(pre) {
+  .blog-prose pre {
     margin: 1.5em 0;
     padding: 1.25em;
     overflow-x: auto;
@@ -415,7 +426,7 @@ const breadcrumbSchema = {
     color: #FBFBF7;
     border: none;
   }
-  .blog-prose :global(pre code) {
+  .blog-prose pre code {
     padding: 0;
     background: none;
     border: none;
