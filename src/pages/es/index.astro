@@ -621,7 +621,7 @@ const homepageStructuredData: unknown[] = [
             >
               <div class="flex flex-wrap items-center gap-2 mb-2">
                 <span class="text-[10px] font-bold uppercase tracking-wider text-black/70">
-                  {item.category ?? item.type === 'changelog' ? 'Changelog' : 'Blog'}
+                  {item.type === 'changelog' ? 'CHANGELOG' : 'BLOG'}
                 </span>
                 <time class="text-xs font-mono text-gray-600" datetime={item.date}>
                   {item.date ? new Date(item.date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
