@@ -13,7 +13,10 @@ type Env = {
 
 const MAX_BODY_BYTES = 64 * 1024;
 
-function buildMetadata(request: Request): string {
+/** Footer-Newsletter: gleiches hidden `subject` wie in Footer.astro */
+const NEWSLETTER_SUBJECT = 'Newsletter Subscribe';
+
+function buildRequestMetadata(request: Request): Record<string, string> {
   const h = (name: string) => request.headers.get(name) ?? '';
   const cfConnecting = h('cf-connecting-ip');
   const xff = h('x-forwarded-for');
@@ -33,7 +36,11 @@ function buildMetadata(request: Request): string {
     if (meta[k] === '') delete meta[k];
   }
 
-  return JSON.stringify(meta);
+  return meta;
+}
+
+function buildMetadata(request: Request): string {
+  return JSON.stringify(buildRequestMetadata(request));
 }
 
 type PagesContext = { request: Request; env: Env };
@@ -87,17 +94,30 @@ export const onRequestPost = async (context: PagesContext): Promise<Response> =>
     typeof subject === 'string' && subject.trim() ? subject.trim().slice(0, 500) : 'unknown';
 
   const id = crypto.randomUUID();
-  const payload = JSON.stringify(record);
   const metadata = buildMetadata(request);
 
   try {
-    await env.database
-      .prepare(
-        `INSERT INTO submissions (id, form_tag, payload, metadata, spam)
-         VALUES (?, ?, ?, ?, 0)`,
-      )
-      .bind(id, formTag, payload, metadata)
-      .run();
+    if (formTag === NEWSLETTER_SUBJECT) {
+      const nlMeta = JSON.stringify({
+        form: { email: record.email, subject: record.subject },
+        request: buildRequestMetadata(request),
+      });
+      await env.database
+        .prepare(
+          `INSERT INTO newsletter (id, metadata, active) VALUES (?, ?, 1)`,
+        )
+        .bind(id, nlMeta)
+        .run();
+    } else {
+      const payload = JSON.stringify(record);
+      await env.database
+        .prepare(
+          `INSERT INTO submissions (id, form_tag, payload, metadata, spam)
+           VALUES (?, ?, ?, ?, 0)`,
+        )
+        .bind(id, formTag, payload, metadata)
+        .run();
+    }
   } catch (e) {
     console.error('D1 insert failed', e);
     return new Response(JSON.stringify({ error: 'Storage failed' }), {
