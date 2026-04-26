@@ -1,9 +1,0 @@
-# D1-Binding in Production: Cloudflare Pages → dein Projekt → Settings → Functions
-# → D1 database bindings → Variable name: database (muss env.database in der Function sein).
-#
-# Lokal testen: nach `npm run build` z. B.
-#   npx wrangler pages dev dist --d1=DATABASE=deine_d1_datenbank
-# (DATABASE durch den Namen aus wrangler d1 list ersetzen, analog zur Dashboard-Bindung.)
-name = "vehicleimagery-astro"
-compatibility_date = "2024-12-01"
-pages_build_output_dir = "dist"
