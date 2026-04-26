@@ -1,4 +1,11 @@
-/// <reference types="@cloudflare/workers-types" />
+/** Minimal D1-Types; Cloudflare bundelt die echten Laufzeittypen. */
+interface D1PreparedStatement {
+  bind(...values: unknown[]): D1PreparedStatement;
+  run(): Promise<unknown>;
+}
+interface D1Database {
+  prepare(query: string): D1PreparedStatement;
+}
 
 type Env = {
   database: D1Database;
@@ -29,7 +36,9 @@ function buildMetadata(request: Request): string {
   return JSON.stringify(meta);
 }
 
-export const onRequestPost: PagesFunction<Env> = async (context) => {
+type PagesContext = { request: Request; env: Env };
+
+export const onRequestPost = async (context: PagesContext): Promise<Response> => {
   const { request, env } = context;
 
   if (!env.database) {
