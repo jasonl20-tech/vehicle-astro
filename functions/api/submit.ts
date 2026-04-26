@@ -50,21 +50,6 @@ function buildMetadata(request: Request): string {
   return JSON.stringify(buildRequestMetadata(request));
 }
 
-function normalizeEmail(record: Record<string, unknown>): string | null {
-  const v = record.email;
-  if (typeof v !== 'string') return null;
-  const s = v.trim().toLowerCase();
-  if (!s || !s.includes('@')) return null;
-  return s;
-}
-
-function businessNameFromRecord(record: Record<string, unknown>): string | null {
-  const v = record.company;
-  if (typeof v !== 'string') return null;
-  const t = v.trim();
-  return t || null;
-}
-
 type PagesContext = { request: Request; env: Env };
 
 export const onRequestPost = async (context: PagesContext): Promise<Response> => {
@@ -132,37 +117,22 @@ export const onRequestPost = async (context: PagesContext): Promise<Response> =>
         .run();
     } else {
       const payload = JSON.stringify(record);
-      const email = normalizeEmail(record);
-      const businessName = businessNameFromRecord(record);
-      const crmId = crypto.randomUUID();
-
-      const subStmt = isTrialFormTag(formTag)
-        ? env.database
-            .prepare(
-              `INSERT INTO trial_submissions (id, form_tag, payload, metadata, spam)
-               VALUES (?, ?, ?, ?, 0)`,
-            )
-            .bind(id, formTag, payload, metadata)
-        : env.database
-            .prepare(
-              `INSERT INTO submissions (id, form_tag, payload, metadata, spam)
-               VALUES (?, ?, ?, ?, 0)`,
-            )
-            .bind(id, formTag, payload, metadata);
-
-      if (email) {
-        const crmStmt = env.database
+      if (isTrialFormTag(formTag)) {
+        await env.database
           .prepare(
-            `INSERT INTO crm_customers (id, email, status, business_name)
-             VALUES (?, ?, 'unbearbeitet', ?)
-             ON CONFLICT(email) DO UPDATE SET
-               updated_at = CURRENT_TIMESTAMP,
-               business_name = COALESCE(excluded.business_name, crm_customers.business_name)`,
+            `INSERT INTO trial_submissions (id, form_tag, payload, metadata, spam)
+             VALUES (?, ?, ?, ?, 0)`,
           )
-          .bind(crmId, email, businessName);
-        await env.database.batch([subStmt, crmStmt]);
+          .bind(id, formTag, payload, metadata)
+          .run();
       } else {
-        await subStmt.run();
+        await env.database
+          .prepare(
+            `INSERT INTO submissions (id, form_tag, payload, metadata, spam)
+             VALUES (?, ?, ?, ?, 0)`,
+          )
+          .bind(id, formTag, payload, metadata)
+          .run();
       }
     }
   } catch (e) {
