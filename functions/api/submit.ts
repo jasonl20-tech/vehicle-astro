@@ -16,6 +16,13 @@ const MAX_BODY_BYTES = 64 * 1024;
 /** Footer-Newsletter: gleiches hidden `subject` wie in Footer.astro */
 const NEWSLETTER_SUBJECT = 'Newsletter Subscribe';
 
+/** Trial: Startseite + /trial (EN) und ES-Index-Fassung – gleiche `subject`-Werte wie in den Astro-Dateien. */
+const TRIAL_FORM_TAGS = new Set<string>(['Free Trial Request', 'Solicitud de prueba gratuita']);
+
+function isTrialFormTag(tag: string): boolean {
+  return TRIAL_FORM_TAGS.has(tag);
+}
+
 function buildRequestMetadata(request: Request): Record<string, string> {
   const h = (name: string) => request.headers.get(name) ?? '';
   const cfConnecting = h('cf-connecting-ip');
@@ -129,12 +136,19 @@ export const onRequestPost = async (context: PagesContext): Promise<Response> =>
       const businessName = businessNameFromRecord(record);
       const crmId = crypto.randomUUID();
 
-      const subStmt = env.database
-        .prepare(
-          `INSERT INTO submissions (id, form_tag, payload, metadata, spam)
-           VALUES (?, ?, ?, ?, 0)`,
-        )
-        .bind(id, formTag, payload, metadata);
+      const subStmt = isTrialFormTag(formTag)
+        ? env.database
+            .prepare(
+              `INSERT INTO trial_submissions (id, form_tag, payload, metadata, spam)
+               VALUES (?, ?, ?, ?, 0)`,
+            )
+            .bind(id, formTag, payload, metadata)
+        : env.database
+            .prepare(
+              `INSERT INTO submissions (id, form_tag, payload, metadata, spam)
+               VALUES (?, ?, ?, ?, 0)`,
+            )
+            .bind(id, formTag, payload, metadata);
 
       if (email) {
         const crmStmt = env.database
