@@ -166,7 +166,7 @@ const company = await getCompanyInfo();
           form.addEventListener('submit', (e) => {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(form).entries());
-            fetch('https://submit-form.com/v6dFS1FAS', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
+            fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
 
             formContent.style.opacity = '0';
             formContent.style.transform = 'scale(0.95)';

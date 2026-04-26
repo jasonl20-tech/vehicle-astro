@@ -21,6 +21,7 @@
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
     "contentful-management": "^11.73.1"
   }
 }

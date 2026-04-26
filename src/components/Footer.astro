@@ -116,7 +116,7 @@ const companyExtra = dynamicByCategory.get('company') || [];
               form?.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const data = Object.fromEntries(new FormData(form).entries());
-                fetch('https://submit-form.com/v6dFS1FAS', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
+                fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
                 if (content) { content.style.opacity = '0'; content.style.transition = 'opacity 0.3s ease'; }
                 setTimeout(() => { content?.classList.add('hidden'); wrapper?.classList.add('success'); success?.classList.remove('hidden'); success?.classList.add('flex'); if (success) { success.style.opacity = '0'; requestAnimationFrame(() => { success.style.transition = 'opacity 0.5s ease'; success.style.opacity = '1'; }); } }, 300);
               });
