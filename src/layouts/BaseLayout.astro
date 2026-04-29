@@ -91,72 +91,13 @@ const alternateUrls = getAlternateUrls(Astro.url.pathname, siteUrl);
         },
       ]},
     )} />
-    <!-- Google Tag Manager: nach load/idle laden, damit LCP (v. a. Mobile) nicht blockiert -->
-    <script is:inline define:vars={{ gtmId: 'GTM-57V9GF6S' }}>
-      (function(w,d,s,l,i){function g(){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;if(f&&f.parentNode)f.parentNode.insertBefore(j,f);}w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});if(w.requestIdleCallback){w.requestIdleCallback(function(){g();},{timeout:2500});}else if(d.readyState==='complete'){g();}else{w.addEventListener('load',function(){setTimeout(g,0);});}})(window,document,'script','dataLayer',gtmId);
-    </script>
-    <!-- End Google Tag Manager -->
-    <!-- Silktide CSS non-blocking: lädt nach erstem Paint -->
-    <link rel="stylesheet" href="/silktide/silktide-consent-manager.css" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="/silktide/silktide-consent-manager.css" /></noscript>
   </head>
   <body class="antialiased min-h-screen bg-cream text-gray-900">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-57V9GF6S" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
     <slot />
     <script>
       document.addEventListener('contextmenu', (e) => {
         if (e.target && e.target.tagName === 'IMG') e.preventDefault();
       });
     </script>
-    <!-- Silktide JS mit defer: blockiert nicht das Parsing, Init läuft wenn Script geladen -->
-    <script is:inline defer src="/silktide/silktide-consent-manager.js"></script>
-    <script is:inline>
-      (function initSilktide() {
-        var c = window.silktideConsentManager;
-        if (c) {
-          c.init({
-            consentTypes: [
-              { id: 'essential', label: 'Essential', description: 'Necessary for the website to function. Cannot be switched off.', required: true },
-              { id: 'analytics', label: 'Analytics', description: 'Help us understand how visitors use the site.', defaultValue: true, gtag: 'analytics_storage' },
-              { id: 'marketing', label: 'Marketing', description: 'Used to deliver relevant advertisements.', defaultValue: false, gtag: ['ad_storage', 'ad_user_data', 'ad_personalization'] },
-            ],
-            text: {
-              prompt: { description: '<p>We use cookies to improve your experience and analyse traffic. Choose your preferences.</p>', acceptAllButtonText: 'Accept all', rejectNonEssentialButtonText: 'Reject non-essential', preferencesButtonText: 'Preferences' },
-              preferences: { title: 'Cookie preferences', description: '<p>Choose which cookies you want to accept.</p>', saveButtonText: 'Save and close', creditLinkText: 'Free cookie banner by Silktide' },
-            },
-            prompt: { position: 'bottomRight' },
-            icon: { position: 'bottomLeft' },
-          });
-          return;
-        }
-        function run() { setTimeout(initSilktide, 0); }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
-        else run();
-      })();
-    </script>
-    <style is:global>
-      #stcm-wrapper {
-        --primaryColor: #1C2B32;
-        --backgroundColor: #FBFBF7;
-        --textColor: #1C2B32;
-        --iconColor: #1C2B32;
-        --iconBackgroundColor: #FBFBF7;
-      }
-      /* Banner und Icon fest rechts */
-      #stcm-banner.stcm-pos-bottom-right,
-      #stcm-banner {
-        left: auto !important;
-        right: 16px !important;
-      }
-      #stcm-icon.stcm-pos-bottom-left,
-      #stcm-icon {
-        left: 10px !important;
-        right: auto !important;
-      }
-    </style>
   </body>
 </html>

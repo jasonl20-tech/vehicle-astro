@@ -200,7 +200,7 @@ const companyExtra = dynamicByCategory.get('company') || [];
           <span class="text-white/30" aria-hidden="true">&middot;</span>
           <a class="hover:text-white transition-colors" href={l('/terms')}>{t('footer.termsOfService')}</a>
           <span class="text-white/30" aria-hidden="true">&middot;</span>
-          <a class="hover:text-white transition-colors" href={l('/cookies')}>{t('footer.cookieSettings')}</a>
+          <a id="footer-cookie-settings" class="hover:text-white transition-colors" href={l('/cookies')}>{t('footer.cookieSettings')}</a>
         </div>
         <div class="flex items-center gap-4">
           <a class="text-gray-300 hover:text-white transition-colors" href={company.twitterUrl} aria-label="X (Twitter)">
@@ -214,3 +214,15 @@ const companyExtra = dynamicByCategory.get('company') || [];
     </div>
   </div>
 </footer>
+
+<script>
+  (function () {
+    const cookieSettingsLink = document.getElementById('footer-cookie-settings');
+    cookieSettingsLink?.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (window.zaraz && window.zaraz.consent) {
+        window.zaraz.consent.modal = true;
+      }
+    });
+  })();
+</script>
