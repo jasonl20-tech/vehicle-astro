@@ -1,15 +1,4 @@
-/** Minimal D1-Types; Cloudflare bundelt die echten Laufzeittypen. */
-interface D1PreparedStatement {
-  bind(...values: unknown[]): D1PreparedStatement;
-  run(): Promise<unknown>;
-}
-interface D1Database {
-  prepare(query: string): D1PreparedStatement;
-}
-
-type Env = {
-  database: D1Database;
-};
+import { resolveD1Database, type D1PagesEnv } from '../_lib/d1';
 
 const MAX_BODY_BYTES = 64 * 1024;
 
@@ -50,13 +39,14 @@ function buildMetadata(request: Request): string {
   return JSON.stringify(buildRequestMetadata(request));
 }
 
-type PagesContext = { request: Request; env: Env };
+type PagesContext = { request: Request; env: D1PagesEnv };
 
 export const onRequestPost = async (context: PagesContext): Promise<Response> => {
   const { request, env } = context;
 
-  if (!env.database) {
-    return new Response(JSON.stringify({ error: 'D1 not configured' }), {
+  const db = resolveD1Database(env);
+  if (!db) {
+    return new Response(JSON.stringify({ error: 'D1 not configured (binding webseite or database)' }), {
       status: 503,
       headers: { 'content-type': 'application/json' },
     });
@@ -109,16 +99,14 @@ export const onRequestPost = async (context: PagesContext): Promise<Response> =>
         form: { email: record.email, subject: record.subject },
         request: buildRequestMetadata(request),
       });
-      await env.database
-        .prepare(
-          `INSERT INTO newsletter (id, metadata, active) VALUES (?, ?, 1)`,
-        )
+      await db
+        .prepare(`INSERT INTO newsletter (id, metadata, active) VALUES (?, ?, 1)`)
         .bind(id, nlMeta)
         .run();
     } else {
       const payload = JSON.stringify(record);
       if (isTrialFormTag(formTag)) {
-        await env.database
+        await db
           .prepare(
             `INSERT INTO trial_submissions (id, form_tag, payload, metadata, spam)
              VALUES (?, ?, ?, ?, 0)`,
@@ -126,7 +114,7 @@ export const onRequestPost = async (context: PagesContext): Promise<Response> =>
           .bind(id, formTag, payload, metadata)
           .run();
       } else {
-        await env.database
+        await db
           .prepare(
             `INSERT INTO submissions (id, form_tag, payload, metadata, spam)
              VALUES (?, ?, ?, ?, 0)`,
