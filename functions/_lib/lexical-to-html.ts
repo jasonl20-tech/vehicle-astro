@@ -2,6 +2,7 @@
  * Lexical → HTML für CMS-Payload (headless, ohne Editor-UI).
  * Knotenliste orientiert sich an typischen Rich-Text-Playground-Konfigurationen.
  */
+import './prism-ssr-shim';
 import { createHeadlessEditor } from '@lexical/headless';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
