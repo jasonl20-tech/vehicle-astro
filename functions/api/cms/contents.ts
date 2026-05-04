@@ -1,4 +1,5 @@
 import { resolveD1Database, type D1PagesEnv } from '../../_lib/d1';
+import { lexicalJsonValueToHtml } from '../../_lib/lexical-to-html';
 
 const MAX_LIMIT = 200;
 
@@ -52,6 +53,35 @@ function parseRow(raw: DbRow) {
   };
 }
 
+type ParsedContentRow = ReturnType<typeof parseRow>;
+
+function withLexicalHtml(
+  row: ParsedContentRow,
+  lexicalFields: string[] | null,
+): ParsedContentRow & { lexicalHtml?: Record<string, string | null> } {
+  if (!lexicalFields?.length) return row;
+
+  const p = row.payload;
+  if (!p || typeof p !== 'object' || Array.isArray(p)) return row;
+
+  const record = p as Record<string, unknown>;
+  const lexicalHtml: Record<string, string | null> = {};
+  for (const key of lexicalFields) {
+    if (!key) continue;
+    lexicalHtml[key] = lexicalJsonValueToHtml(record[key]);
+  }
+
+  return { ...row, lexicalHtml };
+}
+
+function splitLexicalFieldParam(param: string | null): string[] | null {
+  if (!param?.trim()) return null;
+  return param
+    .split(',')
+    .map((x) => x.trim())
+    .filter(Boolean);
+}
+
 interface RequestContext {
   request: Request;
   env: D1PagesEnv;
@@ -74,6 +104,7 @@ export async function onRequest(context: RequestContext): Promise<Response> {
   }
 
   const url = new URL(request.url);
+  const lexicalFieldsRaw = splitLexicalFieldParam(url.searchParams.get('lexicalFields'));
   const singleId = url.searchParams.get('id');
 
   try {
@@ -96,7 +127,7 @@ export async function onRequest(context: RequestContext): Promise<Response> {
       if (!row) {
         return json({ error: 'Not found', item: null }, 404);
       }
-      return json({ item: parseRow(row) }, 200);
+      return json({ item: withLexicalHtml(parseRow(row), lexicalFieldsRaw) }, 200);
     }
 
     const contentModelId = url.searchParams.get('contentModelId');
@@ -130,7 +161,7 @@ export async function onRequest(context: RequestContext): Promise<Response> {
 
     const { results } = await db.prepare(stmt).bind(contentModelId, locale, status, limit).all<DbRow>();
 
-    const items = (results ?? []).map(parseRow);
+    const items = (results ?? []).map((r) => withLexicalHtml(parseRow(r), lexicalFieldsRaw));
 
     return json({ items, count: items.length });
   } catch (e) {

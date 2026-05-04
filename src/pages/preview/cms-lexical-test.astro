@@ -1,0 +1,176 @@
+---
+/** Nur zum manuellen Testen auf Preview/Production; keine Indexierung. */
+export const prerender = true;
+---
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>CMS Lexical Test</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 56rem;
+        margin: 0 auto;
+        padding: 1.5rem;
+        line-height: 1.5;
+      }
+      textarea {
+        width: 100%;
+        min-height: 10rem;
+        font-family: ui-monospace, monospace;
+        font-size: 0.85rem;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1rem 0;
+        align-items: center;
+      }
+      .out {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        border-radius: 6px;
+        min-height: 4rem;
+        margin-top: 1rem;
+      }
+      .out :global(table) {
+        border-collapse: collapse;
+        margin: 0.75rem 0;
+      }
+      .out :global(th),
+      .out :global(td) {
+        border: 1px solid #999;
+        padding: 0.35rem 0.6rem;
+      }
+      .err {
+        color: #b91c1c;
+        white-space: pre-wrap;
+      }
+      code.small {
+        font-size: 0.8rem;
+        background: #f4f4f5;
+        padding: 0.1rem 0.35rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lexical → HTML (API-Test)</h1>
+    <p>
+      Fügt unten gespeicherten Lexical-State ein (wie in <code class="small">payload_json.richText2</code>) und rendert über
+      <code class="small">POST /api/cms/render-lexical</code>. Funktioniert nur, wenn diese Seite unter derselben Origin wie die Worker-API liegt.
+    </p>
+
+    <h2>Rohdaten aus D1 laden (optional)</h2>
+    <div class="row">
+      <label>
+        Content-Model-ID
+        <input type="text" id="cm-id" placeholder="5a51df6c-cc11-4e30-a29f-538f819c48c4" style="width: 22rem" />
+      </label>
+      <label>
+        Locale
+        <input type="text" id="cm-locale" value="de-DE" style="width: 6rem" />
+      </label>
+      <label>
+        lexicalFields (CSV)
+        <input type="text" id="cm-fields" placeholder="richText2" style="width: 10rem" />
+      </label>
+      <button type="button" id="btn-load">Liste laden</button>
+    </div>
+    <pre id="load-result" class="err" style="font-size: 0.78rem"></pre>
+
+    <h2>Direkt: Lexical-State (JSON oder String mit root)</h2>
+    <textarea id="lex-input" placeholder='{"root":{"type":"root",...}}  oder bereits gejsoneter String eines Feldes'></textarea>
+    <div class="row">
+      <button type="button" id="btn-render">Als HTML rendern</button>
+    </div>
+    <pre id="err" class="err"></pre>
+    <div id="preview" class="out" aria-live="polite"></div>
+
+    <script>
+      async function postRender(payload) {
+        const res = await fetch('/api/cms/render-lexical', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ lexical: payload }),
+        });
+        const data = await res.json();
+        return { ok: res.ok, res, data };
+      }
+
+      function showErr(el, msg) {
+        el.textContent = msg ? String(msg) : '';
+      }
+
+      document.getElementById('btn-render').addEventListener('click', async () => {
+        const errEl = document.getElementById('err');
+        const previewEl = document.getElementById('preview');
+        showErr(errEl, '');
+        previewEl.innerHTML = '';
+
+        let raw = document.getElementById('lex-input').value.trim();
+        if (!raw) {
+          showErr(errEl, 'Bitte Lexical-State einfügen.');
+          return;
+        }
+
+        let lexical = null;
+        try {
+          lexical = JSON.parse(raw);
+          while (typeof lexical === 'string') {
+            const t = lexical.trim();
+            if (!t.startsWith('{')) break;
+            lexical = JSON.parse(lexical);
+          }
+        } catch (e) {
+          showErr(errEl, 'Kein gültiges JSON.');
+          return;
+        }
+        if (!lexical || typeof lexical !== 'object' || !lexical.root) {
+          showErr(errEl, 'Erwarte Lexical SerializedEditorState mit Schlüssel "root".');
+          return;
+        }
+
+        try {
+          const { ok, data } = await postRender(lexical);
+          if (!ok) {
+            showErr(errEl, JSON.stringify(data, null, 2));
+            return;
+          }
+          previewEl.innerHTML = data.html || '';
+        } catch (e) {
+          showErr(errEl, String(e));
+        }
+      });
+
+      document.getElementById('btn-load').addEventListener('click', async () => {
+        const out = document.getElementById('load-result');
+        out.textContent = '';
+        const id = document.getElementById('cm-id').value.trim();
+        const locale = document.getElementById('cm-locale').value.trim() || 'de-DE';
+        const fields = document.getElementById('cm-fields').value.trim();
+        if (!id) {
+          out.textContent = 'contentModelId fehlt';
+          return;
+        }
+        const qs = new URLSearchParams({
+          contentModelId: id,
+          locale,
+          status: 'published',
+          limit: '10',
+        });
+        if (fields) qs.set('lexicalFields', fields);
+        try {
+          const res = await fetch('/api/cms/contents?' + qs.toString());
+          const body = await res.json();
+          out.textContent = JSON.stringify(body, null, 2);
+        } catch (e) {
+          out.textContent = String(e);
+        }
+      });
+    </script>
+  </body>
+</html>
