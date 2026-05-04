@@ -1,11 +1,7 @@
 /**
- * @lexical/code zieht prismjs-Grammatiken ein; die erwarten eine globale Variable `Prism`.
- * Im gebündelten Workers-Code existiert die sonst nicht → vor Lexical/Code setzen.
+ * @lexical/code / Prism-Grammatiken erwarten globales `Prism`.
  */
-import Prism from 'prismjs';
-
-const g = globalThis as typeof globalThis & { Prism: typeof Prism };
-g.Prism = Prism;
+import './prism-assign-global';
 
 import 'prismjs/components/prism-markup';
 import 'prismjs/components/prism-clike';
