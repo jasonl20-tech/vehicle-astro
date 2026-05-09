@@ -2,31 +2,17 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
-import { getEntries } from '../../../lib/contentful';
-import { renderRichText, richTextToPlainText, buildAssetMap } from '../../../lib/contentful-rich-text';
-import type { Document } from '@contentful/rich-text-types';
+import { loadFaqs } from '../../../lib/cms-d1-content';
 
 export async function getStaticPaths() {
   let categories: string[] = [];
   try {
-    const res = await getEntries({ content_type: 'faq', limit: 1000, locale: 'es' });
-    const items = res.items || [];
-    const catSet = new Set<string>();
-    for (const item of items) {
-      const cat = (item as { fields?: { category?: string } }).fields?.category;
-      if (cat) {
-        catSet.add(cat.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''));
-      }
-    }
-    categories = Array.from(catSet);
-  } catch {
-    categories = ['general', 'api', 'billing', 'support'];
+    const res = await loadFaqs({ locale: 'es' });
+    categories = res.categories.map((c) => c.slug);
+  } catch (e) {
+    console.warn('[es/faq/[category]] D1 load failed:', e);
   }
-
-  if (categories.length === 0) {
-    categories = ['general', 'api', 'billing', 'support'];
-  }
-
+  if (categories.length === 0) categories = ['general', 'api', 'billing', 'support'];
   return categories.map((cat) => ({ params: { category: cat } }));
 }
 
@@ -43,30 +29,14 @@ let faqs: FaqItem[] = [];
 let categoryLabel = category ? category.charAt(0).toUpperCase() + category.slice(1) : '';
 
 try {
-  const res = await getEntries({ content_type: 'faq', limit: 1000, include: 2, locale: 'es' });
-  const assetMap = buildAssetMap(res?.includes);
-  const items = res.items || [];
-
-  for (const item of items) {
-    const fields = (item as { fields?: { category?: string; question?: string; answer?: Document; order?: number } }).fields;
-    if (!fields?.category || !fields?.question) continue;
-
-    const slug = fields.category.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    if (slug !== category) continue;
-
-    categoryLabel = fields.category.charAt(0).toUpperCase() + fields.category.slice(1);
-
-    faqs.push({
-      question: fields.question,
-      answerHtml: fields.answer ? renderRichText(fields.answer, assetMap) : '',
-      answerText: fields.answer ? richTextToPlainText(fields.answer, 0) : '',
-      order: fields.order ?? 999,
-    });
-  }
-
-  faqs.sort((a, b) => a.order - b.order);
-} catch {
-  faqs = [];
+  const res = await loadFaqs({ locale: 'es' });
+  const matchedCat = res.categories.find((c) => c.slug === category);
+  if (matchedCat) categoryLabel = matchedCat.label;
+  faqs = res.entries
+    .filter((e) => e.categorySlug === category)
+    .map((e) => ({ question: e.question, answerHtml: e.answerHtml, answerText: e.answerText, order: e.order }));
+} catch (e) {
+  console.warn('[es/faq/[category]] D1 load failed:', e);
 }
 
 const siteUrl = Astro.url.origin;

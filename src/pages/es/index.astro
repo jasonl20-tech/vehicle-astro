@@ -2,62 +2,43 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import AnnouncementBar from '../../components/AnnouncementBar.astro';
-import { getEntries, getSiteStats, getCompanyInfo } from '../../lib/contentful';
-import { buildAssetMap, richTextToPlainText } from '../../lib/contentful-rich-text';
+import { getSiteStats, getCompanyInfo } from '../../lib/contentful';
+import { richTextToPlainText } from '../../lib/contentful-rich-text';
+import { loadChangelogs, loadBlogsWithIncludes } from '../../lib/cms-d1-content';
 
 type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; category?: string; type: 'changelog' | 'blog' };
 let latestUpdates: UpdateItem[] = [];
-let announcementBar: {
-  message: import('@contentful/rich-text-types').Document | null;
-  link: string | null;
-  linkColor: string | null;
-  backgroundColor: string | null;
-  assetMap?: import('../lib/contentful-rich-text').AssetMap;
-} | null = null;
 
 try {
-  const [changelogRes, blogRes, announcementRes] = await Promise.all([
-    getEntries({ content_type: 'api', order: '-sys.createdAt', limit: 4 }),
-    getEntries({ content_type: 'blogPost', order: '-sys.createdAt', limit: 4 }).catch(() => ({ items: [] })),
-    getEntries({ content_type: 'announcementBar', limit: 1, order: '-sys.updatedAt', include: 2 }).catch(() => ({ items: [], includes: {} })),
+  const [changelogRes, blogRes] = await Promise.all([
+    loadChangelogs({ locale: 'es', limit: 10 }).catch(() => ({ items: [] })),
+    loadBlogsWithIncludes({ locale: 'es', limit: 10 }).catch(() => ({ items: [], includes: {} })),
   ]);
-  const firstAnnouncement = announcementRes?.items?.[0] as { fields?: { message?: unknown; link?: string; linkColor?: string; backgroundColor?: string } } | undefined;
-  if (firstAnnouncement?.fields?.message) {
-    announcementBar = {
-      message: firstAnnouncement.fields.message as import('@contentful/rich-text-types').Document,
-      link: firstAnnouncement.fields.link ?? null,
-      linkColor: firstAnnouncement.fields.linkColor ?? null,
-      backgroundColor: firstAnnouncement.fields.backgroundColor ?? null,
-      assetMap: buildAssetMap(announcementRes?.includes),
-    };
-  }
-  const changelogs: UpdateItem[] = (changelogRes.items || [])
-    .filter((i: { fields?: { slug?: string } }) => i.fields?.slug)
-    .map((i: { fields?: { slug?: string; title?: string; excerpt?: string; category?: string }; sys?: { createdAt?: string } }) => ({
-      slug: i.fields!.slug!,
-      title: i.fields?.title ?? 'Sin título',
-      date: i.sys?.createdAt ?? '',
-      excerpt: i.fields?.excerpt,
-      category: i.fields?.category,
-      type: 'changelog' as const,
-    }));
-  const blogs: UpdateItem[] = (blogRes.items || [])
-    .filter((i: { fields?: { slug?: string } }) => i.fields?.slug)
-    .map((i: { fields?: { slug?: string; title?: string; excerpt?: unknown; publishedAt?: string; category?: string }; sys?: { createdAt?: string } }) => ({
-      slug: i.fields!.slug!,
-      title: i.fields?.title ?? 'Sin título',
-      date: i.fields?.publishedAt ?? i.sys?.createdAt ?? '',
-      excerpt: i.fields?.excerpt ? richTextToPlainText(i.fields.excerpt as import('@contentful/rich-text-types').Document, 120) : undefined,
-      category: i.fields?.category ?? 'Blog',
+
+  const changelogs: UpdateItem[] = (changelogRes.items || []).slice(0, 4).map((c) => ({
+    slug: c.slug,
+    title: c.title,
+    date: c.date,
+    excerpt: c.excerpt,
+    type: 'changelog' as const,
+  }));
+
+  const blogs: UpdateItem[] = (blogRes.items || []).slice(0, 4)
+    .filter((i) => i.fields?.slug)
+    .map((i) => ({
+      slug: i.fields.slug,
+      title: i.fields.title ?? 'Sin título',
+      date: i.fields.publishedAt ?? '',
+      excerpt: i.fields.excerpt ? richTextToPlainText(i.fields.excerpt, 120) : undefined,
+      category: i.fields.category ?? 'Blog',
       type: 'blog' as const,
     }));
+
   latestUpdates = [...changelogs, ...blogs]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 6);
-} catch {
-  latestUpdates = [];
-  announcementBar = null;
+} catch (e) {
+  console.warn('[es/index] D1 latest updates load failed:', e);
 }
 
 const stats = await getSiteStats();
@@ -137,15 +118,6 @@ const homepageStructuredData: unknown[] = [
   preloadHero
   preloadFirstImage="/images/cupra_front.webp"
 >
-  {announcementBar && (
-    <AnnouncementBar
-      message={announcementBar.message}
-      link={announcementBar.link}
-      linkColor={announcementBar.linkColor}
-      backgroundColor={announcementBar.backgroundColor}
-      assetMap={announcementBar.assetMap}
-    />
-  )}
   <Header />
 
   <style>

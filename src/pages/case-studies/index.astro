@@ -2,23 +2,26 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getEntries } from '../../lib/contentful';
-import { richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
+import { loadCaseStudies } from '../../lib/cms-d1-content';
 
 type CSItem = { slug: string; title: string; date?: string; excerpt?: string; company?: string; industry?: string; featuredImageUrl?: string; featuredImageAlt?: string };
 let items: CSItem[] = [];
 
 try {
-  const res = await getEntries({ content_type: 'caseStudy', order: '-fields.publishedAt', limit: 100, include: 2 });
-  const assetMap = buildAssetMap(res.includes as any);
-  const url = (a: any): string => { if (!a) return ''; if (a.fields?.file?.url) { const u = a.fields.file.url; return u.startsWith('//') ? `https:${u}` : u; } const id = a.sys?.id; if (!id) return ''; const r = assetMap[id]; if (!r?.fields?.file?.url) return ''; const u2 = r.fields.file.url; return u2.startsWith('//') ? `https:${u2}` : u2; };
-  items = res.items.filter((i: any) => i.fields?.slug).map((i: any) => ({
-    slug: i.fields.slug, title: i.fields.title ?? 'Untitled', date: i.fields.publishedAt,
-    excerpt: i.fields.excerpt ? richTextToPlainText(i.fields.excerpt, 160) : undefined,
-    company: i.fields.company, industry: i.fields.industry,
-    featuredImageUrl: url(i.fields.featuredImage) || undefined, featuredImageAlt: i.fields.featuredImageAlt,
+  const res = await loadCaseStudies({ locale: 'en-US', limit: 200 });
+  items = res.items.map((cs) => ({
+    slug: cs.slug,
+    title: cs.title,
+    date: cs.date,
+    excerpt: cs.metaDescription || undefined,
+    company: cs.company,
+    industry: cs.industry,
+    featuredImageUrl: cs.ogImageUrl,
+    featuredImageAlt: cs.title,
   }));
-} catch {}
+} catch (e) {
+  console.warn('[case-studies/index] D1 load failed:', e);
+}
 ---
 
 <BaseLayout title="Case Studies | Vehicle Imagery API" description="See how companies use the Vehicle Imagery API. Real-world case studies from automotive dealerships, leasing platforms, and more." canonicalUrl="/case-studies">

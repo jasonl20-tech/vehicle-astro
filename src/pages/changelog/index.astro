@@ -2,15 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getEntries } from '../../lib/contentful';
+import { loadChangelogs } from '../../lib/cms-d1-content';
 
-function getAssetUrl(asset: { fields?: { file?: { url?: string } } } | null | undefined): string | undefined {
-  if (!asset?.fields?.file?.url) return undefined;
-  const url = asset.fields.file.url;
-  return url.startsWith('//') ? `https:${url}` : url;
-}
-
-let contentfulError: string | null = null;
+let d1Error: string | null = null;
 let changelogs: Array<{
   slug: string;
   title: string;
@@ -23,48 +17,17 @@ let changelogs: Array<{
 }> = [];
 
 try {
-  const res = await getEntries({
-    content_type: 'api',
-    order: '-sys.createdAt',
-    include: 2,
-    limit: 100,
-  });
-  if (res.items.length === 0) {
-    console.warn('[Changelog] Contentful lieferte 0 Einträge.');
-  } else {
-    console.log('[Changelog] Contentful:', res.items.length, 'Einträge geladen');
-  }
-  changelogs = res.items.map((item: {
-    fields?: {
-      slug?: string;
-      title?: string;
-      excerpt?: string;
-      version?: string;
-      category?: string;
-      featuredImage?: { fields?: { file?: { url?: string }; title?: string } };
-      featuredImageAlt?: string;
-    };
-    sys?: { createdAt?: string };
-  }) => {
-    const featuredImage = item.fields?.featuredImage;
-    const featuredImageUrl = getAssetUrl(featuredImage);
-    return {
-      slug: item.fields?.slug ?? '',
-      title: item.fields?.title ?? 'Untitled',
-      date: item.sys?.createdAt ?? '',
-      version: item.fields?.version,
-      category: item.fields?.category,
-      excerpt: item.fields?.excerpt,
-      featuredImageUrl,
-      featuredImageAlt: item.fields?.featuredImageAlt ?? item.fields?.title ?? '',
-    };
-  }).filter((log) => log.slug);
-  if (res.items.length > 0 && changelogs.length < res.items.length) {
-    console.warn('[Changelog]', res.items.length - changelogs.length, 'Einträge ohne Slug ausgefiltert');
-  }
+  const res = await loadChangelogs({ locale: 'en-US', limit: 200 });
+  changelogs = res.items.map((c) => ({
+    slug: c.slug,
+    title: c.title,
+    date: c.date,
+    version: c.version,
+    excerpt: c.excerpt,
+  }));
 } catch (e) {
-  contentfulError = e instanceof Error ? e.message : String(e);
-  console.error('[Changelog] Contentful error:', contentfulError);
+  d1Error = e instanceof Error ? e.message : String(e);
+  console.error('[Changelog] D1 error:', d1Error);
 }
 ---
 
@@ -147,9 +110,9 @@ try {
             <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           </div>
           <p class="text-gray-500 text-lg">No changelog entries yet.</p>
-          <p class="mt-2 text-sm text-gray-400">Add entries in Contentful with content type &quot;api&quot; (Changelog).</p>
-          {contentfulError && (
-            <p class="mt-6 text-sm text-amber-700 bg-amber-50 px-4 py-3 rounded-lg max-w-xl mx-auto">{contentfulError}</p>
+          <p class="mt-2 text-sm text-gray-400">Add entries to D1 (<code class="font-mono">cms_contents</code>) with <code class="font-mono">content_type = 'changelogs'</code>.</p>
+          {d1Error && (
+            <p class="mt-6 text-sm text-amber-700 bg-amber-50 px-4 py-3 rounded-lg max-w-xl mx-auto">{d1Error}</p>
           )}
         </div>
       )}

@@ -1,18 +1,18 @@
 ---
-import { getEntries, getCompanyInfo } from '../lib/contentful';
-import { getLocaleFromUrl, useTranslations, localizeUrl, getContentfulLocale, type Locale } from '../i18n/utils';
+import { getCompanyInfo } from '../lib/contentful';
+import { loadLandingPages } from '../lib/cms-d1-content';
+import { getLocaleFromUrl, useTranslations, localizeUrl } from '../i18n/utils';
 
 const company = await getCompanyInfo();
 
 const locale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(locale);
 const l = (url: string) => localizeUrl(url, locale);
-const cfLocale = getContentfulLocale(locale);
+const cfLocale = locale === 'es' ? 'es' : 'en-US';
 
 interface DynamicLink {
   label: string;
   href: string;
-  order: number;
 }
 
 interface DynamicCategory {
@@ -25,28 +25,20 @@ let dynamicByCategory = new Map<string, DynamicLink[]>();
 let extraCategories: DynamicCategory[] = [];
 
 try {
-  const allFooterItems: any[] = [];
-  for (const ct of ['dynamicPage-2', 'landingPage'] as const) {
-    const res = await getEntries({ content_type: ct, limit: 500, locale: cfLocale });
-    allFooterItems.push(...(res.items as any[]).filter((item) => item.fields?.footer === true));
-  }
+  const res = await loadLandingPages({ locale: cfLocale, limit: 500 });
+  const footerItems = res.items.filter((p) => p.footer);
 
   const catMap = new Map<string, DynamicLink[]>();
-  for (const item of allFooterItems) {
-    const f = item.fields;
-    const category = (f.category as string) || 'Other';
-    const slug = f.slug as string;
-    const prefix = f.urlPrefix as string | undefined;
-    const href = l(prefix ? `/${prefix}/${slug}` : `/${slug}`);
-    const label = (f.footerLabel as string) || (f.title as string) || slug;
-    const order = (f.order as number) || 999;
-
+  for (const item of footerItems) {
+    const category = item.categoryName || 'Other';
+    const href = l(`/${item.slug}`);
+    const label = item.title || item.slug;
     if (!catMap.has(category)) catMap.set(category, []);
-    catMap.get(category)!.push({ label, href, order });
+    catMap.get(category)!.push({ label, href });
   }
 
   for (const [name, links] of catMap) {
-    links.sort((a, b) => a.order - b.order);
+    links.sort((a, b) => a.label.localeCompare(b.label));
     if (knownCategories.has(name.toLowerCase())) {
       dynamicByCategory.set(name.toLowerCase(), links);
     } else {
@@ -54,9 +46,8 @@ try {
     }
   }
   extraCategories.sort((a, b) => a.name.localeCompare(b.name));
-} catch {
-  dynamicByCategory = new Map();
-  extraCategories = [];
+} catch (e) {
+  console.warn('[Footer] D1 categories load failed:', e);
 }
 
 const MAX_LINKS = 8;

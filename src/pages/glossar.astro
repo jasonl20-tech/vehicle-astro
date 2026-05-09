@@ -3,7 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getEntries } from '../lib/contentful';
-import { richTextToPlainText, buildAssetMap } from '../lib/contentful-rich-text';
+import { richTextToPlainText } from '../lib/contentful-rich-text';
+import { loadBlogsWithIncludes, loadCaseStudies, loadChangelogs, loadLandingPages } from '../lib/cms-d1-content';
 
 interface SiteLink {
   href: string;
@@ -47,31 +48,28 @@ const staticPages: SiteLink[] = [
 
 let dynamicPages: SiteLink[] = [];
 
-for (const ct of ['dynamicPage-2', 'landingPage'] as const) {
-  try {
-    const dpRes = await getEntries({ content_type: ct, limit: 500, include: 2 });
-    for (const item of dpRes.items as any[]) {
-      const f = item.fields;
-      if (!f?.slug) continue;
-      const slug = f.slug as string;
-      const prefix = f.urlPrefix as string | undefined;
-      const href = prefix ? `/${prefix}/${slug}` : `/${slug}`;
-      const label = (f.title as string) || slug;
-      const desc = f.description
-        ? (typeof f.description === 'string' ? f.description.slice(0, 120) : richTextToPlainText(f.description, 120))
-        : undefined;
-      const category = (f.category as string) || 'Other';
-      dynamicPages.push({ href, label, description: desc, category });
-    }
-  } catch {}
-}
+try {
+  const lp = await loadLandingPages({ locale: 'en-US', limit: 500 });
+  for (const item of lp.items) {
+    dynamicPages.push({
+      href: `/${item.slug}`,
+      label: item.title || item.slug,
+      description: item.metaDescription || undefined,
+      category: item.categoryName || 'Other',
+    });
+  }
+} catch {}
 
 try {
-  const blogRes = await getEntries({ content_type: 'blogPost', limit: 200, order: '-fields.publishedAt' });
-  for (const item of blogRes.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    dynamicPages.push({ href: `/blog/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Blog Posts' });
+  const blogRes = await loadBlogsWithIncludes({ locale: 'en-US', limit: 200 });
+  for (const item of blogRes.items) {
+    if (!item.fields?.slug) continue;
+    dynamicPages.push({
+      href: `/blog/${item.fields.slug}`,
+      label: item.fields.title || item.fields.slug,
+      description: item.fields.excerpt ? richTextToPlainText(item.fields.excerpt, 120) : undefined,
+      category: 'Blog Posts',
+    });
   }
 } catch {}
 
@@ -85,11 +83,14 @@ try {
 } catch {}
 
 try {
-  const csRes = await getEntries({ content_type: 'caseStudy', limit: 200 });
-  for (const item of csRes.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    dynamicPages.push({ href: `/case-studies/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Case Studies' });
+  const csRes = await loadCaseStudies({ locale: 'en-US', limit: 200 });
+  for (const cs of csRes.items) {
+    dynamicPages.push({
+      href: `/case-studies/${cs.slug}`,
+      label: cs.title,
+      description: cs.metaDescription || undefined,
+      category: 'Case Studies',
+    });
   }
 } catch {}
 
@@ -103,11 +104,9 @@ try {
 } catch {}
 
 try {
-  const clRes = await getEntries({ content_type: 'api', limit: 200, order: '-sys.createdAt' });
-  for (const item of clRes.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    dynamicPages.push({ href: `/changelog/${f.slug}`, label: (f.title as string) || f.slug, category: 'Changelog' });
+  const clRes = await loadChangelogs({ locale: 'en-US', limit: 200 });
+  for (const c of clRes.items) {
+    dynamicPages.push({ href: `/changelog/${c.slug}`, label: c.title, category: 'Changelog' });
   }
 } catch {}
 

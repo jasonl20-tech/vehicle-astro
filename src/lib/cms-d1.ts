@@ -173,6 +173,8 @@ export type CmsAuthorPayload = {
   profilePicture?: ContentfulLink;
   biography?: string;
   autorTitle?: string;
+  linkedin?: string;
+  webseite?: string;
 };
 
 export type CmsBlogPayload = {

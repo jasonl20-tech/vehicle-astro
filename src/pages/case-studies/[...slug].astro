@@ -2,50 +2,43 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getEntries } from '../../lib/contentful';
-import { renderRichText, richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
+import { renderRichText } from '../../lib/contentful-rich-text';
+import { loadCaseStudies, type CaseStudyItem, type AssetMap } from '../../lib/cms-d1-content';
 
 export async function getStaticPaths() {
   try {
-    const res = await getEntries({ content_type: 'caseStudy', include: 2, limit: 200 });
-    const includes = res.includes ?? {};
-    return res.items.filter((i: any) => i.fields?.slug).map((i: any) => ({ params: { slug: i.fields.slug }, props: { entry: i, includes } }));
-  } catch { return []; }
+    const res = await loadCaseStudies({ locale: 'en-US', limit: 500 });
+    return res.items.map((cs) => ({ params: { slug: cs.slug }, props: { entry: cs, assets: res.assets } }));
+  } catch (e) {
+    console.warn('[case-studies/[slug]] D1 load failed:', e);
+    return [];
+  }
 }
 
-const { entry, includes } = Astro.props;
-const f = entry?.fields ?? {};
-const title = (f.title as string) ?? 'Case Study';
-const excerpt = f.excerpt as import('@contentful/rich-text-types').Document | undefined;
-const body = f.body as import('@contentful/rich-text-types').Document | undefined;
-const featuredImage = f.featuredImage as any;
-const featuredImageAlt = (f.featuredImageAlt as string) ?? '';
-const publishedAt = f.publishedAt as string | undefined;
-const company = (f.company as string) ?? '';
-const industry = (f.industry as string) ?? '';
-const seoTitle = (f.seoTitle as string) ?? '';
-const seoDescription = f.seoDescription as import('@contentful/rich-text-types').Document | undefined;
-const ogImageField = f.ogImage as any;
-const noIndex = (f.noIndex as boolean) ?? false;
+const { entry, assets } = Astro.props as { entry: CaseStudyItem; assets: AssetMap };
+const title = entry?.title ?? 'Case Study';
+const body = entry?.body;
+const publishedAt = entry?.date;
+const company = entry?.company ?? '';
+const industry = entry?.industry ?? '';
+const noIndex = false;
 
-const assetMap = buildAssetMap(includes as any);
-const url = (a: any): string => { if (!a) return ''; if (a.fields?.file?.url) { const u = a.fields.file.url; return u.startsWith('//') ? `https:${u}` : u; } const id = a.sys?.id; if (!id) return ''; const r = assetMap[id]; if (!r?.fields?.file?.url) return ''; const u2 = r.fields.file.url; return u2.startsWith('//') ? `https:${u2}` : u2; };
-
-const pageTitle = seoTitle || title;
-const metaDescription = seoDescription ? richTextToPlainText(seoDescription, 160) : richTextToPlainText(excerpt, 160) || undefined;
-const ogImageUrl = url(ogImageField ?? featuredImage);
+const pageTitle = entry?.metaTitle || title;
+const metaDescription = entry?.metaDescription || undefined;
 const siteUrl = Astro.url.origin;
+const ogImageUrl = entry?.ogImageUrl;
 const ogImageFull = ogImageUrl ? (ogImageUrl.startsWith('http') ? ogImageUrl : `${siteUrl}${ogImageUrl.startsWith('/') ? '' : '/'}${ogImageUrl}`) : undefined;
-const bodyHtml = body ? renderRichText(body, assetMap) : '';
-const excerptHtml = excerpt ? renderRichText(excerpt, assetMap) : '';
-const featuredImageUrl = url(featuredImage);
-const articleUrl = `${siteUrl}/case-studies/${f.slug}`;
+const featuredImageUrl = ogImageUrl;
+const featuredImageAlt = title;
+const bodyHtml = body ? renderRichText(body, assets) : '';
+const excerptHtml = '';
+const articleUrl = `${siteUrl}/case-studies/${entry?.slug}`;
 
 const articleSchema = { '@context': 'https://schema.org', '@type': 'Article', headline: pageTitle, description: metaDescription || title, url: articleUrl, ...(ogImageFull && { image: ogImageFull }), ...(publishedAt && { datePublished: publishedAt }), author: { '@type': 'Organization', name: 'Vehicle Imagery' }, publisher: { '@type': 'Organization', name: 'Vehicle Imagery', logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.svg` } } };
 const breadcrumbSchema = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` }, { '@type': 'ListItem', position: 2, name: 'Case Studies', item: `${siteUrl}/case-studies` }, { '@type': 'ListItem', position: 3, name: pageTitle, item: articleUrl }] };
 ---
 
-<BaseLayout title={pageTitle} description={metaDescription} ogImage={ogImageFull} ogImageAlt={featuredImageAlt} canonicalUrl={`/case-studies/${f.slug}`} noIndex={noIndex}>
+<BaseLayout title={pageTitle} description={metaDescription} ogImage={ogImageFull} ogImageAlt={featuredImageAlt} canonicalUrl={`/case-studies/${entry?.slug}`} noIndex={noIndex}>
   <Header />
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />

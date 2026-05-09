@@ -2,8 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getEntries, getSiteStats, getCompanyInfo } from '../../lib/contentful';
-import { richTextToPlainText } from '../../lib/contentful-rich-text';
+import { getSiteStats, getCompanyInfo } from '../../lib/contentful';
+import { loadPressReleases } from '../../lib/cms-d1-content';
 
 const mediaAssets = [
   { title: 'Logo (claro)', desc: 'Logo principal en formato vectorial. Usar sobre fondos claros.', file: '/logo.svg', type: 'SVG', bg: 'light' },
@@ -14,18 +14,16 @@ const mediaAssets = [
 type PressRelease = { title: string; shortText: string; date: string; excerpt: string; link: string };
 let pressReleases: PressRelease[] = [];
 try {
-  const res = await getEntries({ content_type: 'titleComponent', order: '-fields.date', limit: 20 });
-  pressReleases = (res.items || []).map((item: { fields?: { title?: string; shortText?: string; date?: string; excerpt?: unknown; link?: string } }) => ({
-    title: item.fields?.title ?? '',
-    shortText: item.fields?.shortText ?? '',
-    date: item.fields?.date ?? '',
-    excerpt: item.fields?.excerpt
-      ? richTextToPlainText(item.fields.excerpt as import('@contentful/rich-text-types').Document, 300)
-      : '',
-    link: item.fields?.link ?? '',
+  const items = await loadPressReleases({ locale: 'es', limit: 100 });
+  pressReleases = items.map((p) => ({
+    title: p.title,
+    shortText: '',
+    date: p.date,
+    excerpt: p.description,
+    link: p.link,
   }));
-} catch {
-  pressReleases = [];
+} catch (e) {
+  console.warn('[es/press] D1 load failed:', e);
 }
 
 const stats = await getSiteStats();

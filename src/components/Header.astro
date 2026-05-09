@@ -1,6 +1,6 @@
 ---
-import { getEntries } from '../lib/contentful';
-import { getLocaleFromUrl, useTranslations, localizeUrl, stripLocalePrefix, localeNames, type Locale, locales, defaultLocale } from '../i18n/utils';
+import { loadChangelogs } from '../lib/cms-d1-content';
+import { getLocaleFromUrl, useTranslations, localizeUrl, stripLocalePrefix, localeNames, locales } from '../i18n/utils';
 
 const locale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(locale);
@@ -14,14 +14,13 @@ const localeOptions = locales.map((loc) => ({
   isActive: loc === locale,
 }));
 
-let changelogs: any[] = [];
+const cfLocale = locale === 'es' ? 'es' : 'en-US';
+let changelogs: Array<{ slug: string; title: string; date: string }> = [];
 try {
-  const response = await getEntries({ content_type: 'api', limit: 2, order: '-sys.createdAt' });
-  if (response && response.items) {
-    changelogs = response.items as any[];
-  }
-} catch {
-  changelogs = [];
+  const res = await loadChangelogs({ locale: cfLocale, limit: 5 });
+  changelogs = res.items.slice(0, 2).map((c) => ({ slug: c.slug, title: c.title, date: c.date }));
+} catch (e) {
+  console.warn('[Header] D1 changelog load failed:', e);
 }
 
 const navItems = [
@@ -145,13 +144,13 @@ const navItems = [
                     <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">{t('nav.latestChangelogs')}</h3>
                     <div class="flex flex-col gap-6">
                       {changelogs.length > 0 ? (
-                        changelogs.map((log: any) => (
-                          <a href={l(`/changelog/${log.fields.slug || ''}`)} class="group/feat flex flex-col gap-2">
+                        changelogs.map((log) => (
+                          <a href={l(`/changelog/${log.slug}`)} class="group/feat flex flex-col gap-2">
                             <span class="text-[10px] font-bold uppercase tracking-widest text-[#FF8844]">
-                              {new Date(log.sys.createdAt).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              {log.date ? new Date(log.date).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
                             </span>
                             <h4 class="text-[14px] font-bold leading-snug text-white/90 transition-colors duration-200 group-hover/feat:text-white">
-                              {log.fields.title}
+                              {log.title}
                             </h4>
                           </a>
                         ))

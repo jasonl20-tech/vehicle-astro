@@ -2,46 +2,30 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
-import { getEntries } from '../../../lib/contentful';
+import { loadFaqs } from '../../../lib/cms-d1-content';
 
-let categories: { slug: string; label: string; count: number; desc: string }[] = [];
+const categoryDesc: Record<string, string> = {
+  general: 'Preguntas frecuentes sobre Vehicle Imagery y nuestros servicios.',
+  api: 'Preguntas técnicas sobre endpoints, autenticación e integración.',
+  billing: 'Precios, facturas, planes y preguntas relacionadas con pagos.',
+  support: 'Obtén ayuda con tu cuenta, problemas técnicos y más.',
+  account: 'Gestión de cuenta, configuración y acceso.',
+  coverage: 'Marcas disponibles, modelos y soporte regional.',
+  integration: 'SDKs, webhooks e integraciones de terceros.',
+};
 
+let displayCategories: { slug: string; label: string; count: number; desc: string }[] = [];
 try {
-  const res = await getEntries({ content_type: 'faq', limit: 1000 });
-  const items = res.items || [];
-  const catMap = new Map<string, number>();
-
-  for (const item of items) {
-    const cat = (item as { fields?: { category?: string } }).fields?.category;
-    if (cat) {
-      const slug = cat.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-      catMap.set(slug, (catMap.get(slug) || 0) + 1);
-    }
-  }
-
-  const categoryMeta: Record<string, { label: string; desc: string }> = {
-    general: { label: 'General', desc: 'Preguntas frecuentes sobre Vehicle Imagery y nuestros servicios.' },
-    api: { label: 'API', desc: 'Preguntas técnicas sobre endpoints, autenticación e integración.' },
-    billing: { label: 'Facturación', desc: 'Precios, facturas, planes y preguntas relacionadas con pagos.' },
-    support: { label: 'Soporte', desc: 'Obtén ayuda con tu cuenta, problemas técnicos y más.' },
-    account: { label: 'Cuenta', desc: 'Gestión de cuenta, configuración y acceso.' },
-    coverage: { label: 'Cobertura', desc: 'Marcas disponibles, modelos y soporte regional.' },
-    integration: { label: 'Integración', desc: 'SDKs, webhooks e integraciones de terceros.' },
-  };
-
-  categories = Array.from(catMap.entries()).map(([slug, count]) => ({
-    slug,
-    label: categoryMeta[slug]?.label ?? slug.charAt(0).toUpperCase() + slug.slice(1),
-    count,
-    desc: categoryMeta[slug]?.desc ?? `Preguntas frecuentes sobre ${slug}.`,
+  const res = await loadFaqs({ locale: 'es' });
+  displayCategories = res.categories.map((c) => ({
+    slug: c.slug,
+    label: c.label,
+    count: c.count,
+    desc: categoryDesc[c.slug] ?? `Preguntas frecuentes sobre ${c.label}.`,
   }));
-
-  categories.sort((a, b) => a.label.localeCompare(b.label));
-} catch {
-  categories = [];
+} catch (e) {
+  console.warn('[es/faq/index] D1 load failed:', e);
 }
-
-const displayCategories = categories;
 ---
 
 <BaseLayout
@@ -98,7 +82,7 @@ const displayCategories = categories;
           </div>
         ) : (
           <div class="text-center py-20">
-            <p class="text-black/40 text-sm">No se encontraron categorías de FAQ. Añade entradas de FAQ en Contentful para ver las categorías aquí.</p>
+            <p class="text-black/40 text-sm">No se encontraron categorías de FAQ. Añade entradas a D1 (<code class="font-mono">cms_contents</code>) con <code class="font-mono">content_type = 'faqEntrys'</code> + <code class="font-mono">'faqCategorys'</code>.</p>
           </div>
         )}
       </div>
