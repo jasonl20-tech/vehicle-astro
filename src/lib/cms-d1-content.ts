@@ -759,3 +759,169 @@ export async function loadDocumentationPage(opts: { locale?: string } = {}): Pro
     assets,
   };
 }
+
+/* =========================================================================
+ * Main Page (single content type: mainPage)
+ * Note: D1 schema field names are kept 1:1 with the user's spelling
+ * (mixed German/English, including typos like "Describtion" or "Titel").
+ * ======================================================================= */
+
+export type CmsMainPagePayload = {
+  heroTitle?: string;
+  heroDescribtion?: string;
+  heroImage?: EntryLink;
+  heroButton1?: string;
+  heroButton1Link?: string;
+  heroButton2?: string;
+  heroButton2Link?: string;
+  perspectiveAbschnittTitle?: string;
+  perspectiveAbschnittBeschreibung?: string;
+  perspectiveImages?: EntryLink[];
+  developerAbschnittTitle?: string;
+  developerAbschnittBeschreibung?: Document;
+  developerButtonText?: string;
+  developerButtonLink?: string;
+  exampleRequest?: string;
+  industriesAbschnittTitel?: string;
+  industriesAbschnittBeschreibung?: string;
+  industriesAbschnittNote?: string;
+  industriesAbschnittText?: Document;
+  transparentTitle?: string;
+  transparentBeschreibung?: string;
+  colorTitle?: string;
+  colorBeschreibung?: string;
+  freeSektionTitel?: string;
+  freeSektionBeschreibung?: string;
+  freeSektionButton?: string;
+  freeSektionEmailDescribtion?: string;
+  freeSektionLink?: string;
+  contactTitle?: string;
+  contactBeschreibung?: string;
+  contactDemoLinkBeschreibung?: string;
+  latestUpdatesTitle?: string;
+  viewArchive?: string;
+  blog?: string;
+  changelog?: string;
+  ogImage?: EntryLink;
+  metaTitle?: string;
+  metaBeschreibung?: string;
+};
+
+export type MainPageImage = {
+  url: string;
+  alt: string;
+  title: string;
+};
+
+export type MainPage = {
+  heroTitle: string;
+  heroDescribtion: string;
+  heroImageUrl?: string;
+  heroImageAlt: string;
+  heroButton1: string;
+  heroButton1Link: string;
+  heroButton2: string;
+  heroButton2Link: string;
+  perspectiveTitle: string;
+  perspectiveBeschreibung: string;
+  perspectiveImages: MainPageImage[];
+  developerTitle: string;
+  developerBeschreibung?: Document;
+  developerButtonText: string;
+  developerButtonLink: string;
+  exampleRequest: string;
+  industriesTitle: string;
+  industriesBeschreibung: string;
+  industriesNote: string;
+  industriesText?: Document;
+  transparentTitle: string;
+  transparentBeschreibung: string;
+  colorTitle: string;
+  colorBeschreibung: string;
+  freeTitle: string;
+  freeBeschreibung: string;
+  freeButton: string;
+  freeEmailDescribtion: string;
+  freeLink: string;
+  contactTitle: string;
+  contactBeschreibung: string;
+  contactDemoLinkBeschreibung: string;
+  latestUpdatesTitle: string;
+  viewArchiveLabel: string;
+  blogLabel: string;
+  changelogLabel: string;
+  ogImageUrl?: string;
+  metaTitle: string;
+  metaBeschreibung: string;
+  assets: AssetMap;
+};
+
+function resolveImageMeta(link: EntryLink | undefined, assets: AssetMap): MainPageImage | null {
+  const url = resolveAssetUrl(link, assets);
+  if (!url) return null;
+  const id = link?.sys?.id ?? '';
+  const a = id ? assets[id] : undefined;
+  const title = a?.fields?.title ?? '';
+  const alt = a?.fields?.description ?? title;
+  return { url, alt, title };
+}
+
+export async function loadMainPage(opts: { locale?: string } = {}): Promise<MainPage | null> {
+  const locale = opts.locale ?? 'en-US';
+  const [pageRows, assets] = await Promise.all([
+    getCmsRows<CmsMainPagePayload>('mainPage', locale, 5),
+    loadAssetMap(locale),
+  ]);
+
+  const pageRow = pageRows[0];
+  if (!pageRow) return null;
+  const p = pageRow.payload;
+
+  const heroImage = resolveImageMeta(p.heroImage, assets);
+  const perspectiveImages: MainPageImage[] = (p.perspectiveImages ?? [])
+    .map((link) => resolveImageMeta(link, assets))
+    .filter((img): img is MainPageImage => Boolean(img));
+
+  return {
+    heroTitle: p.heroTitle ?? '',
+    heroDescribtion: p.heroDescribtion ?? '',
+    heroImageUrl: heroImage?.url,
+    heroImageAlt: heroImage?.alt ?? p.heroTitle ?? '',
+    heroButton1: p.heroButton1 ?? '',
+    heroButton1Link: p.heroButton1Link ?? '',
+    heroButton2: p.heroButton2 ?? '',
+    heroButton2Link: p.heroButton2Link ?? '',
+    perspectiveTitle: p.perspectiveAbschnittTitle ?? '',
+    perspectiveBeschreibung: p.perspectiveAbschnittBeschreibung ?? '',
+    perspectiveImages,
+    developerTitle: p.developerAbschnittTitle ?? '',
+    developerBeschreibung: p.developerAbschnittBeschreibung,
+    developerButtonText: p.developerButtonText ?? '',
+    developerButtonLink: p.developerButtonLink ?? '',
+    exampleRequest: p.exampleRequest ?? '',
+    industriesTitle: p.industriesAbschnittTitel ?? '',
+    industriesBeschreibung: p.industriesAbschnittBeschreibung ?? '',
+    industriesNote: p.industriesAbschnittNote ?? '',
+    industriesText: p.industriesAbschnittText,
+    transparentTitle: p.transparentTitle ?? '',
+    transparentBeschreibung: p.transparentBeschreibung ?? '',
+    colorTitle: p.colorTitle ?? '',
+    colorBeschreibung: p.colorBeschreibung ?? '',
+    freeTitle: p.freeSektionTitel ?? '',
+    freeBeschreibung: p.freeSektionBeschreibung ?? '',
+    freeButton: p.freeSektionButton ?? '',
+    freeEmailDescribtion: p.freeSektionEmailDescribtion ?? '',
+    freeLink: p.freeSektionLink ?? '',
+    contactTitle: p.contactTitle ?? '',
+    contactBeschreibung: p.contactBeschreibung ?? '',
+    contactDemoLinkBeschreibung: p.contactDemoLinkBeschreibung ?? '',
+    latestUpdatesTitle: p.latestUpdatesTitle ?? '',
+    viewArchiveLabel: p.viewArchive ?? '',
+    blogLabel: p.blog ?? '',
+    changelogLabel: p.changelog ?? '',
+    ogImageUrl: resolveAssetUrl(p.ogImage, assets),
+    metaTitle: p.metaTitle ?? p.heroTitle ?? 'Vehicle Imagery',
+    metaBeschreibung: p.metaBeschreibung ?? p.heroDescribtion ?? '',
+    assets,
+  };
+}
