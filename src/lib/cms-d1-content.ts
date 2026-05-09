@@ -866,6 +866,147 @@ export type MainPage = {
   assets: AssetMap;
 };
 
+/* =========================================================================
+ * Header + Footer (content types: headerEintrge, footerHeader)
+ * Note: D1 schema field names are kept 1:1 with the user's spelling
+ * (mixed German/English, including typos like "Eintrge" / "Describtion").
+ * ======================================================================= */
+
+export type CmsHeaderEntryPayload = {
+  anzeigeName?: string;
+  ausgeschrieberName?: string;
+  kleineBeschreibung?: string;
+  link?: string;
+};
+
+export type CmsFooterHeaderPayload = {
+  exploreTranslation?: string;
+  latestTranslation?: string;
+  needHelpTranslation?: string;
+  needHelpDescribtion?: string;
+  updatesTranslation?: string;
+  contactButton?: string;
+  button1Text?: string;
+  button1Link?: string;
+  button2Text?: string;
+  button2Link?: string;
+  headerFields?: EntryLink[];
+  footerBeschreibung?: string;
+  footerButton1Text?: string;
+  footerButton1Link?: string;
+  footerButton2Text?: string;
+  footerButton2Link?: string;
+  productTranslation?: string;
+  coverageTranslation?: string;
+  resourcesTranslation?: string;
+  companyTranslation?: string;
+  stayUpdatedTranslation?: string;
+  subscribeTranslation?: string;
+  footerAbschluss?: string;
+};
+
+export type HeaderSubItem = {
+  id: string;
+  groupName: string;
+  label: string;
+  description: string;
+  href: string;
+};
+
+export type HeaderFooter = {
+  exploreLabel: string;
+  latestLabel: string;
+  needHelpLabel: string;
+  needHelpDescription: string;
+  updatesLabel: string;
+  contactButtonLabel: string;
+  ctaButton1Text: string;
+  ctaButton1Link: string;
+  ctaButton2Text: string;
+  ctaButton2Link: string;
+  subItemsByGroup: Record<string, HeaderSubItem[]>;
+  footerDescription: string;
+  footerButton1Text: string;
+  footerButton1Link: string;
+  footerButton2Text: string;
+  footerButton2Link: string;
+  productLabel: string;
+  coverageLabel: string;
+  resourcesLabel: string;
+  companyLabel: string;
+  stayUpdatedLabel: string;
+  subscribeLabel: string;
+  footerCloser: string;
+};
+
+function normalizeKey(s: string): string {
+  return (s ?? '').trim().toLowerCase();
+}
+
+export async function loadHeaderFooter(opts: { locale?: string } = {}): Promise<HeaderFooter | null> {
+  const locale = opts.locale ?? 'en-US';
+  const [pageRows, entryRows] = await Promise.all([
+    getCmsRows<CmsFooterHeaderPayload>('footerHeader', locale, 5),
+    getCmsRows<CmsHeaderEntryPayload>('headerEintrge', locale, 200),
+  ]);
+
+  const pageRow = pageRows[0];
+  if (!pageRow) return null;
+  const p = pageRow.payload;
+
+  const entriesById = new Map(entryRows.map((r) => [r.id, r]));
+
+  const linkedIds = (p.headerFields ?? [])
+    .map((link) => link?.sys?.id)
+    .filter((id): id is string => Boolean(id));
+
+  const orderedIds = linkedIds.length > 0 ? linkedIds : entryRows.map((r) => r.id);
+
+  const subItemsByGroup: Record<string, HeaderSubItem[]> = {};
+  for (const id of orderedIds) {
+    const row = entriesById.get(id);
+    if (!row) continue;
+    const groupName = (row.payload.anzeigeName ?? '').trim();
+    if (!groupName) continue;
+    const item: HeaderSubItem = {
+      id: row.id,
+      groupName,
+      label: row.payload.ausgeschrieberName ?? '',
+      description: row.payload.kleineBeschreibung ?? '',
+      href: row.payload.link ?? '',
+    };
+    const key = normalizeKey(groupName);
+    if (!subItemsByGroup[key]) subItemsByGroup[key] = [];
+    subItemsByGroup[key].push(item);
+  }
+
+  return {
+    exploreLabel: p.exploreTranslation ?? '',
+    latestLabel: p.latestTranslation ?? '',
+    needHelpLabel: p.needHelpTranslation ?? '',
+    needHelpDescription: p.needHelpDescribtion ?? '',
+    updatesLabel: p.updatesTranslation ?? '',
+    contactButtonLabel: p.contactButton ?? '',
+    ctaButton1Text: p.button1Text ?? '',
+    ctaButton1Link: p.button1Link ?? '',
+    ctaButton2Text: p.button2Text ?? '',
+    ctaButton2Link: p.button2Link ?? '',
+    subItemsByGroup,
+    footerDescription: p.footerBeschreibung ?? '',
+    footerButton1Text: p.footerButton1Text ?? '',
+    footerButton1Link: p.footerButton1Link ?? '',
+    footerButton2Text: p.footerButton2Text ?? '',
+    footerButton2Link: p.footerButton2Link ?? '',
+    productLabel: p.productTranslation ?? '',
+    coverageLabel: p.coverageTranslation ?? '',
+    resourcesLabel: p.resourcesTranslation ?? '',
+    companyLabel: p.companyTranslation ?? '',
+    stayUpdatedLabel: p.stayUpdatedTranslation ?? '',
+    subscribeLabel: p.subscribeTranslation ?? '',
+    footerCloser: p.footerAbschluss ?? '',
+  };
+}
+
 function resolveImageMeta(link: EntryLink | undefined, assets: AssetMap): MainPageImage | null {
   const url = resolveAssetUrl(link, assets);
   if (!url) return null;

@@ -1,6 +1,6 @@
 ---
 import { companyInfo } from '../lib/site-config';
-import { loadLandingPages } from '../lib/cms-d1-content';
+import { loadLandingPages, loadHeaderFooter } from '../lib/cms-d1-content';
 import { getLocaleFromUrl, useTranslations, localizeUrl } from '../i18n/utils';
 
 const company = companyInfo;
@@ -55,6 +55,21 @@ const productExtra = dynamicByCategory.get('product') || [];
 const coverageExtra = dynamicByCategory.get('coverage') || [];
 const resourcesExtra = dynamicByCategory.get('resources') || [];
 const companyExtra = dynamicByCategory.get('company') || [];
+
+const hf = await loadHeaderFooter({ locale: cfLocale }).catch(() => null);
+
+const tagline = hf?.footerDescription || `${t('footer.tagline')} ${t('footer.taglineDetails')}`;
+const footerBtn1Text = hf?.footerButton1Text || t('footer.getApiKey');
+const footerBtn1Link = hf?.footerButton1Link || l('/trial');
+const footerBtn2Text = hf?.footerButton2Text || t('footer.bookACall');
+const footerBtn2Link = hf?.footerButton2Link || l('/book-a-call');
+const productLabel = hf?.productLabel || t('footer.product');
+const coverageLabel = hf?.coverageLabel || t('footer.coverage');
+const resourcesLabel = hf?.resourcesLabel || t('footer.resources');
+const companyLabel = hf?.companyLabel || t('footer.company');
+const stayUpdatedLabel = hf?.stayUpdatedLabel || t('footer.stayUpdated');
+const subscribeLabel = hf?.subscribeLabel || t('footer.subscribe');
+const footerCloser = hf?.footerCloser || t('footer.copyright').replace('{year}', String(new Date().getFullYear()));
 ---
 
 <footer class="text-white pt-24 pb-12 w-full border-t border-white/10" style="background-color:rgb(10, 43, 49); font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
@@ -65,21 +80,21 @@ const companyExtra = dynamicByCategory.get('company') || [];
           <div class="flex items-center space-x-3 mb-6">
             <img src="/logo.svg" alt="Vehicle Imagery Logo" class="h-12 w-auto brightness-0 invert" loading="lazy" draggable="false"/>
           </div>
-          <p class="text-gray-300 text-lg leading-relaxed mb-8">{t('footer.tagline')}<br/>{t('footer.taglineDetails')}</p>
+          <p class="text-gray-300 text-lg leading-relaxed mb-8 whitespace-pre-line">{tagline}</p>
           <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <a class="bg-white text-black px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] hover:text-white transition-colors text-center sm:text-left" href={l('/trial')}>{t('footer.getApiKey')}</a>
-            <a class="border border-white/30 text-white px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-white/10 transition-colors text-center sm:text-left" href={l('/book-a-call')}>{t('footer.bookACall')}</a>
+            <a class="bg-white text-black px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] hover:text-white transition-colors text-center sm:text-left" href={footerBtn1Link}>{footerBtn1Text}</a>
+            <a class="border border-white/30 text-white px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-white/10 transition-colors text-center sm:text-left" href={footerBtn2Link}>{footerBtn2Text}</a>
           </div>
         </div>
         <div class="w-full lg:w-auto flex flex-col items-center text-center lg:items-end lg:text-left">
           <picture><source srcset="/images/footer_vehicles.webp" type="image/webp" /><img alt="Vehicle fleet showcase" loading="lazy" decoding="async" width="1200" height="300" class="h-24 md:h-32 w-auto object-contain opacity-80 mb-6" src="/images/footer_vehicles.png" draggable="false"/></picture>
-          <p class="text-sm font-bold uppercase tracking-widest text-gray-300 mb-4">{t('footer.stayUpdated')}</p>
+          <p class="text-sm font-bold uppercase tracking-widest text-gray-300 mb-4">{stayUpdatedLabel}</p>
           <div id="footer-nl-wrapper">
             <div id="footer-nl-content">
               <form id="footer-nl-form" class="flex w-full max-w-sm flex-col sm:flex-row gap-2 sm:max-w-none">
                 <input type="hidden" name="subject" value="Newsletter Subscribe"/>
                 <input type="email" name="email" required placeholder={t('footer.enterEmail')} class="px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-white w-full sm:w-80 rounded-none"/>
-                <button type="submit" id="footer-nl-btn" class="px-6 py-3 font-bold uppercase tracking-widest transition-colors rounded-none bg-white text-black hover:bg-gray-200">{t('footer.subscribe')}</button>
+                <button type="submit" id="footer-nl-btn" class="px-6 py-3 font-bold uppercase tracking-widest transition-colors rounded-none bg-white text-black hover:bg-gray-200">{subscribeLabel}</button>
               </form>
             </div>
             <div id="footer-nl-success" class="hidden items-center gap-3">
@@ -118,7 +133,7 @@ const companyExtra = dynamicByCategory.get('company') || [];
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-10 mb-12 items-start">
         <div>
-          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{t('footer.product')}</h4>
+          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{productLabel}</h4>
           <ul class="space-y-4 text-sm text-gray-300">
             <li><a class="hover:text-white transition-colors" href={l('/documentation')}>{t('footer.documentation')}</a></li>
             <li><a class="hover:text-white transition-colors" href={l('/pricing')}>{t('footer.pricing')}</a></li>
@@ -130,7 +145,7 @@ const companyExtra = dynamicByCategory.get('company') || [];
           </ul>
         </div>
         <div>
-          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{t('footer.coverage')}</h4>
+          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{coverageLabel}</h4>
           <ul class="space-y-4 text-sm text-gray-400">
             <li><a class="hover:text-white transition-colors" href={l('/coverage')}>{t('footer.allBrands')}</a></li>
             <li><a class="hover:text-white transition-colors" href={l('/coverage/global')}>{t('footer.globalCoverage')}</a></li>
@@ -142,7 +157,7 @@ const companyExtra = dynamicByCategory.get('company') || [];
           </ul>
         </div>
         <div>
-          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{t('footer.resources')}</h4>
+          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{resourcesLabel}</h4>
           <ul class="space-y-4 text-sm text-gray-300">
             <li><a class="hover:text-white transition-colors" href={l('/blog')}>{t('footer.blog')}</a></li>
             <li><a class="hover:text-white transition-colors" href={l('/case-studies')}>{t('footer.caseStudies')}</a></li>
@@ -166,7 +181,7 @@ const companyExtra = dynamicByCategory.get('company') || [];
         ))}
 
         <div>
-          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{t('footer.company')}</h4>
+          <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{companyLabel}</h4>
           <ul class="space-y-4 text-sm text-gray-300">
             <li><a class="hover:text-white transition-colors" href={l('/team')}>{t('footer.team')}</a></li>
             <li><a class="hover:text-white transition-colors" href={l('/contact')}>{t('footer.contact')}</a></li>
@@ -181,7 +196,7 @@ const companyExtra = dynamicByCategory.get('company') || [];
       </div>
 
       <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-        <p class="text-sm text-gray-300">{t('footer.copyright').replace('{year}', String(new Date().getFullYear()))}</p>
+        <p class="text-sm text-gray-300">{footerCloser}</p>
         <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-300">
           <a class="hover:text-white transition-colors" href={l('/impressum')}>{t('footer.imprint')}</a>
           <span class="text-white/30" aria-hidden="true">&middot;</span>
