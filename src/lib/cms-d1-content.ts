@@ -798,7 +798,12 @@ export type CmsMainPagePayload = {
   contactTitle?: string;
   contactBeschreibung?: string;
   contactDemoLinkBeschreibung?: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactMessage?: string;
+  contactSendButton?: string;
   latestUpdatesTitle?: string;
+  blogChangelogButtons?: string;
   viewArchive?: string;
   blog?: string;
   changelog?: string;
@@ -846,7 +851,12 @@ export type MainPage = {
   contactTitle: string;
   contactBeschreibung: string;
   contactDemoLinkBeschreibung: string;
+  contactNamePlaceholder: string;
+  contactEmailPlaceholder: string;
+  contactMessagePlaceholder: string;
+  contactSendButton: string;
   latestUpdatesTitle: string;
+  itemCtaLabel: string;
   viewArchiveLabel: string;
   blogLabel: string;
   changelogLabel: string;
@@ -915,7 +925,12 @@ export async function loadMainPage(opts: { locale?: string } = {}): Promise<Main
     contactTitle: p.contactTitle ?? '',
     contactBeschreibung: p.contactBeschreibung ?? '',
     contactDemoLinkBeschreibung: p.contactDemoLinkBeschreibung ?? '',
+    contactNamePlaceholder: p.contactName ?? '',
+    contactEmailPlaceholder: p.contactEmail ?? '',
+    contactMessagePlaceholder: p.contactMessage ?? '',
+    contactSendButton: p.contactSendButton ?? '',
     latestUpdatesTitle: p.latestUpdatesTitle ?? '',
+    itemCtaLabel: p.blogChangelogButtons ?? '',
     viewArchiveLabel: p.viewArchive ?? '',
     blogLabel: p.blog ?? '',
     changelogLabel: p.changelog ?? '',
