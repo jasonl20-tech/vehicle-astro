@@ -2,29 +2,31 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getEntries, getCompanyInfo } from '../../lib/contentful';
+import { getCompanyInfo } from '../../lib/contentful';
 import { renderRichText, richTextToPlainText, buildAssetMap } from '../../lib/contentful-rich-text';
+import { loadBlogsWithIncludes } from '../../lib/cms-d1-blog';
 
 export async function getStaticPaths() {
   try {
-    const res = await getEntries({ content_type: 'blogPost', include: 2, limit: 200 });
+    const res = await loadBlogsWithIncludes({ locale: 'en-US', limit: 500 });
     const includes = res.includes ?? {};
-    const slugToTitle = Object.fromEntries(
-      (res.items as Array<{ fields?: { slug?: string; title?: string } }>)
+    const slugToTitle: Record<string, string> = Object.fromEntries(
+      res.items
         .filter((i) => i.fields?.slug && i.fields?.title)
-        .map((i) => [i.fields!.slug!, i.fields!.title!])
+        .map((i) => [i.fields.slug, i.fields.title!])
     );
     return res.items
-      .filter((item: { fields?: { slug?: string } }) => item.fields?.slug)
-      .map((item: { fields?: { slug?: string; relatedPostSlugs?: string[] } }) => {
-        const slugs = item.fields?.relatedPostSlugs ?? [];
-        const relatedPosts = slugs.map((s: string) => ({ slug: s, title: slugToTitle[s] ?? s }));
+      .filter((item) => item.fields?.slug)
+      .map((item) => {
+        const slugs = item.fields.relatedPostSlugs ?? [];
+        const relatedPosts = slugs.map((s) => ({ slug: s, title: slugToTitle[s] ?? s }));
         return {
-          params: { slug: item.fields!.slug! },
+          params: { slug: item.fields.slug },
           props: { entry: item, includes, relatedPosts },
         };
       });
-  } catch {
+  } catch (e) {
+    console.warn('[blog/[slug]] D1 load failed:', e);
     return [];
   }
 }
