@@ -186,6 +186,7 @@ const navItems = [
       </div>
 
       <div class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2 sm:right-6 sm:gap-3 lg:right-12">
+        {locales.length > 1 && (
         <!-- Language Dropdown -->
         <div class="lang-dropdown group/lang relative hidden sm:block">
           <button
@@ -217,6 +218,7 @@ const navItems = [
             </div>
           </div>
         </div>
+        )}
         <a
           href={l('/book-a-call')}
           class="hidden h-9 items-center justify-center border border-white/40 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:border-white hover:bg-white/5 sm:inline-flex"
@@ -272,9 +274,10 @@ const navItems = [
             </div>
           </div>
         ))}
+        {locales.length > 1 && (
         <!-- Mobile language switcher -->
         <div class="border-b border-white/5 px-4 py-3">
-          <p class="text-[11px] font-bold uppercase tracking-widest text-white/40 mb-2">Idioma / Language</p>
+          <p class="text-[11px] font-bold uppercase tracking-widest text-white/40 mb-2">Language</p>
           <div class="flex flex-col gap-1">
             {localeOptions.map((opt) => (
               <a href={opt.href} class={`mobile-menu-link flex items-center gap-2 py-2.5 px-3 text-[14px] font-medium rounded transition-colors ${opt.isActive ? 'bg-white/10 text-white' : 'text-white/75 hover:bg-white/5 hover:text-white'}`}>
@@ -284,6 +287,7 @@ const navItems = [
             ))}
           </div>
         </div>
+        )}
         <div class="mt-4 flex flex-col gap-3 px-4">
           <a href={l('/book-a-call')} class="mobile-menu-link flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10">
             {t('nav.bookACall')}
