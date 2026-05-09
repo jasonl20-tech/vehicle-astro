@@ -2,8 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getEntries } from '../lib/contentful';
-import { richTextToPlainText } from '../lib/contentful-rich-text';
+import { richTextToPlainText } from '../lib/rich-text';
 import { loadBlogsWithIncludes, loadCaseStudies, loadChangelogs, loadLandingPages } from '../lib/cms-d1-content';
 
 interface SiteLink {
@@ -25,9 +24,7 @@ const staticPages: SiteLink[] = [
   { href: '/trial', label: 'Free Trial', description: 'Get your free API key and start building.', category: 'Product' },
   { href: '/book-a-call', label: 'Book a Call', description: 'Schedule a demo with our team.', category: 'Product' },
   { href: '/blog', label: 'Blog', description: 'Updates, tips, and industry insights.', category: 'Resources' },
-  { href: '/whitepapers', label: 'Whitepapers', description: 'In-depth research and technical reports.', category: 'Resources' },
   { href: '/case-studies', label: 'Case Studies', description: 'Real-world customer success stories.', category: 'Resources' },
-  { href: '/tutorials', label: 'Tutorials', description: 'Step-by-step integration guides.', category: 'Resources' },
   { href: '/changelog', label: 'Changelog', description: 'API version history and release notes.', category: 'Resources' },
   { href: '/faq', label: 'FAQ', description: 'Frequently asked questions.', category: 'Resources' },
   { href: '/faq/general', label: 'FAQ – General', description: 'General questions about Vehicle Imagery.', category: 'Resources' },
@@ -74,15 +71,6 @@ try {
 } catch {}
 
 try {
-  const wpRes = await getEntries({ content_type: 'whitepaper', limit: 200 });
-  for (const item of wpRes.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    dynamicPages.push({ href: `/whitepapers/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Whitepapers' });
-  }
-} catch {}
-
-try {
   const csRes = await loadCaseStudies({ locale: 'en-US', limit: 200 });
   for (const cs of csRes.items) {
     dynamicPages.push({
@@ -91,15 +79,6 @@ try {
       description: cs.metaDescription || undefined,
       category: 'Case Studies',
     });
-  }
-} catch {}
-
-try {
-  const tutRes = await getEntries({ content_type: 'tutorial', limit: 200 });
-  for (const item of tutRes.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    dynamicPages.push({ href: `/tutorials/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Tutorials' });
   }
 } catch {}
 
@@ -114,7 +93,7 @@ const existingHrefs = new Set(staticPages.map(p => p.href));
 const allPages = [...staticPages, ...dynamicPages.filter(p => !existingHrefs.has(p.href))];
 
 const grouped = new Map<string, SiteLink[]>();
-const categoryOrder = ['Main', 'Product', 'Coverage', 'Resources', 'Comparisons', 'Blog Posts', 'Whitepapers', 'Case Studies', 'Tutorials', 'Changelog', 'Company', 'Legal', 'Other'];
+const categoryOrder = ['Main', 'Product', 'Coverage', 'Resources', 'Comparisons', 'Blog Posts', 'Case Studies', 'Changelog', 'Company', 'Legal', 'Other'];
 for (const page of allPages) {
   if (!grouped.has(page.category)) grouped.set(page.category, []);
   grouped.get(page.category)!.push(page);

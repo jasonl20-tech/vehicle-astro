@@ -1,17 +1,17 @@
 /**
- * Build-Time-Loader f\u00fcr alle CMS-Inhalte aus Cloudflare D1.
- * Spricht via REST-API die Tabelle `cms_contents` an und liefert die Rows
- * im erwarteten Shape pro Domain (Blog, CaseStudy, Changelog, FAQ, Press,
- * LandingPage, Team-Autoren).
+ * Build-time loader for all CMS content from Cloudflare D1.
+ * Talks to the REST API of the `cms_contents` table and returns rows in the
+ * expected shape per domain (Blog, CaseStudy, Changelog, FAQ, Press,
+ * LandingPage, Team authors).
  *
- * Wichtig: kein Worker-Kontext n\u00f6tig \u2014 funktioniert in jedem Build (lokal,
- * GitHub Actions, Cloudflare Pages-Build). Bindings werden nicht genutzt.
+ * No Worker context required — works in any build (local, GitHub Actions,
+ * Cloudflare Pages build). Bindings are not used.
  */
 import type { Document } from '@contentful/rich-text-types';
 import {
   getCmsRows,
   type CmsRow,
-  type ContentfulLink,
+  type EntryLink,
   type CmsAssetPayload,
   type CmsAuthorPayload,
   type CmsBlogPayload,
@@ -49,7 +49,7 @@ export function plainTextDocument(text: string | undefined | null): Document | u
   } as Document;
 }
 
-/** Contentful-\u00e4hnlicher Asset-Entry (so wie unsere Templates es erwarten). */
+/** Asset entry shape (matches what our Astro templates expect). */
 export type CfAssetEntry = {
   sys: { id: string; type: 'Asset' };
   fields: {
@@ -79,7 +79,7 @@ export function assetRowToEntry(row: CmsRow<CmsAssetPayload>): CfAssetEntry {
 
 /** Resolved-URL aus einem Asset-Link (`{sys: {id}}`) + Asset-Map. */
 export function resolveAssetUrl(
-  link: ContentfulLink | null | undefined,
+  link: EntryLink | null | undefined,
   assets: AssetMap,
 ): string | undefined {
   const id = link?.sys?.id;
@@ -112,11 +112,11 @@ export type CfBlogFields = {
   category?: string;
   categorySlug?: string;
   tags?: string[];
-  featuredImage?: ContentfulLink;
+  featuredImage?: EntryLink;
   featuredImageAlt?: string;
   authorName?: string;
   authorSlug?: string;
-  authorAvatar?: ContentfulLink;
+  authorAvatar?: EntryLink;
   authorBio?: Document;
   authorWebsite?: string;
   authorTwitter?: string;
@@ -125,7 +125,7 @@ export type CfBlogFields = {
   relatedPostSlugs?: string[];
   seoTitle?: string;
   seoDescription?: Document;
-  ogImage?: ContentfulLink;
+  ogImage?: EntryLink;
   ogImageAlt?: string;
   canonicalUrl?: string;
   noIndex?: boolean;
@@ -234,8 +234,8 @@ export async function loadTeamMembers(opts: { locale?: string } = {}): Promise<T
 export type CmsCaseStudyPayload = {
   title?: string;
   body?: Document;
-  layout?: ContentfulLink;
-  ogImage?: ContentfulLink;
+  layout?: EntryLink;
+  ogImage?: EntryLink;
   metaTitle?: string;
   metaDescription?: string;
   /** optional, falls man k\u00fcnftig pflegt */
@@ -251,7 +251,7 @@ export type CaseStudyItem = {
   slug: string;
   title: string;
   body?: Document;
-  ogImage?: ContentfulLink;
+  ogImage?: EntryLink;
   ogImageUrl?: string;
   metaTitle: string;
   metaDescription: string;
@@ -379,7 +379,7 @@ export type CmsFaqCategoryPayload = { categoryName?: string };
 export type CmsFaqEntryPayload = {
   question?: string;
   answer?: string;
-  faqCategory?: ContentfulLink;
+  faqCategory?: EntryLink;
 };
 
 export type FaqCategory = {
@@ -550,9 +550,9 @@ export type CmsLandingPagePayload = {
   title?: string;
   slug?: string;
   body?: Document;
-  layout?: ContentfulLink;
-  category?: ContentfulLink;
-  ogImage?: ContentfulLink;
+  layout?: EntryLink;
+  category?: EntryLink;
+  ogImage?: EntryLink;
   metaTitle?: string;
   metaDescription?: string;
   footer?: boolean;
@@ -566,7 +566,7 @@ export type LandingPage = {
   layoutName: string;
   categoryId?: string;
   categoryName?: string;
-  ogImage?: ContentfulLink;
+  ogImage?: EntryLink;
   ogImageUrl?: string;
   metaTitle: string;
   metaDescription: string;

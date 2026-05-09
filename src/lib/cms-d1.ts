@@ -1,20 +1,19 @@
 /**
- * Build-Time D1-CMS-Loader.
- * Spricht die Cloudflare D1 REST-API an (kein Worker-Kontext n\u00f6tig) und liefert
- * Rows im Contentful-\u00e4hnlichen Shape, damit bestehende Astro-Templates kaum
- * angepasst werden m\u00fcssen.
+ * Build-time D1 CMS loader.
+ * Talks to the Cloudflare D1 REST API (no Worker context needed) and returns
+ * rows in an entry-shape friendly to our Astro templates.
  *
  * Tabelle (Production):
  *   cms_contents (
  *     id           TEXT NOT NULL,
  *     locale       TEXT NOT NULL,
  *     content_type TEXT NOT NULL,
- *     content      TEXT NOT NULL,   -- JSON-String
+ *     content      TEXT NOT NULL,   -- JSON string
  *     updated_at   TEXT NOT NULL,
  *     PRIMARY KEY (id, locale)
  *   )
  *
- * .env / Pages-Env Variablen (alle drei zwingend):
+ * Env variables (all three required):
  *   CLOUDFLARE_ACCOUNT_ID
  *   CLOUDFLARE_D1_DATABASE_ID
  *   CLOUDFLARE_API_TOKEN
@@ -155,7 +154,7 @@ export async function getCmsRowById<T = unknown>(
  * Konkrete Payload-Typen (so wie aktuell in D1 geschrieben)
  * ------------------------------------------------------------------------- */
 
-export type ContentfulLink = { sys?: { type?: string; linkType?: string; id?: string } };
+export type EntryLink = { sys?: { type?: string; linkType?: string; id?: string } };
 
 export type CmsAssetPayload = {
   title?: string;
@@ -170,7 +169,7 @@ export type CmsAssetPayload = {
 
 export type CmsAuthorPayload = {
   name?: string;
-  profilePicture?: ContentfulLink;
+  profilePicture?: EntryLink;
   biography?: string;
   autorTitle?: string;
   linkedin?: string;
@@ -181,11 +180,11 @@ export type CmsBlogPayload = {
   title?: string;
   body?: Document;
   excerpt?: Document;
-  blogimage?: ContentfulLink;
+  blogimage?: EntryLink;
   metaTitle?: string;
   metaDescription?: string;
   publishDate?: string;
-  author?: ContentfulLink;
+  author?: EntryLink;
   /** Optionale, k\u00fcnftig pflegbare Felder \u2014 Templates lesen sie mit. */
   slug?: string;
   subtitle?: string;
@@ -194,7 +193,7 @@ export type CmsBlogPayload = {
   tags?: string[];
   readingTimeMinutes?: number;
   relatedPostSlugs?: string[];
-  ogImage?: ContentfulLink;
+  ogImage?: EntryLink;
   ogImageAlt?: string;
   canonicalUrl?: string;
   noIndex?: boolean;

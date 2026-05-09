@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getSiteStats, getCompanyInfo } from '../lib/contentful';
+import { getSiteStats, getCompanyInfo } from '../lib/site-config';
 
 const company = await getCompanyInfo();
 const BASE_URL = company.apiBaseUrl;

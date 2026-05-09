@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getCompanyInfo } from '../../lib/contentful';
+import { getCompanyInfo } from '../../lib/site-config';
 
 const company = await getCompanyInfo();
 ---

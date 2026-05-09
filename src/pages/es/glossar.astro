@@ -2,8 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getEntries } from '../../lib/contentful';
-import { richTextToPlainText } from '../../lib/contentful-rich-text';
+import { richTextToPlainText } from '../../lib/rich-text';
 import { loadBlogsWithIncludes, loadCaseStudies, loadChangelogs, loadLandingPages } from '../../lib/cms-d1-content';
 
 interface SiteLink {
@@ -25,9 +24,7 @@ const staticPages: SiteLink[] = [
   { href: '/es/trial', label: 'Prueba Gratuita', description: 'Obtén tu clave API gratuita y comienza a construir.', category: 'Producto' },
   { href: '/es/book-a-call', label: 'Reservar Llamada', description: 'Programa una demo con nuestro equipo.', category: 'Producto' },
   { href: '/es/blog', label: 'Blog', description: 'Actualizaciones, consejos e información del sector.', category: 'Recursos' },
-  { href: '/es/whitepapers', label: 'Informes Técnicos', description: 'Investigación en profundidad e informes técnicos.', category: 'Recursos' },
   { href: '/es/case-studies', label: 'Casos de Estudio', description: 'Historias reales de éxito de clientes.', category: 'Recursos' },
-  { href: '/es/tutorials', label: 'Tutoriales', description: 'Guías de integración paso a paso.', category: 'Recursos' },
   { href: '/es/changelog', label: 'Changelog', description: 'Historial de versiones y notas de publicación.', category: 'Recursos' },
   { href: '/es/faq', label: 'FAQ', description: 'Preguntas frecuentes.', category: 'Recursos' },
   { href: '/es/faq/general', label: 'FAQ – General', description: 'Preguntas generales sobre Vehicle Imagery.', category: 'Recursos' },
@@ -71,15 +68,6 @@ try {
 } catch {}
 
 try {
-  const wpRes = await getEntries({ content_type: 'whitepaper', limit: 200, locale: 'es' });
-  for (const item of wpRes.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    dynamicPages.push({ href: `/es/whitepapers/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Informes Técnicos' });
-  }
-} catch {}
-
-try {
   const csRes = await loadCaseStudies({ locale: 'es', limit: 200 });
   for (const cs of csRes.items) {
     dynamicPages.push({
@@ -88,15 +76,6 @@ try {
       description: cs.metaDescription || undefined,
       category: 'Casos de Estudio',
     });
-  }
-} catch {}
-
-try {
-  const tutRes = await getEntries({ content_type: 'tutorial', limit: 200, locale: 'es' });
-  for (const item of tutRes.items as any[]) {
-    const f = item.fields;
-    if (!f?.slug) continue;
-    dynamicPages.push({ href: `/es/tutorials/${f.slug}`, label: (f.title as string) || f.slug, description: f.excerpt ? richTextToPlainText(f.excerpt, 120) : undefined, category: 'Tutoriales' });
   }
 } catch {}
 
@@ -111,7 +90,7 @@ const existingHrefs = new Set(staticPages.map(p => p.href));
 const allPages = [...staticPages, ...dynamicPages.filter(p => !existingHrefs.has(p.href))];
 
 const grouped = new Map<string, SiteLink[]>();
-const categoryOrder = ['Principal', 'Producto', 'Cobertura', 'Recursos', 'Comparaciones', 'Blog', 'Informes Técnicos', 'Casos de Estudio', 'Tutoriales', 'Changelog', 'Empresa', 'Otros'];
+const categoryOrder = ['Principal', 'Producto', 'Cobertura', 'Recursos', 'Comparaciones', 'Blog', 'Casos de Estudio', 'Changelog', 'Empresa', 'Otros'];
 for (const page of allPages) {
   if (!grouped.has(page.category)) grouped.set(page.category, []);
   grouped.get(page.category)!.push(page);

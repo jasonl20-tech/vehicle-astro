@@ -1,7 +1,11 @@
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 import { BLOCKS, type Document } from '@contentful/rich-text-types';
 
-/** Rich-Text-Document zu reinem Text (z.B. für meta description). Max. maxLength Zeichen. */
+// Rich-text rendering helpers. We still use the Contentful renderer packages because
+// our D1 `body` fields store Contentful-compatible Lexical/Rich-text JSON documents,
+// but the data source itself is no longer Contentful.
+
+/** Rich-text document to plain text (e.g. for meta descriptions). */
 export function richTextToPlainText(doc: Document | null | undefined, maxLength = 160): string {
   if (!doc?.content) return '';
   const parts: string[] = [];

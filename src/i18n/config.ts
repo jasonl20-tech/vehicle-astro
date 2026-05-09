@@ -7,12 +7,6 @@ export const localeNames: Record<Locale, string> = {
   es: 'Español',
 };
 
-// Contentful locale codes – adjust if your space uses different codes
-export const contentfulLocaleMap: Record<Locale, string> = {
-  en: 'en-US',
-  es: 'es',
-};
-
 export const ogLocaleMap: Record<Locale, string> = {
   en: 'en_US',
   es: 'es_ES',

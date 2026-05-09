@@ -1,4 +1,4 @@
-import { defaultLocale, locales, type Locale, contentfulLocaleMap, ogLocaleMap, dateLocaleMap } from './config';
+import { defaultLocale, locales, type Locale, ogLocaleMap, dateLocaleMap } from './config';
 import { ui, type TranslationKey } from './ui';
 
 function cleanPathname(pathname: string): string {
@@ -42,10 +42,6 @@ export function getAlternateUrls(pathname: string, siteUrl: string): Array<{ loc
     locale: loc,
     href: `${siteUrl}${localizeUrl(stripped, loc)}`,
   }));
-}
-
-export function getContentfulLocale(locale: Locale): string {
-  return contentfulLocaleMap[locale] || contentfulLocaleMap[defaultLocale];
 }
 
 export function getOgLocale(locale: Locale): string {

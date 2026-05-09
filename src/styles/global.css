@@ -31,7 +31,7 @@ img {
   animation-play-state: paused;
 }
 
-/* Dynamische Seiten (Contentful Body): linksbündig, Formatierung erhalten – ohne @tailwindcss/typography */
+/* Dynamic CMS body: left-aligned, preserve formatting – without @tailwindcss/typography */
 .dynamic-body {
   text-align: left !important;
   max-width: 48rem;
@@ -43,7 +43,7 @@ img {
   line-height: 1.75;
   color: rgba(0, 0, 0, 0.6);
 }
-/* Keine zusätzliche Einrückung durch Wrapper (z. B. aus Contentful) */
+/* No extra indentation from wrapper elements */
 .dynamic-body > * {
   margin-left: 0 !important;
 }
@@ -133,7 +133,7 @@ img {
   border: none;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-/* Alle Nachfahren linksbündig (übersteuert ggf. Inline-Styles aus Contentful) */
+/* All descendants left-aligned (overrides any inline styles from CMS body) */
 .dynamic-body div,
 .dynamic-body span {
   text-align: left !important;
