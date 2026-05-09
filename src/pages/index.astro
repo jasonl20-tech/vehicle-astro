@@ -109,7 +109,7 @@ const homepageStructuredData: unknown[] = [
     ) : (
       <>
         <!-- Hero Section -->
-        <section class="hero-section relative grid grid-cols-1 min-h-[calc(100svh-5rem)] md:min-h-[calc(100vh-80px)] md:h-[calc(100vh-80px)] overflow-hidden md:overflow-visible">
+        <section class="hero-section relative grid grid-cols-1 min-h-[calc(100svh-5rem)] md:min-h-[calc(100vh-80px)] md:h-[calc(100vh-80px)] overflow-hidden">
           <div class="pointer-events-none absolute left-0 right-0 -top-[2px] z-10" style="height:2px; background-color:var(--vi-dark); background-image:linear-gradient(to right, var(--vi-cream) 0%, var(--vi-cream) 65%, var(--vi-dark) 65%, var(--vi-dark) 100%);"></div>
           <div class="px-5 sm:px-8 md:px-16 flex flex-col justify-center items-start relative w-full order-1 self-stretch min-h-full py-12 sm:py-16 md:py-0" style="background-color:var(--vi-cream);">
             <div class="absolute top-0 left-0 w-full h-px bg-black/5 md:hidden"></div>
@@ -326,9 +326,14 @@ const homepageStructuredData: unknown[] = [
                   <div id="idx-trial-content">
                     <form id="idx-trial-form" class="flex flex-col sm:flex-row gap-0 max-w-lg mx-auto border-b border-white/20 pb-2">
                       <input type="hidden" name="subject" value="Free Trial Request"/>
-                      <input type="email" name="email" required class="flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"/>
+                      <input type="email" name="email" required placeholder="company@email.com" class="flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg"/>
                       {page.freeButton && (
-                        <button type="submit" id="idx-trial-btn" class="px-6 py-3 font-semibold whitespace-nowrap uppercase tracking-widest text-sm transition-colors text-white hover:text-[rgb(200,90,70)]">{page.freeButton}</button>
+                        <button type="submit" id="idx-trial-btn" class="group inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold whitespace-nowrap uppercase tracking-widest text-sm transition-colors text-white hover:text-[rgb(200,90,70)]">
+                          {page.freeButton}
+                          <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                          </svg>
+                        </button>
                       )}
                     </form>
                     {page.freeEmailDescribtion && (
@@ -398,13 +403,8 @@ const homepageStructuredData: unknown[] = [
                     <div id="idx-contact-content">
                       <form id="idx-contact-form" class="space-y-6">
                         <input type="hidden" name="subject" value="Contact Form"/>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          <div>
-                            <input type="text" name="name" required class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
-                          </div>
-                          <div>
-                            <input type="email" name="email" required class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
-                          </div>
+                        <div>
+                          <input type="text" name="name" required class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
                         </div>
                         <div>
                           <input type="text" name="company" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
@@ -467,13 +467,28 @@ const homepageStructuredData: unknown[] = [
                 )}
                 <div class="flex flex-wrap gap-4 sm:gap-6 sm:justify-end">
                   {page.viewArchiveLabel && (
-                    <a href="/changelog" class="text-sm font-bold uppercase tracking-widest text-black/60 hover:text-[rgb(200,90,70)] transition-colors">{page.viewArchiveLabel}</a>
+                    <a href="/changelog" class="group inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-widest text-black/60 hover:text-[rgb(200,90,70)] transition-colors">
+                      {page.viewArchiveLabel}
+                      <svg class="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                      </svg>
+                    </a>
                   )}
                   {page.blogLabel && (
-                    <a href="/blog" class="text-sm font-bold uppercase tracking-widest text-black/60 hover:text-[rgb(200,90,70)] transition-colors">{page.blogLabel}</a>
+                    <a href="/blog" class="group inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-widest text-black/60 hover:text-[rgb(200,90,70)] transition-colors">
+                      {page.blogLabel}
+                      <svg class="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                      </svg>
+                    </a>
                   )}
                   {page.changelogLabel && (
-                    <a href="/changelog" class="text-sm font-bold uppercase tracking-widest text-black/60 hover:text-[rgb(200,90,70)] transition-colors">{page.changelogLabel}</a>
+                    <a href="/changelog" class="group inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-widest text-black/60 hover:text-[rgb(200,90,70)] transition-colors">
+                      {page.changelogLabel}
+                      <svg class="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                      </svg>
+                    </a>
                   )}
                 </div>
               </div>
