@@ -614,3 +614,148 @@ export async function loadLandingPages(opts: { locale?: string; limit?: number }
     .filter((it) => it.slug);
   return { items, assets, categories };
 }
+
+/* =========================================================================
+ * Documentation Page (3 content types: documentationPage, dcoumentationEntrys, dcoumentationExtras)
+ * Note: D1 schema field names are kept 1:1 with the user's spelling (incl. typos).
+ * ======================================================================= */
+
+export type CmsDocEntryPayload = {
+  type?: string;
+  title?: string;
+  describtion?: string;
+  endpointUrl?: string;
+  queryParameters?: string[];
+  exampleResponse?: unknown;
+};
+
+export type CmsDocExtraPayload = {
+  name?: string;
+  inhalt?: Document;
+};
+
+export type CmsDocPagePayload = {
+  title?: string;
+  describtion?: string;
+  endpointsTitleName?: string;
+  endpoints?: EntryLink[];
+  elementsTitleName?: string;
+  otherElements?: EntryLink[];
+  ogimage?: EntryLink;
+  metaTitle?: string;
+  metaDescribtion?: string;
+};
+
+export type DocEndpoint = {
+  id: string;
+  slug: string;
+  type?: string;
+  title: string;
+  describtion?: string;
+  endpointUrl?: string;
+  queryParameters: string[];
+  exampleResponseJson?: string;
+};
+
+export type DocExtra = {
+  id: string;
+  slug: string;
+  name: string;
+  inhalt?: Document;
+};
+
+export type DocumentationPage = {
+  title: string;
+  describtion: string;
+  endpointsTitleName: string;
+  elementsTitleName: string;
+  endpoints: DocEndpoint[];
+  otherElements: DocExtra[];
+  ogImageUrl?: string;
+  metaTitle: string;
+  metaDescribtion: string;
+  assets: AssetMap;
+};
+
+function uniqueSlug(base: string, fallback: string, used: Set<string>): string {
+  let s = base || fallback;
+  if (!s) s = 'item';
+  let candidate = s;
+  let i = 2;
+  while (used.has(candidate)) {
+    candidate = `${s}-${i++}`;
+  }
+  used.add(candidate);
+  return candidate;
+}
+
+export async function loadDocumentationPage(opts: { locale?: string } = {}): Promise<DocumentationPage | null> {
+  const locale = opts.locale ?? 'en-US';
+  const [pageRows, entryRows, extraRows, assets] = await Promise.all([
+    getCmsRows<CmsDocPagePayload>('documentationPage', locale, 5),
+    getCmsRows<CmsDocEntryPayload>('dcoumentationEntrys', locale, 200),
+    getCmsRows<CmsDocExtraPayload>('dcoumentationExtras', locale, 200),
+    loadAssetMap(locale),
+  ]);
+
+  const pageRow = pageRows[0];
+  if (!pageRow) return null;
+  const p = pageRow.payload;
+
+  const entriesById = new Map(entryRows.map((r) => [r.id, r]));
+  const extrasById = new Map(extraRows.map((r) => [r.id, r]));
+
+  const endpointSlugs = new Set<string>();
+  const endpoints: DocEndpoint[] = (p.endpoints ?? [])
+    .map((link) => entriesById.get(link?.sys?.id ?? ''))
+    .filter((r): r is CmsRow<CmsDocEntryPayload> => Boolean(r))
+    .map((r) => {
+      const title = r.payload.title ?? r.id;
+      let exampleResponseJson: string | undefined;
+      const ex = r.payload.exampleResponse;
+      if (ex !== undefined && ex !== null) {
+        try {
+          exampleResponseJson = typeof ex === 'string' ? ex : JSON.stringify(ex, null, 2);
+        } catch {
+          exampleResponseJson = String(ex);
+        }
+      }
+      return {
+        id: r.id,
+        slug: uniqueSlug(slugify(title), `endpoint-${r.id}`, endpointSlugs),
+        type: r.payload.type,
+        title,
+        describtion: r.payload.describtion,
+        endpointUrl: r.payload.endpointUrl,
+        queryParameters: Array.isArray(r.payload.queryParameters) ? r.payload.queryParameters : [],
+        exampleResponseJson,
+      };
+    });
+
+  const extraSlugs = new Set<string>();
+  const otherElements: DocExtra[] = (p.otherElements ?? [])
+    .map((link) => extrasById.get(link?.sys?.id ?? ''))
+    .filter((r): r is CmsRow<CmsDocExtraPayload> => Boolean(r))
+    .map((r) => {
+      const name = r.payload.name ?? r.id;
+      return {
+        id: r.id,
+        slug: uniqueSlug(slugify(name), `extra-${r.id}`, extraSlugs),
+        name,
+        inhalt: r.payload.inhalt,
+      };
+    });
+
+  return {
+    title: p.title ?? 'Documentation',
+    describtion: p.describtion ?? '',
+    endpointsTitleName: p.endpointsTitleName ?? 'Endpoints',
+    elementsTitleName: p.elementsTitleName ?? '',
+    endpoints,
+    otherElements,
+    ogImageUrl: resolveAssetUrl(p.ogimage, assets),
+    metaTitle: p.metaTitle ?? p.title ?? 'Documentation',
+    metaDescribtion: p.metaDescribtion ?? p.describtion ?? '',
+    assets,
+  };
+}
