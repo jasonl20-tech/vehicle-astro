@@ -390,13 +390,20 @@ const homepageStructuredData: unknown[] = [
                         {page.contactTitle && (
                           <h2 class="text-3xl sm:text-4xl font-black mb-6 tracking-tighter text-white">{page.contactTitle}</h2>
                         )}
-                        {page.contactBeschreibung && page.contactBeschreibung !== page.contactTitle && (
-                          <p class="text-gray-300 mb-6 leading-relaxed font-light text-lg">{page.contactBeschreibung}</p>
-                        )}
-                        {page.contactDemoLinkBeschreibung && (
-                          <p class="text-gray-300 mb-12 leading-relaxed font-light">{page.contactDemoLinkBeschreibung}</p>
+                        {page.contactBeschreibung && (
+                          <p class="text-gray-300 leading-relaxed font-light text-lg">{page.contactBeschreibung}</p>
                         )}
                       </div>
+                      {page.contactDemoLinkBeschreibung && (
+                        <div class="mt-12">
+                          <a class="group inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-white hover:text-[rgb(200,90,70)] transition-colors" href="/book-a-call">
+                            {page.contactDemoLinkBeschreibung}
+                            <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div id="idx-contact-wrapper" class="lg:w-[60%] p-10 sm:p-12 lg:p-16 transition-all duration-700 ease-out">
@@ -407,7 +414,7 @@ const homepageStructuredData: unknown[] = [
                           {page.contactNamePlaceholder && (
                             <label for="idx-contact-name" class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-widest">{page.contactNamePlaceholder}</label>
                           )}
-                          <input id="idx-contact-name" type="text" name="name" required placeholder="name" class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
+                          <input id="idx-contact-name" type="text" name="name" required placeholder="your name.." class="w-full bg-gray-50 border border-gray-200 rounded-[2px] px-4 py-3 text-black focus:border-[rgb(200,90,70)] focus:ring-1 focus:ring-[rgb(200,90,70)] focus:outline-none transition-all"/>
                         </div>
                         <div>
                           {page.contactEmailPlaceholder && (
