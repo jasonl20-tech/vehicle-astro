@@ -52,8 +52,6 @@ export const ui = {
     'nav.contact.teamDesc': 'Meet the people behind it',
     'nav.contact.support': 'Support',
     'nav.contact.supportDesc': 'Technical assistance',
-    'nav.contact.partners': 'Partners',
-    'nav.contact.partnersDesc': 'Partnership program',
     'nav.contact.press': 'Press',
     'nav.contact.pressDesc': 'Media kit & news',
 
@@ -83,7 +81,6 @@ export const ui = {
     'footer.team': 'Team',
     'footer.contact': 'Contact',
     'footer.support': 'Support',
-    'footer.partners': 'Partners',
     'footer.press': 'Press',
     'footer.careers': 'Careers',
     'footer.copyright': '© {year} Vehicle Imagery. Made with German engineering.',
@@ -151,8 +148,6 @@ export const ui = {
     'nav.contact.teamDesc': 'Conoce al equipo',
     'nav.contact.support': 'Soporte',
     'nav.contact.supportDesc': 'Asistencia técnica',
-    'nav.contact.partners': 'Socios',
-    'nav.contact.partnersDesc': 'Programa de socios',
     'nav.contact.press': 'Prensa',
     'nav.contact.pressDesc': 'Kit de prensa y noticias',
 
@@ -182,7 +177,6 @@ export const ui = {
     'footer.team': 'Equipo',
     'footer.contact': 'Contacto',
     'footer.support': 'Soporte',
-    'footer.partners': 'Socios',
     'footer.press': 'Prensa',
     'footer.careers': 'Carreras',
     'footer.copyright': '© {year} Vehicle Imagery. Hecho con ingeniería alemana.',

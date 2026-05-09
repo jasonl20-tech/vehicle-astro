@@ -11,7 +11,6 @@ export interface CompanyInfo {
   apiBaseUrl: string;
   emailInfo: string;
   emailSupport: string;
-  emailPartners: string;
   emailPress: string;
   emailCareers: string;
   twitterUrl: string;
@@ -32,7 +31,6 @@ export const companyInfo: CompanyInfo = {
   apiBaseUrl: 'https://api.vehicleimagery.com',
   emailInfo: 'info@vehicleimagery.com',
   emailSupport: 'support@vehicleimagery.com',
-  emailPartners: 'partners@vehicleimagery.com',
   emailPress: 'press@vehicleimagery.com',
   emailCareers: 'careers@vehicleimagery.com',
   twitterUrl: 'https://x.com/VehicleImagery',
