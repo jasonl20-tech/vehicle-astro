@@ -1,0 +1,293 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { loadPaymentLandingPage, type PaymentLandingField } from '../lib/cms-d1-content';
+import { renderRichText } from '../lib/rich-text';
+
+interface Props {
+  slug: string;
+  canonicalUrl: string;
+}
+
+const { slug, canonicalUrl } = Astro.props;
+const { page, assets } = await loadPaymentLandingPage(slug, { locale: 'en-US' });
+
+const htmlId = slug.replace(/[^a-z0-9]+/gi, '-');
+
+const topHtml = page?.topText ? renderRichText(page.topText, assets) : '';
+const bottomHtml = page?.bottomText ? renderRichText(page.bottomText, assets) : '';
+
+const title = page?.metaTitle ?? 'Vehicle Imagery';
+const description = page?.metaDescription ?? '';
+
+function fieldRequired(f: PaymentLandingField): boolean {
+  return f === 'email' || f === 'name';
+}
+
+const inputClass =
+  'w-full border-b border-white/10 bg-transparent px-0 py-3 text-[13px] text-white placeholder-white/25 focus:border-[rgb(200,90,70)] focus:outline-none transition-colors';
+---
+
+<BaseLayout title={title} description={description} canonicalUrl={canonicalUrl}>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    {!page ? (
+      <section class="mx-auto max-w-2xl px-6 py-32 text-center sm:px-12">
+        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[rgb(200,90,70)] mb-4">Configuration</p>
+        <h1 class="text-3xl font-light text-black tracking-tight mb-4">Payment page not found</h1>
+        <p class="text-[15px] text-black/50 leading-relaxed">
+          No <code class="rounded bg-black/5 px-1.5 py-0.5 text-sm">paymentSeiten</code> entry with title{' '}
+          <span class="font-mono text-black/70">«{slug}»</span> for locale en-US. Add it in D1 to show this route.
+        </p>
+      </section>
+    ) : (
+      <>
+        <section class="mx-auto max-w-[1400px] px-6 pt-24 pb-8 sm:px-12 lg:px-16">
+          <div class="max-w-3xl">
+            {topHtml ? (
+              <div class={`payment-top-text dynamic-body`} set:html={topHtml} />
+            ) : null}
+          </div>
+        </section>
+
+        <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-24 sm:px-12 lg:px-16">
+          <div class="grid items-start gap-16 lg:grid-cols-[1fr_1fr]">
+            <div class="payment-bottom-panel rounded-[2rem] overflow-hidden border border-black/[0.06] bg-[#fafafa] p-10 sm:p-12">
+              {bottomHtml ? (
+                <div class={`payment-bottom-text dynamic-body`} set:html={bottomHtml} />
+              ) : (
+                <p class="text-[14px] text-black/40">No details configured (bottom text empty).</p>
+              )}
+            </div>
+
+            <div
+              class="group relative overflow-hidden rounded-[2rem] transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(10,43,49,0.35)]"
+              style="background-color: rgb(10, 43, 49);"
+            >
+              <div
+                class="absolute inset-0 opacity-[0.03]"
+                style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;"
+                aria-hidden="true"
+              />
+              <div
+                class="absolute top-0 left-0 h-[2px] w-full bg-gradient-to-r from-[rgb(200,90,70)] via-[rgb(200,90,70)]/40 to-transparent"
+              />
+              <div class="relative p-10 sm:p-14">
+                {page.requestAccessLabel && (
+                  <span class="mb-4 block text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">{page.requestAccessLabel}</span>
+                )}
+                {page.formTitle && (
+                  <h3 class="mb-4 text-3xl font-light leading-[1.05] tracking-tight text-white sm:text-4xl">{page.formTitle}</h3>
+                )}
+                {page.formDescription && (
+                  <p class="mb-10 max-w-sm text-[14px] leading-relaxed text-white/40">{page.formDescription}</p>
+                )}
+
+                <div id={`payment-form-wrapper-${htmlId}`} class="payment-form-wrap transition-all duration-700 ease-out">
+                  <div id={`payment-form-content-${htmlId}`}>
+                    <form id={`payment-form-${htmlId}`} class="space-y-5">
+                      <input type="hidden" name="subject" value={page.formSubject} />
+
+                      {page.formFields.map((field) => {
+                        const label = page.labels[field] ?? field;
+                        if (field === 'message') {
+                          return (
+                            <div>
+                              <label class="mb-1 block text-[11px] font-bold uppercase tracking-wider text-white/35" for={`${htmlId}-message`}>
+                                {label}
+                              </label>
+                              <textarea
+                                id={`${htmlId}-message`}
+                                name="message"
+                                rows="3"
+                                placeholder={label}
+                                class={`${inputClass} resize-none`}
+                              />
+                            </div>
+                          );
+                        }
+                        const nameAttr = field === 'company' ? 'company' : field;
+                        const type = field === 'email' ? 'email' : 'text';
+                        const auto = field === 'email' ? 'email' : field === 'name' ? 'name' : 'organization';
+                        return (
+                          <div>
+                            <label class="mb-1 block text-[11px] font-bold uppercase tracking-wider text-white/35" for={`${htmlId}-${nameAttr}`}>
+                              {label}
+                            </label>
+                            <input
+                              id={`${htmlId}-${nameAttr}`}
+                              type={type}
+                              name={nameAttr}
+                              required={fieldRequired(field)}
+                              autocomplete={auto}
+                              placeholder={label}
+                              class={inputClass}
+                            />
+                          </div>
+                        );
+                      })}
+
+                      <div class="pt-4">
+                        <button
+                          type="submit"
+                          class="group/btn inline-flex w-full items-center justify-center rounded-full bg-white px-8 py-4 text-[13px] font-medium text-black transition-all duration-300 hover:bg-[rgb(200,90,70)] hover:text-white sm:w-auto"
+                        >
+                          <span>{page.submitButtonLabel}</span>
+                          <svg
+                            class="ml-2 h-4 w-4 transform transition-transform group-hover/btn:translate-x-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div id={`payment-success-${htmlId}`} class="hidden flex-col items-center justify-center py-12 text-center">
+                    <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
+                      <svg class="h-10 w-10" viewBox="0 0 52 52" fill="none">
+                        <circle
+                          cx="26"
+                          cy="26"
+                          r="24"
+                          stroke="white"
+                          stroke-width="2.5"
+                          fill="none"
+                          stroke-dasharray="150.8"
+                          stroke-dashoffset="150.8"
+                          class="pay-suc-circle"
+                        />
+                        <path
+                          d="M15 27L23 35L37 19"
+                          stroke="white"
+                          stroke-width="3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          fill="none"
+                          stroke-dasharray="40"
+                          stroke-dashoffset="40"
+                          class="pay-suc-check"
+                        />
+                      </svg>
+                    </div>
+                    <h3 class="mb-3 text-2xl font-normal text-white">Request sent</h3>
+                    <p class="max-w-xs text-[14px] leading-relaxed text-white/70">Thanks — we’ll get back to you shortly.</p>
+                  </div>
+                </div>
+
+                <style is:global>
+                  .payment-top-text.dynamic-body h1 {
+                    font-size: clamp(2.5rem, 6vw, 5rem);
+                    font-weight: 300;
+                    line-height: 0.95;
+                    letter-spacing: -0.02em;
+                    margin-bottom: 2rem;
+                  }
+                  .payment-top-text.dynamic-body p {
+                    font-size: 16px;
+                    color: rgba(0, 0, 0, 0.5);
+                    line-height: 1.65;
+                    max-width: 32rem;
+                  }
+                  .payment-bottom-text.dynamic-body h2 {
+                    font-size: clamp(2rem, 4vw, 3rem);
+                    font-weight: 300;
+                    margin-bottom: 1.5rem;
+                  }
+                  .payment-bottom-text.dynamic-body p,
+                  .payment-bottom-text.dynamic-body li {
+                    font-size: 14px;
+                    color: rgba(0, 0, 0, 0.5);
+                    line-height: 1.65;
+                  }
+                  .payment-bottom-text.dynamic-body ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                  }
+                  .payment-bottom-text.dynamic-body ul li {
+                    display: flex;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                  }
+                  .payment-bottom-text.dynamic-body ul li::before {
+                    content: '';
+                    flex-shrink: 0;
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    margin-top: 0.15rem;
+                    border-radius: 9999px;
+                    background: rgba(200, 90, 70, 0.1);
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23c85a46' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 0.65rem;
+                  }
+                </style>
+
+                <style>
+                  @keyframes pay-draw-circle {
+                    to {
+                      stroke-dashoffset: 0;
+                    }
+                  }
+                  @keyframes pay-draw-check {
+                    to {
+                      stroke-dashoffset: 0;
+                    }
+                  }
+                  .payment-form-wrap.success .pay-suc-circle {
+                    animation: pay-draw-circle 0.6s ease-out 0.2s forwards;
+                  }
+                  .payment-form-wrap.success .pay-suc-check {
+                    animation: pay-draw-check 0.4s ease-out 0.7s forwards;
+                  }
+                </style>
+
+                <script define:vars={{ htmlId }}>
+                  (function () {
+                    const form = document.getElementById('payment-form-' + htmlId);
+                    const wrapper = document.getElementById('payment-form-wrapper-' + htmlId);
+                    const formContent = document.getElementById('payment-form-content-' + htmlId);
+                    const successEl = document.getElementById('payment-success-' + htmlId);
+                    if (!form || !wrapper || !formContent || !successEl) return;
+                    form.addEventListener('submit', (e) => {
+                      e.preventDefault();
+                      const data = Object.fromEntries(new FormData(form).entries());
+                      fetch('/api/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                        body: JSON.stringify(data),
+                      }).catch(() => {});
+                      formContent.style.opacity = '0';
+                      formContent.style.transform = 'scale(0.95)';
+                      formContent.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                      setTimeout(() => {
+                        formContent.classList.add('hidden');
+                        wrapper.classList.add('success');
+                        successEl.classList.remove('hidden');
+                        successEl.classList.add('flex');
+                        successEl.style.opacity = '0';
+                        successEl.style.transform = 'scale(0.95)';
+                        requestAnimationFrame(() => {
+                          successEl.style.transition = 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s';
+                          successEl.style.opacity = '1';
+                          successEl.style.transform = 'scale(1)';
+                        });
+                      }, 300);
+                    });
+                  })();
+                </script>
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    )}
+  </main>
+  <Footer />
+</BaseLayout>

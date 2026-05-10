@@ -9,7 +9,8 @@
  *   /case-studies/<slug>-> caseStudy
  *   /press/<slug>       -> pressReleases
  *   /changelog/<slug>   -> changelogs
- *   /faq                -> juengster faqEntrys / faqCategorys
+ *   /pricing/startups   -> paymentSeiten title startups
+ *   /trial, /pricing    -> paymentSeiten title = path segment
  *
  * Statische Seiten (kein D1-Backing) behalten den von Astro gesetzten Wert.
  */
@@ -27,7 +28,7 @@ const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 const DATABASE_ID = process.env.CLOUDFLARE_D1_DATABASE_ID;
 const TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 
-const DYNAMIC_TYPES = ['landingPages', 'blog', 'caseStudy', 'pressReleases', 'changelogs'];
+const DYNAMIC_TYPES = ['landingPages', 'blog', 'caseStudy', 'pressReleases', 'changelogs', 'paymentSeiten'];
 
 function slugifyTitle(text) {
   return String(text || '')
@@ -89,6 +90,11 @@ async function buildLastmodMap() {
       case 'caseStudy':      path = `/case-studies/${slug}`; break;
       case 'pressReleases':  path = `/press/${slug}`; break;
       case 'changelogs':     path = `/changelog/${slug}`; break;
+      case 'paymentSeiten': {
+        const t = slug.toLowerCase();
+        path = t === 'startups' ? '/pricing/startups' : `/${t}`;
+        break;
+      }
       default: continue;
     }
     map.set(`${SITE}${path}`, iso);

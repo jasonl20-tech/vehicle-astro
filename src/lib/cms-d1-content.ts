@@ -8,6 +8,7 @@
  * Cloudflare Pages build). Bindings are not used.
  */
 import type { Document } from '@contentful/rich-text-types';
+import { richTextToPlainText } from './rich-text';
 import {
   getCmsRows,
   type CmsRow,
@@ -1034,6 +1035,128 @@ export async function loadHeaderFooter(opts: { locale?: string } = {}): Promise<
     stayUpdatedLabel: p.stayUpdatedTranslation ?? '',
     subscribeLabel: p.subscribeTranslation ?? '',
     footerCloser: p.footerAbschluss ?? '',
+  };
+}
+
+/* =========================================================================
+ * Payment landing pages (/trial, /pricing, …) — content type `paymentSeiten`
+ * `title` in D1 = slug (e.g. trial, pricing, startups)
+ * ======================================================================= */
+
+export type CmsPaymentSeitenPayload = {
+  title?: string;
+  topText?: Document;
+  bottomText?: Document;
+  formularId?: string[];
+  emailTranslation?: string;
+  companyNameTranslation?: string;
+  nameTranslation?: string;
+  messageTranslation?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  /** Falls leer: abgeleitet aus slug (Trial → Free Trial Request, …) */
+  formSubject?: string;
+  submitButtonTranslation?: string;
+  requestAccessLabel?: string;
+  formTitle?: string;
+  formDescription?: string;
+};
+
+export type PaymentLandingField = 'email' | 'name' | 'company' | 'message';
+
+export type PaymentLandingPage = {
+  slug: string;
+  topText?: Document;
+  bottomText?: Document;
+  formFields: PaymentLandingField[];
+  labels: Partial<Record<PaymentLandingField, string>>;
+  formSubject: string;
+  metaTitle: string;
+  metaDescription: string;
+  submitButtonLabel: string;
+  requestAccessLabel?: string;
+  formTitle?: string;
+  formDescription?: string;
+};
+
+function defaultPaymentFormSubject(slug: string): string {
+  const s = slug.trim().toLowerCase();
+  if (s === 'trial') return 'Free Trial Request';
+  if (s === 'pricing') return 'Pricing – Custom Plan Request';
+  if (s === 'startups') return 'Pricing – Startup Plan Request';
+  return `Payment page — ${slug}`;
+}
+
+function normalizePaymentFormField(raw: string): PaymentLandingField | null {
+  const x = String(raw).trim().toLowerCase();
+  if (x === 'email') return 'email';
+  if (x === 'name') return 'name';
+  if (x === 'company' || x === 'companyname') return 'company';
+  if (x === 'message') return 'message';
+  return null;
+}
+
+const defaultPaymentFieldLabels: Record<PaymentLandingField, string> = {
+  email: 'Email',
+  name: 'Name',
+  company: 'Company',
+  message: 'Message',
+};
+
+export async function loadPaymentLandingPage(
+  slug: string,
+  opts: { locale?: string } = {},
+): Promise<{ page: PaymentLandingPage | null; assets: AssetMap }> {
+  const locale = opts.locale ?? 'en-US';
+  const want = slug.trim().toLowerCase();
+
+  const [rows, assets] = await Promise.all([
+    getCmsRows<CmsPaymentSeitenPayload>('paymentSeiten', locale, 200),
+    loadAssetMap(locale),
+  ]);
+
+  const row = rows.find((r) => (r.payload.title ?? '').trim().toLowerCase() === want);
+  if (!row) {
+    return { page: null, assets };
+  }
+
+  const p = row.payload;
+  const rawIds = Array.isArray(p.formularId) ? p.formularId : [];
+  const parsed = rawIds
+    .map(normalizePaymentFormField)
+    .filter((f): f is PaymentLandingField => f !== null);
+  const formFields = parsed.length > 0 ? parsed : (['email'] as PaymentLandingField[]);
+
+  const labels: Partial<Record<PaymentLandingField, string>> = {
+    email: p.emailTranslation?.trim() || defaultPaymentFieldLabels.email,
+    name: p.nameTranslation?.trim() || defaultPaymentFieldLabels.name,
+    company: p.companyNameTranslation?.trim() || defaultPaymentFieldLabels.company,
+    message: p.messageTranslation?.trim() || defaultPaymentFieldLabels.message,
+  };
+
+  const formSubject = (p.formSubject ?? '').trim() || defaultPaymentFormSubject(want);
+  const plainIntro = richTextToPlainText(p.topText, 400);
+  const metaTitle =
+    (p.metaTitle ?? '').trim() ||
+    (plainIntro ? plainIntro.slice(0, 72).trim() : `${want.charAt(0).toUpperCase()}${want.slice(1)} | Vehicle Imagery API`);
+  const metaDescription = (p.metaDescription ?? '').trim() || richTextToPlainText(p.topText, 165);
+
+  return {
+    page: {
+      slug: want,
+      topText: p.topText,
+      bottomText: p.bottomText,
+      formFields,
+      labels,
+      formSubject,
+      metaTitle,
+      metaDescription,
+      submitButtonLabel: (p.submitButtonTranslation ?? '').trim() || 'Send',
+      requestAccessLabel: (p.requestAccessLabel ?? '').trim() || undefined,
+      formTitle: (p.formTitle ?? '').trim() || undefined,
+      formDescription: (p.formDescription ?? '').trim() || undefined,
+    },
+    assets,
   };
 }
 
