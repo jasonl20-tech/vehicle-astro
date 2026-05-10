@@ -1,8 +1,7 @@
 ---
 import '../styles/global.css';
 import { getLocaleFromUrl, getAlternateUrls, getOgLocale, type Locale } from '../i18n/utils';
-
-const defaultKeywords = 'vehicle imagery API, car stock photos API, automotive imagery API, vehicle photography API, car images API, vehicle stock imagery, automotive stock photos, vehicle imagery for dealerships, car stock photos for websites, vehicle photography API documentation, automotive imagery API Europe';
+import { loadFirmenKonfiguration } from '../lib/cms-d1-content';
 
 interface Props {
   title: string;
@@ -19,27 +18,47 @@ interface Props {
   preloadFirstImage?: string;
 }
 
-const BRAND = 'Vehicle Imagery';
-const BRAND_SUFFIX = ' | Vehicle Imagery';
-const { title, description = '', ogImage, ogImageAlt, ogImageWidth: ogImageWidthProp, ogImageHeight: ogImageHeightProp, canonicalUrl, noIndex = false, keywords = defaultKeywords, structuredDataGraph, preloadHero = false, preloadFirstImage } = Astro.props;
+const FALLBACK_BRAND = 'Vehicle Imagery';
+const FALLBACK_SITE_NAME = 'Vehicle Imagery API';
+const FALLBACK_OG_IMAGE = '/images/hero-car.webp';
+const FALLBACK_OG_IMAGE_ALT = 'Vehicle Imagery';
+
+const { title, description = '', ogImage, ogImageAlt, ogImageWidth: ogImageWidthProp, ogImageHeight: ogImageHeightProp, canonicalUrl, noIndex = false, keywords, structuredDataGraph, preloadHero = false, preloadFirstImage } = Astro.props;
 const locale: Locale = getLocaleFromUrl(Astro.url);
 const siteUrl = Astro.url.origin;
-const defaultOgImage = `${siteUrl}/images/hero-car.webp`;
-const defaultOgImageAlt = 'Vehicle Imagery – Studio quality car photography API';
+const cfLocale = locale === 'es' ? 'es' : 'en-US';
+
+// Cached at module level - one D1 hit per locale per build run.
+const firma = await loadFirmenKonfiguration({ locale: cfLocale }).catch(() => null);
+
+const brandName = firma?.firmenName || FALLBACK_BRAND;
+const siteName = firma?.siteName || FALLBACK_SITE_NAME;
+const brandSuffix = ` | ${brandName}`;
+
+const defaultOgImage = firma?.defaultOgImageUrl
+  ? (firma.defaultOgImageUrl.startsWith('http') ? firma.defaultOgImageUrl : `${siteUrl}${firma.defaultOgImageUrl}`)
+  : `${siteUrl}${FALLBACK_OG_IMAGE}`;
+const defaultOgImageAlt = firma?.defaultOgImageAlt || FALLBACK_OG_IMAGE_ALT;
+const defaultOgImageWidth = firma?.defaultOgImageWidth ?? 1200;
+const defaultOgImageHeight = firma?.defaultOgImageHeight ?? 630;
+
 const ogImageUrl = ogImage
   ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`)
   : defaultOgImage;
 const resolvedOgImageAlt = ogImageAlt || defaultOgImageAlt;
 const ogUrl = canonicalUrl ? `${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}` : Astro.url.href;
-const ogImageWidth = ogImageWidthProp ?? 1200;
-const ogImageHeight = ogImageHeightProp ?? 630;
+const ogImageWidth = ogImageWidthProp ?? defaultOgImageWidth;
+const ogImageHeight = ogImageHeightProp ?? defaultOgImageHeight;
+
+const resolvedKeywords = keywords ?? firma?.keywords ?? '';
+
 const alternateUrls = getAlternateUrls(Astro.url.pathname, siteUrl);
 
-// Append brand suffix when the page title doesn't already mention it
-// and there's still room (Google typically truncates around 60 chars).
-const needsBrand = !title.toLowerCase().includes(BRAND.toLowerCase());
-const finalTitle = (needsBrand && (title.length + BRAND_SUFFIX.length) <= 70)
-  ? `${title}${BRAND_SUFFIX}`
+// Append brand suffix when the title doesn't already mention the brand
+// and there's still room (Google truncates around 60 chars).
+const needsBrand = !title.toLowerCase().includes(brandName.toLowerCase());
+const finalTitle = (needsBrand && (title.length + brandSuffix.length) <= 70)
+  ? `${title}${brandSuffix}`
   : title;
 ---
 
@@ -54,7 +73,7 @@ const finalTitle = (needsBrand && (title.length + BRAND_SUFFIX.length) <= 70)
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
+    {resolvedKeywords && <meta name="keywords" content={resolvedKeywords} />}
     {noIndex ? <meta name="robots" content="noindex" /> : <meta name="robots" content="index, follow" />}
     <meta name="generator" content={Astro.generator} />
     <title>{finalTitle}</title>
@@ -72,7 +91,7 @@ const finalTitle = (needsBrand && (title.length + BRAND_SUFFIX.length) <= 70)
     <meta property="og:type" content="website" />
     <meta property="og:url" content={ogUrl} />
     <meta property="og:locale" content={getOgLocale(locale)} />
-    <meta property="og:site_name" content="Vehicle Imagery API" />
+    <meta property="og:site_name" content={siteName} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={finalTitle} />
     <meta name="twitter:description" content={description} />
@@ -88,16 +107,18 @@ const finalTitle = (needsBrand && (title.length + BRAND_SUFFIX.length) <= 70)
         {
           '@type': 'Organization',
           '@id': `${siteUrl}/#organization`,
-          name: 'Vehicle Imagery',
+          name: brandName,
           url: siteUrl,
-          logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.svg` },
+          logo: {
+            '@type': 'ImageObject',
+            url: firma?.logoUrl || `${siteUrl}/logo.svg`,
+          },
         },
         {
           '@type': 'WebSite',
           '@id': `${siteUrl}/#website`,
           url: siteUrl,
-          name: 'Vehicle Imagery API',
-          description: 'Studio-quality vehicle imagery API. Car stock photos for dealerships, leasing, and automotive platforms.',
+          name: siteName,
           publisher: { '@id': `${siteUrl}/#organization` },
         },
         ...(structuredDataGraph ?? []),

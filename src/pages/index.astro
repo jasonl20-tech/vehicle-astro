@@ -56,7 +56,7 @@ const ogImageAbsolute = page?.ogImageUrl
 const softwareAppSchema = {
   '@type': 'SoftwareApplication',
   '@id': `${siteUrl}/#software`,
-  name: 'Vehicle Imagery API',
+  name: firma?.siteName || 'Vehicle Imagery API',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Any (REST API)',
   url: siteUrl,
@@ -82,9 +82,7 @@ const webPageSchema = {
   about: { '@id': `${siteUrl}/#software` },
 };
 
-const sameAsLinks = (firma?.socialUrls && firma.socialUrls.length > 0)
-  ? firma.socialUrls
-  : [company.twitterUrl, company.facebookUrl, company.linkedinUrl].filter((u): u is string => Boolean(u));
+const sameAsLinks = [company.twitterUrl, company.facebookUrl, company.linkedinUrl].filter((u): u is string => Boolean(u));
 
 const homepageStructuredData: unknown[] = [
   {
@@ -93,7 +91,6 @@ const homepageStructuredData: unknown[] = [
     name: firma?.firmenName || company.companyName,
     url: siteUrl,
     logo: firma?.logoUrl || `${siteUrl}/logo.svg`,
-    description: firma?.tagline || undefined,
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: company.phone,

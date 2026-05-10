@@ -564,9 +564,6 @@ export type CmsLandingPagePayload = {
   ogImage?: EntryLink;
   metaTitle?: string;
   metaDescription?: string;
-  /** Optional CMS fields - safe to add later in Contentful */
-  keywords?: string;
-  noIndex?: boolean;
 };
 
 export type LandingPage = {
@@ -583,8 +580,6 @@ export type LandingPage = {
   ogImageAlt?: string;
   metaTitle: string;
   metaDescription: string;
-  keywords?: string;
-  noIndex: boolean;
   updatedAt: string;
 };
 
@@ -625,8 +620,6 @@ export async function loadLandingPages(opts: { locale?: string; limit?: number }
         ogImageAlt: ogAsset?.fields?.description || ogAsset?.fields?.title || (p.title ?? slug),
         metaTitle: p.metaTitle ?? p.title ?? slug,
         metaDescription: p.metaDescription ?? '',
-        keywords: typeof p.keywords === 'string' && p.keywords.trim() ? p.keywords.trim() : undefined,
-        noIndex: p.noIndex === true,
         updatedAt: r.updatedAt,
       };
     })
@@ -1052,50 +1045,57 @@ type CmsFirmenKonfigurationPayload = {
   firmenLogo?: EntryLink;
   firmenName?: string;
   meetingEmbed?: string;
-  /** Optional CMS fields - safe to add later in Contentful */
-  twitterUrl?: string;
-  linkedinUrl?: string;
-  facebookUrl?: string;
-  youtubeUrl?: string;
-  instagramUrl?: string;
-  githubUrl?: string;
-  tagline?: string;
+  defaultOgImage?: EntryLink;
+  keywords?: string[];
+  siteName?: string;
 };
 
 export type FirmenKonfiguration = {
   logoUrl: string | null;
   firmenName: string;
   meetingEmbed: string;
-  socialUrls: string[];
-  tagline: string;
+  defaultOgImageUrl: string | null;
+  defaultOgImageWidth: number | null;
+  defaultOgImageHeight: number | null;
+  defaultOgImageAlt: string;
+  keywords: string;
+  siteName: string;
 };
+
+const firmenKonfigurationCache = new Map<string, FirmenKonfiguration | null>();
 
 export async function loadFirmenKonfiguration(
   opts: { locale?: string } = {},
 ): Promise<FirmenKonfiguration | null> {
   const locale = opts.locale ?? 'en-US';
+  if (firmenKonfigurationCache.has(locale)) {
+    return firmenKonfigurationCache.get(locale) ?? null;
+  }
+
   const rows = await getCmsRows<CmsFirmenKonfigurationPayload>('firmenKonfiguration', locale, 1);
   const row = rows[0];
-  if (!row) return null;
+  if (!row) {
+    firmenKonfigurationCache.set(locale, null);
+    return null;
+  }
   const p = row.payload;
 
   const assets = await loadAssetMap(locale);
-  const socialUrls = [
-    p.twitterUrl,
-    p.linkedinUrl,
-    p.facebookUrl,
-    p.youtubeUrl,
-    p.instagramUrl,
-    p.githubUrl,
-  ].filter((u): u is string => typeof u === 'string' && u.trim().length > 0);
+  const ogAsset = p.defaultOgImage?.sys?.id ? assets[p.defaultOgImage.sys.id] : undefined;
 
-  return {
+  const cfg: FirmenKonfiguration = {
     logoUrl: resolveAssetUrl(p.firmenLogo, assets) ?? null,
     firmenName: p.firmenName ?? '',
     meetingEmbed: p.meetingEmbed ?? '',
-    socialUrls,
-    tagline: p.tagline ?? '',
+    defaultOgImageUrl: resolveAssetUrl(p.defaultOgImage, assets) ?? null,
+    defaultOgImageWidth: ogAsset?.fields?.file?.details?.image?.width ?? null,
+    defaultOgImageHeight: ogAsset?.fields?.file?.details?.image?.height ?? null,
+    defaultOgImageAlt: ogAsset?.fields?.description || ogAsset?.fields?.title || (p.firmenName ?? ''),
+    keywords: Array.isArray(p.keywords) ? p.keywords.filter(Boolean).join(', ') : '',
+    siteName: p.siteName ?? '',
   };
+  firmenKonfigurationCache.set(locale, cfg);
+  return cfg;
 }
 
 function resolveImageMeta(link: EntryLink | undefined, assets: AssetMap): MainPageImage | null {

@@ -153,7 +153,14 @@ function formatSitemapXml(xml) {
 
 try {
   const xml = await readFile(src, 'utf-8');
-  const lastmodMap = await buildLastmodMap();
+  let lastmodMap = new Map();
+  try {
+    lastmodMap = await buildLastmodMap();
+  } catch (d1Err) {
+    // Never block deploy - the sitemap (built by Astro from emitted pages)
+    // is more important than perfectly accurate lastmod values.
+    console.warn(`  D1 lastmod fetch failed - falling back to Astro defaults (${d1Err?.message ?? d1Err})`);
+  }
   const { xml: patchedXml, replaced } = applyLastmodOverrides(xml, lastmodMap);
   const formatted = formatSitemapXml(patchedXml);
   await writeFile(dest, formatted);
