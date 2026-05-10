@@ -1125,7 +1125,12 @@ export async function loadPaymentLandingPage(
   const parsed = rawIds
     .map(normalizePaymentFormField)
     .filter((f): f is PaymentLandingField => f !== null);
-  const formFields = parsed.length > 0 ? parsed : (['email'] as PaymentLandingField[]);
+  /** Standard: Name + E-Mail (sinnvolles Minimum). Leer oder nur noch E-Mail unter „trial“ → Name zusätzlich. */
+  let formFields: PaymentLandingField[] =
+    parsed.length > 0 ? parsed : (['name', 'email'] as PaymentLandingField[]);
+  if (want === 'trial' && parsed.length === 1 && parsed[0] === 'email') {
+    formFields = ['name', 'email'];
+  }
 
   const labels: Partial<Record<PaymentLandingField, string>> = {
     email: p.emailTranslation?.trim() || defaultPaymentFieldLabels.email,
