@@ -28,13 +28,8 @@ const hasEmbed = Boolean(meetingEmbed?.trim());
       </section>
     )}
     {hasEmbed && (
-      <section class="mx-auto max-w-[1400px] px-6 pb-8 sm:px-12 lg:px-16">
-        <div
-          class="min-w-0 relative overflow-hidden rounded-[2rem] border border-black/[0.06] bg-white"
-          style="min-height: 950px;"
-        >
-          <Fragment set:html={meetingEmbed!} />
-        </div>
+      <section class="mx-auto max-w-[1400px] px-6 pb-8 sm:px-12 lg:px-16 min-w-0">
+        <Fragment set:html={meetingEmbed!} />
       </section>
     )}
     {hasBottom && (
