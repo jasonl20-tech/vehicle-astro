@@ -1,5 +1,5 @@
 ---
-import { loadChangelogs, loadHeaderFooter } from '../lib/cms-d1-content';
+import { loadChangelogs, loadHeaderFooter, loadFirmenKonfiguration } from '../lib/cms-d1-content';
 import { getLocaleFromUrl, localizeUrl, stripLocalePrefix, localeNames, locales } from '../i18n/utils';
 
 const locale = getLocaleFromUrl(Astro.url);
@@ -15,9 +15,10 @@ const localeOptions = locales.map((loc) => ({
 
 const cfLocale = locale === 'es' ? 'es' : 'en-US';
 
-const [hf, changelogRes] = await Promise.all([
+const [hf, changelogRes, firma] = await Promise.all([
   loadHeaderFooter({ locale: cfLocale }).catch(() => null),
   loadChangelogs({ locale: cfLocale, limit: 5 }).catch(() => ({ items: [] })),
+  loadFirmenKonfiguration({ locale: cfLocale }).catch(() => null),
 ]);
 
 const changelogs = (changelogRes.items || []).slice(0, 2).map((c) => ({
@@ -34,7 +35,11 @@ const navGroups = hf?.groups ?? [];
     <nav class="relative flex h-14 sm:h-16 md:h-20 w-full items-center">
 
       <div class="flex flex-1 items-center gap-6 lg:gap-9">
-        <a href={l('/')} class="group flex shrink-0 items-center transition-opacity hover:opacity-80" aria-label="Home"></a>
+        <a href={l('/')} class="group flex shrink-0 items-center transition-opacity hover:opacity-80" aria-label={firma?.firmenName || 'Home'}>
+          {firma?.logoUrl && (
+            <img src={firma.logoUrl} alt={firma.firmenName || ''} class="h-7 w-auto sm:h-8 md:h-9" loading="eager" decoding="async" draggable="false" />
+          )}
+        </a>
 
         {navGroups.length > 0 && (
           <div class="hidden items-center gap-6 lg:gap-9 md:flex relative" id="nav-menu">
@@ -190,7 +195,11 @@ const navGroups = hf?.groups ?? [];
 
     <div class="hidden border-t border-white/10 bg-[#1C2B32] md:hidden" id="mobile-menu" role="dialog" aria-label="Navigation">
       <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <span></span>
+        <a href={l('/')} class="flex items-center" aria-label={firma?.firmenName || 'Home'}>
+          {firma?.logoUrl && (
+            <img src={firma.logoUrl} alt={firma.firmenName || ''} class="h-7 w-auto" loading="lazy" decoding="async" draggable="false" />
+          )}
+        </a>
         <button type="button" class="flex h-9 w-9 items-center justify-center rounded-md text-white/70 hover:bg-white/10 hover:text-white" aria-label="Close menu" id="mobile-menu-close">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>

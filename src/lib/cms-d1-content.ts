@@ -1025,6 +1025,39 @@ export async function loadHeaderFooter(opts: { locale?: string } = {}): Promise<
   };
 }
 
+/* =========================================================================
+ * Firmen-Konfiguration (globales Branding & Embeds)
+ * ======================================================================= */
+
+type CmsFirmenKonfigurationPayload = {
+  firmenLogo?: EntryLink;
+  firmenName?: string;
+  meetingEmbed?: string;
+};
+
+export type FirmenKonfiguration = {
+  logoUrl: string | null;
+  firmenName: string;
+  meetingEmbed: string;
+};
+
+export async function loadFirmenKonfiguration(
+  opts: { locale?: string } = {},
+): Promise<FirmenKonfiguration | null> {
+  const locale = opts.locale ?? 'en-US';
+  const rows = await getCmsRows<CmsFirmenKonfigurationPayload>('firmenKonfiguration', locale, 1);
+  const row = rows[0];
+  if (!row) return null;
+  const p = row.payload;
+
+  const assets = await loadAssetMap(locale);
+  return {
+    logoUrl: resolveAssetUrl(p.firmenLogo, assets) ?? null,
+    firmenName: p.firmenName ?? '',
+    meetingEmbed: p.meetingEmbed ?? '',
+  };
+}
+
 function resolveImageMeta(link: EntryLink | undefined, assets: AssetMap): MainPageImage | null {
   const url = resolveAssetUrl(link, assets);
   if (!url) return null;

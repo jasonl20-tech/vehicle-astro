@@ -1,5 +1,5 @@
 ---
-import { loadLandingPages, loadHeaderFooter } from '../lib/cms-d1-content';
+import { loadLandingPages, loadHeaderFooter, loadFirmenKonfiguration } from '../lib/cms-d1-content';
 import { getLocaleFromUrl, localizeUrl } from '../i18n/utils';
 
 const locale = getLocaleFromUrl(Astro.url);
@@ -52,7 +52,10 @@ const coverageExtra = dynamicByCategory.get('coverage') || [];
 const resourcesExtra = dynamicByCategory.get('resources') || [];
 const companyExtra = dynamicByCategory.get('company') || [];
 
-const hf = await loadHeaderFooter({ locale: cfLocale }).catch(() => null);
+const [hf, firma] = await Promise.all([
+  loadHeaderFooter({ locale: cfLocale }).catch(() => null),
+  loadFirmenKonfiguration({ locale: cfLocale }).catch(() => null),
+]);
 
 const sectionsToRender: Array<{ key: string; label: string; links: DynamicLink[] }> = [];
 if (hf?.productLabel) sectionsToRender.push({ key: 'product', label: hf.productLabel, links: productExtra });
@@ -66,6 +69,11 @@ if (hf?.companyLabel) sectionsToRender.push({ key: 'company', label: hf.companyL
     <div class="w-full mx-auto">
       <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-20 gap-12 border-b border-white/10 pb-12">
         <div class="max-w-xl">
+          {firma?.logoUrl && (
+            <div class="flex items-center space-x-3 mb-6">
+              <img src={firma.logoUrl} alt={firma.firmenName || ''} class="h-12 w-auto" loading="lazy" decoding="async" draggable="false"/>
+            </div>
+          )}
           {hf?.footerDescription && (
             <p class="text-gray-300 text-lg leading-relaxed mb-8 whitespace-pre-line">{hf.footerDescription}</p>
           )}
