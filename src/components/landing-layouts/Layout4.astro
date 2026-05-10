@@ -2,42 +2,26 @@
 interface Props {
   title: string;
   bodyHtml?: string;
-  ogImageUrl?: string;
-  metaDescription?: string;
 }
-const { title, bodyHtml, ogImageUrl, metaDescription } = Astro.props;
+const { title, bodyHtml } = Astro.props;
 ---
 
-<!-- Layout 4 — Dark Theme Premium -->
+<!-- Layout 4 — Dark Premium Wide -->
 <article style="background-color: rgb(10, 43, 49); font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
 
-  <section class="relative overflow-hidden">
+  <section class="relative overflow-hidden border-b border-white/10">
     <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
     <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-[0.05] pointer-events-none" style="background: radial-gradient(circle, white 0%, transparent 60%);" aria-hidden="true"></div>
     <div class="absolute -bottom-48 -left-24 w-72 h-72 rounded-full opacity-[0.04] pointer-events-none" style="background: radial-gradient(circle, rgb(255,136,68) 0%, transparent 60%);" aria-hidden="true"></div>
 
-    <div class="relative mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16 pt-24 pb-16">
-      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16 items-end">
-        <div class="lg:col-span-7">
-          <span class="block h-[3px] w-12 bg-[rgb(255,136,68)] mb-8"></span>
-          <h1 class="text-5xl sm:text-6xl md:text-7xl font-light leading-[0.98] text-white tracking-tight">{title}</h1>
-          {metaDescription && (
-            <p class="mt-8 text-[16px] sm:text-[17px] text-white/55 leading-relaxed max-w-xl">{metaDescription}</p>
-          )}
-        </div>
-        {ogImageUrl && (
-          <div class="lg:col-span-5">
-            <div class="aspect-[4/3] w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5">
-              <img src={ogImageUrl} alt={title} class="h-full w-full object-cover" loading="eager" decoding="async" draggable="false" />
-            </div>
-          </div>
-        )}
-      </div>
+    <div class="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pt-24 pb-20">
+      <span class="block h-[3px] w-12 bg-[rgb(255,136,68)] mb-10"></span>
+      <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.96] text-white tracking-tight">{title}</h1>
     </div>
   </section>
 
   {bodyHtml && (
-    <section class="relative mx-auto max-w-3xl px-6 sm:px-12 lg:px-16 pb-32">
+    <section class="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pt-20 pb-32">
       <div class="dynamic-body dynamic-body--dark" set:html={bodyHtml} />
     </section>
   )}

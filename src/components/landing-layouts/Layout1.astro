@@ -2,32 +2,20 @@
 interface Props {
   title: string;
   bodyHtml?: string;
-  ogImageUrl?: string;
-  metaDescription?: string;
 }
-const { title, bodyHtml, ogImageUrl, metaDescription } = Astro.props;
+const { title, bodyHtml } = Astro.props;
 ---
 
-<!-- Layout 1 — Editorial Long-Form -->
+<!-- Layout 1 — Editorial Wide -->
 <article class="bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-  {ogImageUrl && (
-    <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pt-10">
-      <div class="aspect-[16/7] w-full overflow-hidden rounded-[2rem] bg-black/[0.04]">
-        <img src={ogImageUrl} alt={title} class="h-full w-full object-cover" loading="eager" decoding="async" draggable="false" />
-      </div>
-    </div>
-  )}
-
-  <header class="mx-auto max-w-3xl px-6 sm:px-12 lg:px-16 pt-16 pb-10">
-    <h1 class="text-4xl sm:text-5xl md:text-6xl font-light leading-[1.02] text-black tracking-tight">{title}</h1>
-    {metaDescription && (
-      <p class="mt-6 text-[17px] text-black/55 leading-relaxed">{metaDescription}</p>
-    )}
-    <hr class="mt-10 border-black/10" />
+  <header class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pt-20 pb-12">
+    <span class="block h-[3px] w-12 bg-[rgb(200,90,70)] mb-8"></span>
+    <h1 class="text-5xl sm:text-6xl md:text-7xl font-light leading-[0.98] text-black tracking-tight">{title}</h1>
+    <hr class="mt-12 border-black/10" />
   </header>
 
   {bodyHtml && (
-    <section class="mx-auto max-w-3xl px-6 sm:px-12 lg:px-16 pb-24">
+    <section class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pb-24">
       <div class="dynamic-body" set:html={bodyHtml} />
     </section>
   )}

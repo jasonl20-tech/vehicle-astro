@@ -2,35 +2,20 @@
 interface Props {
   title: string;
   bodyHtml?: string;
-  ogImageUrl?: string;
-  metaDescription?: string;
 }
-const { title, bodyHtml, ogImageUrl, metaDescription } = Astro.props;
+const { title, bodyHtml } = Astro.props;
 ---
 
-<!-- Layout 5 — Minimal Premium Centered -->
+<!-- Layout 5 — Minimal Premium Wide -->
 <article class="bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
 
-  <section class="mx-auto max-w-2xl px-6 sm:px-8 pt-32 pb-16 text-center">
-    {ogImageUrl && (
-      <div class="mx-auto mb-12 flex justify-center">
-        <div class="h-20 w-20 sm:h-24 sm:w-24 overflow-hidden rounded-2xl border border-black/5 bg-black/[0.03] shadow-sm">
-          <img src={ogImageUrl} alt={title} class="h-full w-full object-cover" loading="eager" decoding="async" draggable="false" />
-        </div>
-      </div>
-    )}
-
+  <section class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pt-28 pb-12 text-center">
     <span class="mx-auto mb-10 block h-[2px] w-8 bg-[rgb(200,90,70)]"></span>
-
-    <h1 class="text-3xl sm:text-4xl md:text-5xl font-light leading-[1.05] text-black tracking-tight">{title}</h1>
-
-    {metaDescription && (
-      <p class="mx-auto mt-8 max-w-xl text-[15px] sm:text-[16px] text-black/55 leading-relaxed">{metaDescription}</p>
-    )}
+    <h1 class="mx-auto text-4xl sm:text-5xl md:text-6xl font-light leading-[1.05] text-black tracking-tight max-w-5xl">{title}</h1>
   </section>
 
   {bodyHtml && (
-    <section class="mx-auto max-w-2xl px-6 sm:px-8 pb-32">
+    <section class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pb-32">
       <hr class="mb-16 border-black/10" />
       <div class="dynamic-body dynamic-body--lg" set:html={bodyHtml} />
     </section>

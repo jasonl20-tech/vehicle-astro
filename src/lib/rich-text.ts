@@ -1,5 +1,5 @@
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
-import { BLOCKS, type Document } from '@contentful/rich-text-types';
+import { BLOCKS, INLINES, type Document } from '@contentful/rich-text-types';
 
 // Rich-text rendering helpers. We still use the Contentful renderer packages because
 // our D1 `body` fields store Contentful-compatible Lexical/Rich-text JSON documents,
@@ -35,7 +35,47 @@ export function renderRichText(doc: Document | null | undefined, assetMap?: Asse
     preserveWhitespace: true,
     renderNode: {
       [BLOCKS.PARAGRAPH]: (_node: { content?: unknown[] }, next: Next) => `<p>${next(_node.content ?? [])}</p>`,
-      'embedded-asset-block': (node: { data?: { target?: { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } } }) => {
+      [BLOCKS.HEADING_1]: (n: { content?: unknown[] }, next: Next) => `<h1>${next(n.content ?? [])}</h1>`,
+      [BLOCKS.HEADING_2]: (n: { content?: unknown[] }, next: Next) => `<h2>${next(n.content ?? [])}</h2>`,
+      [BLOCKS.HEADING_3]: (n: { content?: unknown[] }, next: Next) => `<h3>${next(n.content ?? [])}</h3>`,
+      [BLOCKS.HEADING_4]: (n: { content?: unknown[] }, next: Next) => `<h4>${next(n.content ?? [])}</h4>`,
+      [BLOCKS.HEADING_5]: (n: { content?: unknown[] }, next: Next) => `<h5>${next(n.content ?? [])}</h5>`,
+      [BLOCKS.HEADING_6]: (n: { content?: unknown[] }, next: Next) => `<h6>${next(n.content ?? [])}</h6>`,
+      [BLOCKS.UL_LIST]: (n: { content?: unknown[] }, next: Next) => `<ul>${next(n.content ?? [])}</ul>`,
+      [BLOCKS.OL_LIST]: (n: { content?: unknown[] }, next: Next) => `<ol>${next(n.content ?? [])}</ol>`,
+      [BLOCKS.LIST_ITEM]: (n: { content?: unknown[] }, next: Next) => `<li>${next(n.content ?? [])}</li>`,
+      [BLOCKS.QUOTE]: (n: { content?: unknown[] }, next: Next) => `<blockquote>${next(n.content ?? [])}</blockquote>`,
+      [BLOCKS.HR]: () => '<hr/>',
+      [BLOCKS.TABLE]: (n: { content?: unknown[] }, next: Next) => {
+        const rows = (n.content ?? []) as Array<{ content?: Array<{ nodeType?: string }> }>;
+        const firstRow = rows[0];
+        const hasHeader = !!firstRow?.content?.some((c) => c?.nodeType === 'table-header-cell');
+        if (hasHeader) {
+          const head = next([firstRow]);
+          const body = next(rows.slice(1));
+          return `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
+        }
+        return `<table><tbody>${next(rows)}</tbody></table>`;
+      },
+      [BLOCKS.TABLE_ROW]: (n: { content?: unknown[] }, next: Next) => `<tr>${next(n.content ?? [])}</tr>`,
+      [BLOCKS.TABLE_CELL]: (n: { content?: unknown[] }, next: Next) => `<td>${next(n.content ?? [])}</td>`,
+      [BLOCKS.TABLE_HEADER_CELL]: (n: { content?: unknown[] }, next: Next) => `<th>${next(n.content ?? [])}</th>`,
+      [INLINES.HYPERLINK]: (node: { data?: { uri?: string }; content?: unknown[] }, next: Next) => {
+        const uri = node.data?.uri ?? '#';
+        const isExternal = /^https?:\/\//i.test(uri) && !uri.includes('vehicleimagery.com');
+        const rel = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `<a href="${escapeHtml(uri)}"${rel}>${next(node.content ?? [])}</a>`;
+      },
+      [INLINES.ASSET_HYPERLINK]: (node: { data?: { target?: { sys?: { id?: string }; fields?: { file?: { url?: string } } } }; content?: unknown[] }, next: Next) => {
+        let target = node.data?.target;
+        if (!getAssetUrl(target) && assetMap && target?.sys?.id) {
+          target = assetMap[target.sys.id] as typeof target;
+        }
+        const url = getAssetUrl(target);
+        if (!url) return next(node.content ?? []);
+        return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${next(node.content ?? [])}</a>`;
+      },
+      [BLOCKS.EMBEDDED_ASSET]: (node: { data?: { target?: { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } } }) => {
         let target = node.data?.target;
         if (!getAssetUrl(target) && assetMap && target?.sys?.id) {
           target = assetMap[target.sys.id] as typeof target;

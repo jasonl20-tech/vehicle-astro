@@ -2,39 +2,33 @@
 interface Props {
   title: string;
   bodyHtml?: string;
-  ogImageUrl?: string;
-  metaDescription?: string;
 }
-const { title, bodyHtml, ogImageUrl, metaDescription } = Astro.props;
+const { title, bodyHtml } = Astro.props;
 ---
 
-<!-- Layout 2 — Magazine Sidebar -->
+<!-- Layout 2 — Split Header / Wide Body -->
 <article class="bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-  <div class="mx-auto max-w-[1400px] px-6 sm:px-12 lg:px-16 pt-16 pb-24">
-    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
-
-      <aside class="lg:col-span-4 xl:col-span-4">
-        <div class="lg:sticky lg:top-28 flex flex-col gap-8">
-          {ogImageUrl && (
-            <div class="aspect-square w-full overflow-hidden rounded-[1.5rem] bg-black/[0.04]">
-              <img src={ogImageUrl} alt={title} class="h-full w-full object-cover" loading="eager" decoding="async" draggable="false" />
-            </div>
-          )}
-          <div>
-            <span class="block h-[3px] w-10 bg-[rgb(200,90,70)] mb-6"></span>
-            <h1 class="text-3xl sm:text-4xl font-light leading-[1.05] text-black tracking-tight">{title}</h1>
-            {metaDescription && (
-              <p class="mt-5 text-[14px] text-black/55 leading-relaxed">{metaDescription}</p>
-            )}
-          </div>
+  <header class="border-b border-black/10">
+    <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pt-20 pb-12">
+      <div class="grid gap-8 lg:grid-cols-12 lg:gap-12 items-end">
+        <div class="lg:col-span-2">
+          <span class="block h-[3px] w-10 bg-[rgb(200,90,70)]"></span>
         </div>
-      </aside>
-
-      <div class="lg:col-span-8 xl:col-span-7 xl:col-start-6">
-        {bodyHtml && (
-          <div class="dynamic-body" set:html={bodyHtml} />
-        )}
+        <div class="lg:col-span-10">
+          <h1 class="text-5xl sm:text-6xl md:text-7xl font-light leading-[0.98] text-black tracking-tight">{title}</h1>
+        </div>
       </div>
     </div>
-  </div>
+  </header>
+
+  {bodyHtml && (
+    <section class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pt-16 pb-24">
+      <div class="grid gap-8 lg:grid-cols-12 lg:gap-12">
+        <div class="lg:col-span-2"></div>
+        <div class="lg:col-span-10">
+          <div class="dynamic-body" set:html={bodyHtml} />
+        </div>
+      </div>
+    </section>
+  )}
 </article>

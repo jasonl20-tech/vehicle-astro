@@ -62,15 +62,15 @@ const layoutNumber = entry?.layoutNumber ?? 1;
   <Header />
   <main class="min-h-screen">
     {layoutNumber === 2 ? (
-      <Layout2 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+      <Layout2 title={title} bodyHtml={bodyHtml} />
     ) : layoutNumber === 3 ? (
-      <Layout3 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+      <Layout3 title={title} bodyHtml={bodyHtml} />
     ) : layoutNumber === 4 ? (
-      <Layout4 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+      <Layout4 title={title} bodyHtml={bodyHtml} />
     ) : layoutNumber === 5 ? (
-      <Layout5 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+      <Layout5 title={title} bodyHtml={bodyHtml} />
     ) : (
-      <Layout1 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+      <Layout1 title={title} bodyHtml={bodyHtml} />
     )}
   </main>
   <Footer />

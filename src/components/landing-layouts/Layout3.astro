@@ -2,37 +2,22 @@
 interface Props {
   title: string;
   bodyHtml?: string;
-  ogImageUrl?: string;
-  metaDescription?: string;
 }
-const { title, bodyHtml, ogImageUrl, metaDescription } = Astro.props;
+const { title, bodyHtml } = Astro.props;
 ---
 
-<!-- Layout 3 — Cover Hero (Splash) -->
+<!-- Layout 3 — Centered Hero, Wide Body -->
 <article class="bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-  <section class="relative isolate overflow-hidden">
-    {ogImageUrl ? (
-      <>
-        <img src={ogImageUrl} alt={title} class="absolute inset-0 h-full w-full object-cover" loading="eager" decoding="async" draggable="false" />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/55 to-black/85"></div>
-      </>
-    ) : (
-      <div class="absolute inset-0" style="background-color: rgb(10, 43, 49);">
-        <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
-      </div>
-    )}
-
-    <div class="relative mx-auto flex min-h-[70vh] max-w-[1100px] flex-col items-center justify-center px-6 py-32 text-center sm:px-12">
-      <span class="mb-8 block h-[3px] w-12 bg-[rgb(200,90,70)]"></span>
-      <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-white tracking-tight max-w-4xl">{title}</h1>
-      {metaDescription && (
-        <p class="mt-8 text-[16px] sm:text-[17px] text-white/70 leading-relaxed max-w-2xl">{metaDescription}</p>
-      )}
+  <section class="relative overflow-hidden border-b border-black/10">
+    <div class="absolute inset-0 opacity-[0.025] pointer-events-none" style="background-image: radial-gradient(rgba(0,0,0,0.8) 1px, transparent 1px); background-size: 28px 28px;" aria-hidden="true"></div>
+    <div class="relative mx-auto flex max-w-[1400px] flex-col items-center justify-center px-4 sm:px-6 lg:px-12 pt-32 pb-24 text-center">
+      <span class="mb-10 block h-[3px] w-12 bg-[rgb(200,90,70)]"></span>
+      <h1 class="text-6xl sm:text-7xl md:text-8xl font-light leading-[0.95] text-black tracking-tight max-w-6xl">{title}</h1>
     </div>
   </section>
 
   {bodyHtml && (
-    <section class="mx-auto max-w-3xl px-6 sm:px-12 lg:px-16 pt-24 pb-24">
+    <section class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 pt-20 pb-24">
       <div class="dynamic-body dynamic-body--lg" set:html={bodyHtml} />
     </section>
   )}

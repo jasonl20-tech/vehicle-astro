@@ -34,7 +34,6 @@ img {
 /* Dynamic CMS body: left-aligned, preserve formatting – without @tailwindcss/typography */
 .dynamic-body {
   text-align: left !important;
-  max-width: 48rem;
   width: 100%;
   margin-left: 0;
   margin-right: auto;
@@ -43,6 +42,8 @@ img {
   line-height: 1.75;
   color: rgba(0, 0, 0, 0.6);
 }
+/* Use this modifier when you want the old narrow reading column */
+.dynamic-body--narrow { max-width: 48rem; }
 /* No extra indentation from wrapper elements */
 .dynamic-body > * {
   margin-left: 0 !important;
@@ -139,6 +140,98 @@ img {
   text-align: left !important;
 }
 
+/* Inline code + code marks */
+.dynamic-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0.25rem;
+  padding: 0.1em 0.35em;
+  color: #1C2B32;
+}
+
+/* Strikethrough / sub / sup marks */
+.dynamic-body s,
+.dynamic-body del { text-decoration: line-through; }
+.dynamic-body u { text-decoration: underline; }
+.dynamic-body sup {
+  font-size: 0.75em;
+  vertical-align: super;
+  line-height: 0;
+}
+.dynamic-body sub {
+  font-size: 0.75em;
+  vertical-align: sub;
+  line-height: 0;
+}
+
+/* Tables */
+.dynamic-body table {
+  width: 100%;
+  margin: 1.75em 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 0.95rem;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 768px) {
+  .dynamic-body table { display: table; }
+}
+.dynamic-body thead {
+  background: rgba(28, 43, 50, 0.04);
+}
+.dynamic-body th,
+.dynamic-body td {
+  padding: 0.75em 1em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left !important;
+  vertical-align: top;
+}
+.dynamic-body th {
+  font-weight: 700;
+  color: #000;
+  background: rgba(28, 43, 50, 0.04);
+}
+.dynamic-body th p,
+.dynamic-body td p {
+  margin: 0;
+}
+.dynamic-body tbody tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+/* Nested lists */
+.dynamic-body ul ul,
+.dynamic-body ul ol,
+.dynamic-body ol ul,
+.dynamic-body ol ol {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+.dynamic-body ul ul { list-style-type: circle; }
+.dynamic-body ul ul ul { list-style-type: square; }
+
+/* Pre / code blocks */
+.dynamic-body pre {
+  background: #0f1a1d;
+  color: #e6edf0;
+  padding: 1.25em 1.5em;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 1.5em 0;
+}
+.dynamic-body pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
 /* Dark variant — same rules but inverted colors for dark backgrounds */
 .dynamic-body--dark {
   color: rgba(255, 255, 255, 0.65);
@@ -165,6 +258,23 @@ img {
 }
 .dynamic-body--dark hr {
   border-top-color: rgba(255, 255, 255, 0.12);
+}
+.dynamic-body--dark code {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+.dynamic-body--dark thead,
+.dynamic-body--dark th {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+.dynamic-body--dark th,
+.dynamic-body--dark td {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.dynamic-body--dark tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.025);
 }
 
 /* Wide variant — for centered large reading layouts */
