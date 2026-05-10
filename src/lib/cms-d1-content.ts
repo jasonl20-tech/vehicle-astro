@@ -1046,6 +1046,8 @@ export async function loadHeaderFooter(opts: { locale?: string } = {}): Promise<
 export type CmsPaymentSeitenPayload = {
   title?: string;
   topText?: Document;
+  /** Rich Text links/rechts neben dem Formular (Desktop) */
+  midText?: Document;
   bottomText?: Document;
   formularId?: string[];
   emailTranslation?: string;
@@ -1070,6 +1072,7 @@ export type PaymentLandingField = 'email' | 'name' | 'company' | 'message';
 export type PaymentLandingPage = {
   slug: string;
   topText?: Document;
+  midText?: Document;
   bottomText?: Document;
   formFields: PaymentLandingField[];
   labels: Partial<Record<PaymentLandingField, string>>;
@@ -1150,6 +1153,7 @@ export async function loadPaymentLandingPage(
     page: {
       slug: want,
       topText: p.topText,
+      midText: p.midText,
       bottomText: p.bottomText,
       formFields,
       labels,

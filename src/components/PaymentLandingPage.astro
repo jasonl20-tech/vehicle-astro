@@ -16,7 +16,9 @@ const { page, assets } = await loadPaymentLandingPage(slug, { locale: 'en-US' })
 const htmlId = slug.replace(/[^a-z0-9]+/gi, '-');
 
 const topHtml = page?.topText ? renderRichText(page.topText, assets) : '';
+const midHtml = page?.midText ? renderRichText(page.midText, assets) : '';
 const bottomHtml = page?.bottomText ? renderRichText(page.bottomText, assets) : '';
+const hasMid = midHtml.trim().length > 0;
 
 const title = page?.metaTitle ?? 'Vehicle Imagery';
 const description = page?.metaDescription ?? '';
@@ -62,14 +64,28 @@ const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 l
           </div>
         </section>
 
-        <!-- 2) Form — Farben wie Header/Navigation (#1C2B32), Terracotta-Akzente -->
+        <!-- 2) Mid-Text + Formular; Mid links/rechts (Desktop), untereinander (mobil) -->
         <section class="w-full pb-16">
           <div class={shellPad}>
-            <div class="mx-auto w-full max-w-xl">
             <div
-              class={`payment-form-panel group relative overflow-hidden rounded-[2rem] text-white transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(28,43,50,0.45)]`}
-              style={`background-color: ${panelDark}; color-scheme: dark;`}
+              class:list={[
+                hasMid &&
+                  'grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(260px,28rem)_minmax(0,1fr)] lg:gap-x-6 xl:gap-x-10 lg:items-start',
+                !hasMid && 'mx-auto flex w-full max-w-xl justify-center',
+              ]}
             >
+              {hasMid ? (
+                <div
+                  class="payment-mid-text dynamic-body order-1 mx-auto w-full max-w-lg lg:mx-0 lg:max-w-xs lg:justify-self-end lg:text-right xl:max-w-sm"
+                  set:html={midHtml}
+                />
+              ) : null}
+
+              <div class:list={[hasMid && 'order-2 min-w-0 w-full max-w-xl justify-self-center', !hasMid && 'w-full max-w-xl']}>
+                <div
+                  class={`payment-form-panel group relative overflow-hidden rounded-[2rem] text-white transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(28,43,50,0.45)]`}
+                  style={`background-color: ${panelDark}; color-scheme: dark;`}
+                >
               <div
                 class="pointer-events-none absolute inset-0 opacity-[0.03]"
                 style="background-image: radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 28px 28px;"
@@ -277,8 +293,17 @@ const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 l
                     });
                   })();
                 </script>
+                </div>
               </div>
-            </div>
+              </div>
+
+              {hasMid ? (
+                <div
+                  class="payment-mid-text dynamic-body order-3 hidden max-w-lg lg:mx-0 lg:block lg:max-w-xs lg:justify-self-start lg:text-left xl:max-w-sm"
+                  aria-hidden="true"
+                  set:html={midHtml}
+                />
+              ) : null}
             </div>
           </div>
         </section>
@@ -318,6 +343,24 @@ const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 l
             margin-right: auto;
             max-width: none;
             color: rgba(0, 0, 0, 0.5);
+          }
+
+          /* Flankiert das Formular; gleiche dynamische Typo wie unten */
+          .payment-mid-text.dynamic-body {
+            color: rgba(0, 0, 0, 0.58);
+          }
+          .payment-mid-text.dynamic-body p {
+            font-size: 0.9375rem;
+            line-height: 1.65;
+            margin-bottom: 0.85em;
+          }
+          .payment-mid-text.dynamic-body p:last-child {
+            margin-bottom: 0;
+          }
+          .payment-mid-text.dynamic-body ul,
+          .payment-mid-text.dynamic-body ol {
+            font-size: 0.9375rem;
+            line-height: 1.55;
           }
 
           .payment-bottom-rich.dynamic-body {
