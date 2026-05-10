@@ -57,6 +57,8 @@ const [hf, firma] = await Promise.all([
   loadFirmenKonfiguration({ locale: cfLocale }).catch(() => null),
 ]);
 
+const currentYear = new Date().getFullYear();
+
 const sectionsToRender: Array<{ key: string; label: string; links: DynamicLink[] }> = [];
 if (hf?.productLabel) sectionsToRender.push({ key: 'product', label: hf.productLabel, links: productExtra });
 if (hf?.coverageLabel) sectionsToRender.push({ key: 'coverage', label: hf.coverageLabel, links: coverageExtra });
@@ -71,7 +73,7 @@ if (hf?.companyLabel) sectionsToRender.push({ key: 'company', label: hf.companyL
         <div class="max-w-xl">
           {firma?.logoUrl && (
             <div class="flex items-center space-x-3 mb-6">
-              <img src={firma.logoUrl} alt={firma.firmenName || ''} class="h-12 w-auto" loading="lazy" decoding="async" draggable="false"/>
+              <img src={firma.logoUrl} alt={firma.firmenName || ''} class="h-12 w-auto brightness-0 invert" loading="lazy" decoding="async" draggable="false"/>
             </div>
           )}
           {hf?.footerDescription && (
@@ -80,10 +82,10 @@ if (hf?.companyLabel) sectionsToRender.push({ key: 'company', label: hf.companyL
           {(hf?.footerButton1Text || hf?.footerButton2Text) && (
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
               {hf?.footerButton1Text && (
-                <a class="bg-white text-black px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] hover:text-white transition-colors text-center sm:text-left" href={hf.footerButton1Link || '#'}>{hf.footerButton1Text}</a>
+                <a class="bg-white text-black px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-[rgb(200,90,70)] hover:text-white transition-colors text-center sm:text-left" href={l('/trial')}>{hf.footerButton1Text}</a>
               )}
               {hf?.footerButton2Text && (
-                <a class="border border-white/30 text-white px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-white/10 transition-colors text-center sm:text-left" href={hf.footerButton2Link || '#'}>{hf.footerButton2Text}</a>
+                <a class="border border-white/30 text-white px-6 py-3 rounded-none font-bold uppercase tracking-widest hover:bg-white/10 transition-colors text-center sm:text-left" href={l('/book-a-call')}>{hf.footerButton2Text}</a>
               )}
             </div>
           )}
@@ -97,7 +99,7 @@ if (hf?.companyLabel) sectionsToRender.push({ key: 'company', label: hf.companyL
               <div id="footer-nl-content">
                 <form id="footer-nl-form" class="flex w-full max-w-sm flex-col sm:flex-row gap-2 sm:max-w-none">
                   <input type="hidden" name="subject" value="Newsletter Subscribe"/>
-                  <input type="email" name="email" required class="px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-white w-full sm:w-80 rounded-none"/>
+                  <input type="email" name="email" required placeholder="yourname@company.com" class="px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-white w-full sm:w-80 rounded-none"/>
                   {hf?.subscribeLabel && (
                     <button type="submit" id="footer-nl-btn" class="px-6 py-3 font-bold uppercase tracking-widest transition-colors rounded-none bg-white text-black hover:bg-gray-200">{hf.subscribeLabel}</button>
                   )}
@@ -167,7 +169,7 @@ if (hf?.companyLabel) sectionsToRender.push({ key: 'company', label: hf.companyL
 
       {hf?.footerCloser && (
         <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p class="text-sm text-gray-300">{hf.footerCloser}</p>
+          <p class="text-sm text-gray-300">&copy; {currentYear} {hf.footerCloser}</p>
         </div>
       )}
     </div>
