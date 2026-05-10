@@ -1,56 +1,40 @@
 ---
-import { loadLandingPages, loadHeaderFooter, loadFirmenKonfiguration } from '../lib/cms-d1-content';
+import { loadLandingPages, loadHeaderFooter, loadFirmenKonfiguration, loadCategories } from '../lib/cms-d1-content';
 import { getLocaleFromUrl, localizeUrl } from '../i18n/utils';
 
 const locale = getLocaleFromUrl(Astro.url);
 const l = (url: string) => localizeUrl(url, locale);
 const cfLocale = locale === 'es' ? 'es' : 'en-US';
 
-interface DynamicLink {
-  label: string;
-  href: string;
-}
-
-interface DynamicCategory {
+interface FooterSection {
   name: string;
-  links: DynamicLink[];
+  links: Array<{ label: string; href: string }>;
 }
 
-const knownCategories = new Set(['product', 'coverage', 'resources', 'company']);
-let dynamicByCategory = new Map<string, DynamicLink[]>();
-let extraCategories: DynamicCategory[] = [];
+let footerSections: FooterSection[] = [];
 
 try {
-  const res = await loadLandingPages({ locale: cfLocale, limit: 500 });
-  const footerItems = res.items.filter((p) => p.footer);
+  const [landingRes, categories] = await Promise.all([
+    loadLandingPages({ locale: cfLocale, limit: 500 }),
+    loadCategories({ locale: cfLocale }),
+  ]);
 
-  const catMap = new Map<string, DynamicLink[]>();
-  for (const item of footerItems) {
-    const category = item.categoryName || 'Other';
-    const href = l(`/${item.slug}`);
-    const label = item.title || item.slug;
-    if (!catMap.has(category)) catMap.set(category, []);
-    catMap.get(category)!.push({ label, href });
-  }
+  const landingById = new Map(landingRes.items.map((p) => [p.id, p]));
 
-  for (const [name, links] of catMap) {
-    links.sort((a, b) => a.label.localeCompare(b.label));
-    if (knownCategories.has(name.toLowerCase())) {
-      dynamicByCategory.set(name.toLowerCase(), links);
-    } else {
-      extraCategories.push({ name, links });
+  for (const cat of categories.values()) {
+    const links: FooterSection['links'] = [];
+    for (const entryId of cat.entryIds) {
+      const lp = landingById.get(entryId);
+      if (!lp || !lp.footer) continue;
+      links.push({ label: lp.title || lp.slug, href: l(`/${lp.slug}`) });
+    }
+    if (links.length > 0) {
+      footerSections.push({ name: cat.name, links });
     }
   }
-  extraCategories.sort((a, b) => a.name.localeCompare(b.name));
 } catch (e) {
-  console.warn('[Footer] D1 categories load failed:', e);
+  console.warn('[Footer] D1 sections load failed:', e);
 }
-
-const MAX_LINKS = 8;
-const productExtra = dynamicByCategory.get('product') || [];
-const coverageExtra = dynamicByCategory.get('coverage') || [];
-const resourcesExtra = dynamicByCategory.get('resources') || [];
-const companyExtra = dynamicByCategory.get('company') || [];
 
 const [hf, firma] = await Promise.all([
   loadHeaderFooter({ locale: cfLocale }).catch(() => null),
@@ -58,12 +42,7 @@ const [hf, firma] = await Promise.all([
 ]);
 
 const currentYear = new Date().getFullYear();
-
-const sectionsToRender: Array<{ key: string; label: string; links: DynamicLink[] }> = [];
-if (hf?.productLabel) sectionsToRender.push({ key: 'product', label: hf.productLabel, links: productExtra });
-if (hf?.coverageLabel) sectionsToRender.push({ key: 'coverage', label: hf.coverageLabel, links: coverageExtra });
-if (hf?.resourcesLabel) sectionsToRender.push({ key: 'resources', label: hf.resourcesLabel, links: resourcesExtra });
-if (hf?.companyLabel) sectionsToRender.push({ key: 'company', label: hf.companyLabel, links: companyExtra });
+const MAX_LINKS = 10;
 ---
 
 <footer class="text-white pt-24 pb-12 w-full border-t border-white/10" style="background-color:rgb(10, 43, 49); font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
@@ -139,26 +118,13 @@ if (hf?.companyLabel) sectionsToRender.push({ key: 'company', label: hf.companyL
         )}
       </div>
 
-      {sectionsToRender.length > 0 && (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-10 mb-12 items-start">
-          {sectionsToRender.map((section) => (
+      {footerSections.length > 0 && (
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 mb-12 items-start">
+          {footerSections.map((section) => (
             <div>
-              <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{section.label}</h4>
-              {section.links.length > 0 && (
-                <ul class="space-y-4 text-sm text-gray-300">
-                  {section.links.slice(0, MAX_LINKS).map((link) => (
-                    <li><a class="hover:text-white transition-colors" href={link.href}>{link.label}</a></li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-
-          {extraCategories.map((cat) => (
-            <div>
-              <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{cat.name}</h4>
-              <ul class="space-y-4 text-sm text-gray-400">
-                {cat.links.slice(0, MAX_LINKS).map((link) => (
+              <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{section.name}</h4>
+              <ul class="space-y-4 text-sm text-gray-300">
+                {section.links.slice(0, MAX_LINKS).map((link) => (
                   <li><a class="hover:text-white transition-colors" href={link.href}>{link.label}</a></li>
                 ))}
               </ul>

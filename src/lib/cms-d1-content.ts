@@ -511,10 +511,15 @@ export async function loadPressReleases(opts: { locale?: string; limit?: number 
  * Categories + Layouts (Footer / Landing-Pages)
  * ======================================================================= */
 
-export type CmsCategoryPayload = { categoryName?: string };
+export type CmsCategoryPayload = { categoryName?: string; entrys?: EntryLink[] };
 export type CmsLayoutPayload = { layoutName?: string; layoutDeskription?: string; number?: number };
 
-export type CategoryEntry = { id: string; name: string; slug: string };
+export type CategoryEntry = {
+  id: string;
+  name: string;
+  slug: string;
+  entryIds: string[];
+};
 export type LayoutEntry = { id: string; name: string; description: string; number: number | null };
 
 export async function loadCategories(opts: { locale?: string } = {}): Promise<Map<string, CategoryEntry>> {
@@ -523,7 +528,10 @@ export async function loadCategories(opts: { locale?: string } = {}): Promise<Ma
   const map = new Map<string, CategoryEntry>();
   for (const r of rows) {
     const name = r.payload.categoryName ?? r.id;
-    map.set(r.id, { id: r.id, name, slug: slugify(name) });
+    const entryIds = (r.payload.entrys ?? [])
+      .map((link) => link?.sys?.id)
+      .filter((id): id is string => Boolean(id));
+    map.set(r.id, { id: r.id, name, slug: slugify(name), entryIds });
   }
   return map;
 }
