@@ -512,10 +512,10 @@ export async function loadPressReleases(opts: { locale?: string; limit?: number 
  * ======================================================================= */
 
 export type CmsCategoryPayload = { categoryName?: string };
-export type CmsLayoutPayload = { layoutName?: string; layoutDeskription?: string };
+export type CmsLayoutPayload = { layoutName?: string; layoutDeskription?: string; number?: number };
 
 export type CategoryEntry = { id: string; name: string; slug: string };
-export type LayoutEntry = { id: string; name: string; description: string };
+export type LayoutEntry = { id: string; name: string; description: string; number: number | null };
 
 export async function loadCategories(opts: { locale?: string } = {}): Promise<Map<string, CategoryEntry>> {
   const locale = opts.locale ?? 'en-US';
@@ -533,10 +533,12 @@ export async function loadLayouts(opts: { locale?: string } = {}): Promise<Map<s
   const rows = await getCmsRows<CmsLayoutPayload>('layouts', locale, 200);
   const map = new Map<string, LayoutEntry>();
   for (const r of rows) {
+    const num = typeof r.payload.number === 'number' ? r.payload.number : Number.parseInt(String(r.payload.number ?? ''), 10);
     map.set(r.id, {
       id: r.id,
       name: r.payload.layoutName ?? r.id,
       description: r.payload.layoutDeskription ?? '',
+      number: Number.isFinite(num) ? num : null,
     });
   }
   return map;
@@ -564,6 +566,7 @@ export type LandingPage = {
   title: string;
   body?: Document;
   layoutName: string;
+  layoutNumber: number | null;
   categoryId?: string;
   categoryName?: string;
   ogImage?: EntryLink;
@@ -602,6 +605,7 @@ export async function loadLandingPages(opts: { locale?: string; limit?: number }
         title: p.title ?? slug,
         body: p.body,
         layoutName: (layoutEntry?.name ?? '').toLowerCase().replace(/\s+/g, '-'),
+        layoutNumber: layoutEntry?.number ?? null,
         categoryId: catEntry?.id,
         categoryName: catEntry?.name,
         ogImage: p.ogImage,

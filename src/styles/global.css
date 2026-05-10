@@ -138,3 +138,40 @@ img {
 .dynamic-body span {
   text-align: left !important;
 }
+
+/* Dark variant — same rules but inverted colors for dark backgrounds */
+.dynamic-body--dark {
+  color: rgba(255, 255, 255, 0.65);
+}
+.dynamic-body--dark strong,
+.dynamic-body--dark b,
+.dynamic-body--dark h1,
+.dynamic-body--dark h2,
+.dynamic-body--dark h3,
+.dynamic-body--dark h4,
+.dynamic-body--dark h5,
+.dynamic-body--dark h6 {
+  color: #fff;
+}
+.dynamic-body--dark a {
+  color: rgb(255, 136, 68);
+}
+.dynamic-body--dark a:hover {
+  color: rgb(255, 154, 92);
+}
+.dynamic-body--dark blockquote {
+  border-left-color: rgb(255, 136, 68);
+  color: rgba(255, 255, 255, 0.75);
+}
+.dynamic-body--dark hr {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Wide variant — for centered large reading layouts */
+.dynamic-body--lg {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+}
+.dynamic-body--lg h1 { font-size: 2.25rem; }
+.dynamic-body--lg h2 { font-size: 1.75rem; }
+.dynamic-body--lg h3 { font-size: 1.375rem; }

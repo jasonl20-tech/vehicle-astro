@@ -2,6 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Layout1 from '../components/landing-layouts/Layout1.astro';
+import Layout2 from '../components/landing-layouts/Layout2.astro';
+import Layout3 from '../components/landing-layouts/Layout3.astro';
+import Layout4 from '../components/landing-layouts/Layout4.astro';
+import Layout5 from '../components/landing-layouts/Layout5.astro';
 import { renderRichText } from '../lib/rich-text';
 import { loadLandingPages, type LandingPage, type AssetMap } from '../lib/cms-d1-content';
 import { locales, defaultLocale, localizeUrl, type Locale } from '../i18n/utils';
@@ -33,8 +38,8 @@ const { entry, assets, locale = 'en' as Locale } = Astro.props;
 const title = entry?.title ?? 'Page';
 const slug = entry?.slug ?? '';
 const bodyHtml = entry?.body ? renderRichText(entry.body, assets) : '';
-const pageTitle = entry?.metaTitle || `${title} | Vehicle Imagery`;
-const pageDescription = entry?.metaDescription || title;
+const pageTitle = entry?.metaTitle || title;
+const pageDescription = entry?.metaDescription || '';
 const canonical = localizeUrl(`/${slug}`, locale);
 const siteUrl = Astro.url.origin;
 
@@ -49,25 +54,24 @@ const jsonLd = JSON.stringify({
   description: pageDescription,
   url: `${siteUrl}${canonical}`,
 });
+
+const layoutNumber = entry?.layoutNumber ?? 1;
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription} canonicalUrl={canonical} ogImage={ogImage}>
   <Header />
-  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-    <section class="mx-auto max-w-3xl px-6 sm:px-12 lg:px-16 pt-20 pb-12">
-      <header class="mb-12">
-        {entry?.categoryName && (
-          <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-[rgb(200,90,70)] mb-6">{entry.categoryName}</p>
-        )}
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-light leading-[0.95] text-black tracking-tight">{title}</h1>
-      </header>
-
-      {bodyHtml ? (
-        <article class="blog-prose blog-article-body" set:html={bodyHtml} />
-      ) : (
-        <p class="text-black/60">No content.</p>
-      )}
-    </section>
+  <main class="min-h-screen">
+    {layoutNumber === 2 ? (
+      <Layout2 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+    ) : layoutNumber === 3 ? (
+      <Layout3 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+    ) : layoutNumber === 4 ? (
+      <Layout4 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+    ) : layoutNumber === 5 ? (
+      <Layout5 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+    ) : (
+      <Layout1 title={title} bodyHtml={bodyHtml} ogImageUrl={entry?.ogImageUrl} metaDescription={pageDescription} />
+    )}
   </main>
   <Footer />
   <script type="application/ld+json" set:html={jsonLd} />
