@@ -64,24 +64,17 @@ const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 l
           </div>
         </section>
 
-        <!-- 2) Mid-Text + Formular; Mid links/rechts (Desktop), untereinander (mobil) -->
+        <!-- 2) Formular links, Mid-Text rechts (Desktop 2 Spalten, Mobil untereinander) -->
         <section class="w-full pb-16">
           <div class={shellPad}>
             <div
               class:list={[
                 hasMid &&
-                  'grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(260px,28rem)_minmax(0,1fr)] lg:gap-x-6 xl:gap-x-10 lg:items-start',
+                  'grid gap-10 lg:grid-cols-[minmax(260px,min(100%,28rem))_minmax(0,1fr)] lg:items-start lg:gap-x-10 xl:gap-x-12',
                 !hasMid && 'mx-auto flex w-full max-w-xl justify-center',
               ]}
             >
-              {hasMid ? (
-                <div
-                  class="payment-mid-text dynamic-body order-1 mx-auto w-full max-w-lg lg:mx-0 lg:max-w-xs lg:justify-self-end lg:text-right xl:max-w-sm"
-                  set:html={midHtml}
-                />
-              ) : null}
-
-              <div class:list={[hasMid && 'order-2 min-w-0 w-full max-w-xl justify-self-center', !hasMid && 'w-full max-w-xl']}>
+              <div class:list={[hasMid && 'min-w-0 w-full max-w-xl', !hasMid && 'w-full max-w-xl']}>
                 <div
                   class={`payment-form-panel group relative overflow-hidden rounded-[2rem] text-white transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(28,43,50,0.45)]`}
                   style={`background-color: ${panelDark}; color-scheme: dark;`}
@@ -298,11 +291,7 @@ const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 l
               </div>
 
               {hasMid ? (
-                <div
-                  class="payment-mid-text dynamic-body order-3 hidden max-w-lg lg:mx-0 lg:block lg:max-w-xs lg:justify-self-start lg:text-left xl:max-w-sm"
-                  aria-hidden="true"
-                  set:html={midHtml}
-                />
+                <div class="payment-mid-text dynamic-body w-full max-w-lg lg:max-w-none lg:pt-1" set:html={midHtml} />
               ) : null}
             </div>
           </div>
@@ -345,7 +334,7 @@ const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 l
             color: rgba(0, 0, 0, 0.5);
           }
 
-          /* Flankiert das Formular; gleiche dynamische Typo wie unten */
+          /* Neben dem Formular (rechte Spalte); gleiche dynamische Typo wie unten */
           .payment-mid-text.dynamic-body {
             color: rgba(0, 0, 0, 0.58);
           }
