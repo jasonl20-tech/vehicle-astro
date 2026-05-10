@@ -2,30 +2,54 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { loadFirmenKonfiguration } from '../lib/cms-d1-content';
+import CmsContactPageLayout from '../components/CmsContactPageLayout.astro';
+import { loadContactPage, loadFirmenKonfiguration, type AssetMap } from '../lib/cms-d1-content';
+import { renderRichText } from '../lib/rich-text';
 import { getLocaleFromUrl } from '../i18n/utils';
 
 const locale = getLocaleFromUrl(Astro.url);
 const cfLocale = locale === 'es' ? 'es' : 'en-US';
 
-const firma = await loadFirmenKonfiguration({ locale: cfLocale }).catch(() => null);
+const [{ page, assets }, firma] = await Promise.all([
+  loadContactPage('book-a-call', { locale: cfLocale }).catch(() => ({
+    page: null,
+    assets: {} as AssetMap,
+  })),
+  loadFirmenKonfiguration({ locale: cfLocale }).catch(() => null),
+]);
+
 const meetingEmbed = firma?.meetingEmbed?.trim() || '';
+const topHtml = page?.topText ? renderRichText(page.topText, assets) : '';
+const bottomHtml = page?.bottomText ? renderRichText(page.bottomText, assets) : '';
+
+const hasAny = page || meetingEmbed;
+const metaTitle = page?.metaTitle ?? 'Book a Call';
+const metaDescription = page?.metaDescription ?? '';
 ---
 
-<BaseLayout
-  title="Book a Call"
-  description=""
-  canonicalUrl="/book-a-call"
->
-  <Header />
-  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-    <section class="mx-auto max-w-[1400px] px-6 pt-16 pb-24 sm:px-12 lg:px-16">
-      {meetingEmbed ? (
-        <div class="rounded-[2rem] overflow-hidden border border-black/[0.06] bg-white min-w-0 relative" style="min-height: 950px;">
-          <Fragment set:html={meetingEmbed} />
-        </div>
-      ) : null}
-    </section>
-  </main>
-  <Footer />
-</BaseLayout>
+{
+  hasAny ? (
+    <CmsContactPageLayout
+      metaTitle={metaTitle}
+      metaDescription={metaDescription}
+      canonicalUrl="/book-a-call"
+      topHtml={topHtml}
+      bottomHtml={bottomHtml}
+      meetingEmbed={meetingEmbed || undefined}
+    />
+  ) : (
+    <BaseLayout title="Book a Call" description="" canonicalUrl="/book-a-call">
+      <Header />
+      <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+        <section class="mx-auto max-w-3xl px-6 py-32 text-center">
+          <h1 class="text-3xl font-light text-black mb-4">Book a Call</h1>
+          <p class="text-black/60">
+            No book-a-call content configured (D1: contactPages with &quot;Book a Call&quot; in which[], or meeting embed in
+            firmenKonfiguration).
+          </p>
+        </section>
+      </main>
+      <Footer />
+    </BaseLayout>
+  )
+}

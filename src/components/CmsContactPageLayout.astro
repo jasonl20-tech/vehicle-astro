@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  metaTitle: string;
+  metaDescription: string;
+  canonicalUrl: string;
+  topHtml: string;
+  bottomHtml: string;
+  /** Nur Book-a-Call: Kalender-Embed aus firmenKonfiguration */
+  meetingEmbed?: string;
+}
+
+const { metaTitle, metaDescription, canonicalUrl, topHtml, bottomHtml, meetingEmbed } = Astro.props;
+const hasTop = topHtml.trim().length > 0;
+const hasBottom = bottomHtml.trim().length > 0;
+const hasEmbed = Boolean(meetingEmbed?.trim());
+---
+
+<BaseLayout title={metaTitle} description={metaDescription} canonicalUrl={canonicalUrl}>
+  <Header />
+  <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    {hasTop && (
+      <section class="mx-auto max-w-[900px] px-6 pt-16 pb-8 sm:px-12 lg:px-16">
+        <div class="dynamic-body dynamic-body--docs" set:html={topHtml} />
+      </section>
+    )}
+    {hasEmbed && (
+      <section class="mx-auto max-w-[1400px] px-6 pb-8 sm:px-12 lg:px-16">
+        <div
+          class="min-w-0 relative overflow-hidden rounded-[2rem] border border-black/[0.06] bg-white"
+          style="min-height: 950px;"
+        >
+          <Fragment set:html={meetingEmbed!} />
+        </div>
+      </section>
+    )}
+    {hasBottom && (
+      <section class="mx-auto max-w-[900px] px-6 pb-24 sm:px-12 lg:px-16">
+        <div class="dynamic-body dynamic-body--docs" set:html={bottomHtml} />
+      </section>
+    )}
+  </main>
+  <Footer />
+</BaseLayout>

@@ -2,7 +2,7 @@
  * Build-time loader for all CMS content from Cloudflare D1.
  * Talks to the REST API of the `cms_contents` table and returns rows in the
  * expected shape per domain (Blog, CaseStudy, Changelog, FAQ, Press,
- * LandingPage, Team authors).
+ * LandingPage, Team authors, contactPages).
  *
  * No Worker context required — works in any build (local, GitHub Actions,
  * Cloudflare Pages build). Bindings are not used.
@@ -1164,6 +1164,89 @@ export async function loadPaymentLandingPage(
       requestAccessLabel: (p.requestAccessLabel ?? '').trim() || undefined,
       formTitle: (p.formName ?? p.formTitle ?? '').trim() || undefined,
       formDescription: (p.formDescription ?? '').trim() || undefined,
+    },
+    assets,
+  };
+}
+
+/* =========================================================================
+ * Contact / Book-a-Call (content_type: contactPages, Feld which[])
+ * ======================================================================= */
+
+type CmsContactPagesPayload = {
+  title?: string;
+  topText?: Document;
+  bottomText?: Document;
+  /** z. B. ["Book a Call"] oder ["Contact"] */
+  which?: string[];
+  metaTitle?: string;
+  metaDescription?: string;
+};
+
+export type ContactPageContent = {
+  title: string;
+  topText?: Document;
+  bottomText?: Document;
+  metaTitle: string;
+  metaDescription: string;
+};
+
+function normalizeContactWhichTag(raw: string): string {
+  return String(raw)
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_]+/g, ' ');
+}
+
+function contactRowMatchesVariant(
+  which: string[] | undefined,
+  variant: 'contact' | 'book-a-call',
+): boolean {
+  const tags = (Array.isArray(which) ? which : []).map(normalizeContactWhichTag);
+  if (variant === 'book-a-call') {
+    return tags.some((t) => t === 'book a call' || t === 'book-a-call');
+  }
+  return tags.some((t) => t === 'contact');
+}
+
+/**
+ * Liest eine Zeile aus D1 `contactPages`, passend zu `which` (Contact vs. Book a Call).
+ * Reihenfolge: neuestes updated_at zuerst (wie getCmsRows).
+ */
+export async function loadContactPage(
+  variant: 'contact' | 'book-a-call',
+  opts: { locale?: string } = {},
+): Promise<{ page: ContactPageContent | null; assets: AssetMap }> {
+  const locale = opts.locale ?? 'en-US';
+  const [rows, assets] = await Promise.all([
+    getCmsRows<CmsContactPagesPayload>('contactPages', locale, 200),
+    loadAssetMap(locale),
+  ]);
+
+  const row = rows.find((r) => contactRowMatchesVariant(r.payload.which, variant));
+  if (!row) {
+    return { page: null, assets };
+  }
+
+  const p = row.payload;
+  const plainTop = richTextToPlainText(p.topText, 400);
+  const fallbackTitle = variant === 'book-a-call' ? 'Book a Call' : 'Contact';
+  const metaTitle =
+    (p.metaTitle ?? '').trim() ||
+    (p.title ?? '').trim() ||
+    (plainTop ? plainTop.slice(0, 72).trim() : fallbackTitle);
+  const metaDescription =
+    (p.metaDescription ?? '').trim() ||
+    richTextToPlainText(p.topText, 165) ||
+    richTextToPlainText(p.bottomText, 165);
+
+  return {
+    page: {
+      title: (p.title ?? '').trim() || metaTitle,
+      topText: p.topText,
+      bottomText: p.bottomText,
+      metaTitle,
+      metaDescription,
     },
     assets,
   };
