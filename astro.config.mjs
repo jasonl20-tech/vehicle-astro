@@ -38,7 +38,7 @@ export default defineConfig({
         } else if (/\/blog\//.test(path) || /\/changelog\//.test(path)) {
           item.priority = 0.8;
           item.changefreq = 'weekly';
-        } else if (/^\/(?!blog|changelog|faq|coverage|pricing)[^/]+\/?$/.test(path)) {
+        } else if (/^\/(?!blog|changelog|faq|pricing)[^/]+\/?$/.test(path)) {
           item.priority = 0.9;
           item.changefreq = 'weekly';
         } else {
