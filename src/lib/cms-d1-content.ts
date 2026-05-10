@@ -913,6 +913,11 @@ export type HeaderSubItem = {
   href: string;
 };
 
+export type HeaderGroup = {
+  name: string;
+  items: HeaderSubItem[];
+};
+
 export type HeaderFooter = {
   exploreLabel: string;
   latestLabel: string;
@@ -925,6 +930,7 @@ export type HeaderFooter = {
   ctaButton2Text: string;
   ctaButton2Link: string;
   subItemsByGroup: Record<string, HeaderSubItem[]>;
+  groups: HeaderGroup[];
   footerDescription: string;
   footerButton1Text: string;
   footerButton1Link: string;
@@ -963,6 +969,8 @@ export async function loadHeaderFooter(opts: { locale?: string } = {}): Promise<
   const orderedIds = linkedIds.length > 0 ? linkedIds : entryRows.map((r) => r.id);
 
   const subItemsByGroup: Record<string, HeaderSubItem[]> = {};
+  const groupOrder: string[] = [];
+  const groupDisplayName: Record<string, string> = {};
   for (const id of orderedIds) {
     const row = entriesById.get(id);
     if (!row) continue;
@@ -976,9 +984,18 @@ export async function loadHeaderFooter(opts: { locale?: string } = {}): Promise<
       href: row.payload.link ?? '',
     };
     const key = normalizeKey(groupName);
-    if (!subItemsByGroup[key]) subItemsByGroup[key] = [];
+    if (!subItemsByGroup[key]) {
+      subItemsByGroup[key] = [];
+      groupOrder.push(key);
+      groupDisplayName[key] = groupName;
+    }
     subItemsByGroup[key].push(item);
   }
+
+  const groups: HeaderGroup[] = groupOrder.map((k) => ({
+    name: groupDisplayName[k] ?? k,
+    items: subItemsByGroup[k],
+  }));
 
   return {
     exploreLabel: p.exploreTranslation ?? '',
@@ -992,6 +1009,7 @@ export async function loadHeaderFooter(opts: { locale?: string } = {}): Promise<
     ctaButton2Text: p.button2Text ?? '',
     ctaButton2Link: p.button2Link ?? '',
     subItemsByGroup,
+    groups,
     footerDescription: p.footerBeschreibung ?? '',
     footerButton1Text: p.footerButton1Text ?? '',
     footerButton1Link: p.footerButton1Link ?? '',

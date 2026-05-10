@@ -1,9 +1,8 @@
 ---
 import { loadChangelogs, loadHeaderFooter } from '../lib/cms-d1-content';
-import { getLocaleFromUrl, useTranslations, localizeUrl, stripLocalePrefix, localeNames, locales } from '../i18n/utils';
+import { getLocaleFromUrl, localizeUrl, stripLocalePrefix, localeNames, locales } from '../i18n/utils';
 
 const locale = getLocaleFromUrl(Astro.url);
-const t = useTranslations(locale);
 const l = (url: string) => localizeUrl(url, locale);
 
 const currentPath = stripLocalePrefix(Astro.url.pathname);
@@ -15,198 +14,115 @@ const localeOptions = locales.map((loc) => ({
 }));
 
 const cfLocale = locale === 'es' ? 'es' : 'en-US';
-let changelogs: Array<{ slug: string; title: string; date: string }> = [];
-try {
-  const res = await loadChangelogs({ locale: cfLocale, limit: 5 });
-  changelogs = res.items.slice(0, 2).map((c) => ({ slug: c.slug, title: c.title, date: c.date }));
-} catch (e) {
-  console.warn('[Header] D1 changelog load failed:', e);
-}
 
-const hf = await loadHeaderFooter({ locale: cfLocale }).catch(() => null);
+const [hf, changelogRes] = await Promise.all([
+  loadHeaderFooter({ locale: cfLocale }).catch(() => null),
+  loadChangelogs({ locale: cfLocale, limit: 5 }).catch(() => ({ items: [] })),
+]);
 
-function pickSubItems(groupName: string, fallback: Array<{ href: string; label: string; desc: string }>) {
-  const key = groupName.trim().toLowerCase();
-  const fromD1 = hf?.subItemsByGroup?.[key];
-  if (fromD1 && fromD1.length > 0) {
-    return fromD1.map((s) => ({ href: s.href || '#', label: s.label, desc: s.description }));
-  }
-  return fallback;
-}
+const changelogs = (changelogRes.items || []).slice(0, 2).map((c) => ({
+  slug: c.slug,
+  title: c.title,
+  date: c.date,
+}));
 
-const navItems = [
-  {
-    href: l('/coverage'),
-    label: t('nav.coverage'),
-    align: 'left',
-    svgKey: 'Coverage',
-    overlay: pickSubItems('Coverage', [
-      { href: l('/coverage/global'), label: t('nav.coverage.global'), desc: t('nav.coverage.globalDesc') },
-      { href: l('/coverage/vehicle-types'), label: t('nav.coverage.vehicleTypes'), desc: t('nav.coverage.vehicleTypesDesc') },
-      { href: l('/coverage/quality'), label: t('nav.coverage.quality'), desc: t('nav.coverage.qualityDesc') },
-    ]),
-  },
-  {
-    href: l('/pricing'),
-    label: t('nav.pricing'),
-    align: 'center',
-    svgKey: 'Pricing',
-    overlay: pickSubItems('Pricing', [
-      { href: l('/pricing'), label: t('nav.pricing.trial'), desc: t('nav.pricing.trialDesc') },
-      { href: l('/pricing'), label: t('nav.pricing.onRequest'), desc: t('nav.pricing.onRequestDesc') },
-      { href: l('/pricing/startups'), label: t('nav.pricing.startups'), desc: t('nav.pricing.startupsDesc') },
-    ]),
-  },
-  {
-    href: l('/documentation'),
-    label: t('nav.documentation'),
-    align: 'center',
-    svgKey: 'Documentation',
-    overlay: pickSubItems('Documentation', [
-      { href: l('/documentation#authentication'), label: t('nav.docs.apiRef'), desc: t('nav.docs.apiRefDesc') },
-      { href: l('/documentation#query-params'), label: t('nav.docs.params'), desc: t('nav.docs.paramsDesc') },
-      { href: l('/documentation#brands'), label: t('nav.docs.endpoints'), desc: t('nav.docs.endpointsDesc') },
-      { href: l('/documentation#errors'), label: t('nav.docs.errors'), desc: t('nav.docs.errorsDesc') },
-    ]),
-  },
-  {
-    href: l('/faq'),
-    label: t('nav.faq'),
-    align: 'center',
-    svgKey: 'FAQ',
-    overlay: pickSubItems('FAQ', [
-      { href: l('/faq/general'), label: t('nav.faq.general'), desc: t('nav.faq.generalDesc') },
-      { href: l('/faq/api'), label: t('nav.faq.api'), desc: t('nav.faq.apiDesc') },
-      { href: l('/faq/billing'), label: t('nav.faq.billing'), desc: t('nav.faq.billingDesc') },
-      { href: l('/faq/support'), label: t('nav.faq.support'), desc: t('nav.faq.supportDesc') },
-    ]),
-  },
-  {
-    href: l('/contact'),
-    label: t('nav.contact'),
-    align: 'right',
-    svgKey: 'Contact',
-    overlay: pickSubItems('Contact', [
-      { href: l('/team'), label: t('nav.contact.team'), desc: t('nav.contact.teamDesc') },
-      { href: l('/support'), label: t('nav.contact.support'), desc: t('nav.contact.supportDesc') },
-      { href: l('/press'), label: t('nav.contact.press'), desc: t('nav.contact.pressDesc') },
-    ]),
-  },
-];
-
-const exploreLabel = hf?.exploreLabel || t('nav.explore');
-const latestLabel = hf?.latestLabel || t('nav.latestChangelogs');
-const needHelpLabel = hf?.needHelpLabel || t('nav.needHelp');
-const needHelpDescription = hf?.needHelpDescription || t('nav.needHelpDesc');
-const updatesLabel = hf?.updatesLabel || t('nav.updates');
-const contactButtonLabel = hf?.contactButtonLabel || t('nav.contactUs');
-const ctaButton1Text = hf?.ctaButton1Text || t('nav.bookACall');
-const ctaButton1Link = hf?.ctaButton1Link || l('/book-a-call');
-const ctaButton2Text = hf?.ctaButton2Text || t('nav.tryNow');
-const ctaButton2Link = hf?.ctaButton2Link || l('/trial');
+const navGroups = hf?.groups ?? [];
 ---
 
 <header id="site-header" class="sticky top-0 z-50 border-b border-white/10 bg-[#1C2B32] transition-transform duration-300 ease-out" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
   <div class="relative w-full px-4 sm:px-6 lg:px-12">
     <nav class="relative flex h-14 sm:h-16 md:h-20 w-full items-center">
-      
+
       <div class="flex flex-1 items-center gap-6 lg:gap-9">
-        <a href={l('/')} class="group flex shrink-0 items-center transition-opacity hover:opacity-80" aria-label="Vehicle Imagery Home">
-          <img
-            src="/logo.svg"
-            alt="Vehicle Imagery"
-            class="h-8 w-auto brightness-0 invert sm:h-[38px]"
-          />
-        </a>
+        <a href={l('/')} class="group flex shrink-0 items-center transition-opacity hover:opacity-80" aria-label="Home"></a>
 
-        <div class="hidden items-center gap-6 lg:gap-9 md:flex relative" id="nav-menu">
-          {navItems.map((item) => (
-            <div class="group/nav relative flex h-20 items-center" data-nav-item>
-              <a
-                href={item.href}
-                class="peer relative text-[13px] lg:text-[14px] font-medium text-white/80 transition-colors duration-200 hover:text-white"
-              >
-                {item.label}
-                <span class="pointer-events-none absolute -bottom-[31px] left-0 h-[3px] w-0 bg-white opacity-0 transition-all duration-300 group-hover/nav:w-full group-hover/nav:opacity-100 z-[60]"></span>
-              </a>
-              
-              <div class="absolute top-[80px] left-0 h-[30px] w-full bg-transparent z-[40]"></div>
-              
-              <div class="nav-overlay pointer-events-none fixed top-[80px] z-50 w-[calc(100vw-2rem)] max-w-[860px] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 group-hover/nav:pointer-events-auto group-hover/nav:translate-y-0 group-hover/nav:opacity-100 left-0" style="left: 0;">
-                
-                <div class="absolute -top-[1px] left-0 h-[1px] w-full bg-white/20"></div>
+        {navGroups.length > 0 && (
+          <div class="hidden items-center gap-6 lg:gap-9 md:flex relative" id="nav-menu">
+            {navGroups.map((group) => (
+              <div class="group/nav relative flex h-20 items-center" data-nav-item>
+                <span
+                  class="peer relative text-[13px] lg:text-[14px] font-medium text-white/80 transition-colors duration-200 hover:text-white cursor-default"
+                >
+                  {group.name}
+                  <span class="pointer-events-none absolute -bottom-[31px] left-0 h-[3px] w-0 bg-white opacity-0 transition-all duration-300 group-hover/nav:w-full group-hover/nav:opacity-100 z-[60]"></span>
+                </span>
 
-                <div class="border border-white/15 bg-[#1C2B32] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.6)] relative overflow-hidden">
-                  
-                  <div class="absolute -right-20 -top-20 opacity-[0.03] pointer-events-none select-none">
-                    {item.svgKey === 'Coverage' && <svg class="w-96 h-96" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>}
-                    {item.svgKey === 'Pricing' && <svg class="w-96 h-96" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>}
-                    {item.svgKey === 'Documentation' && <svg class="w-96 h-96" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>}
-                    {item.svgKey === 'FAQ' && <svg class="w-96 h-96" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>}
-                    {item.svgKey === 'Contact' && <svg class="w-96 h-96" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>}
-                  </div>
+                <div class="absolute top-[80px] left-0 h-[30px] w-full bg-transparent z-[40]"></div>
 
-                  <div class="grid grid-cols-1 lg:grid-cols-12 relative z-10">
-                  <div class="lg:col-span-5 border-b border-white/10 lg:border-b-0 lg:border-r border-white/10 p-4 sm:p-6 lg:p-8">
-                    <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">{exploreLabel} {item.label}</h3>
-                    <ul class="flex flex-col gap-1">
-                      {item.overlay.map((sub) => (
-                        <li>
-                          <a href={sub.href} class="group/item flex flex-col justify-center px-4 py-3 -mx-4 border border-transparent transition-colors hover:bg-white/5">
-                            <span class="text-[14px] font-bold text-white/90 transition-colors group-hover/item:text-white">{sub.label}</span>
-                            <span class="text-[12px] font-medium text-white/40 transition-colors group-hover/item:text-white/60">{sub.desc}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                <div class="nav-overlay pointer-events-none fixed top-[80px] z-50 w-[calc(100vw-2rem)] max-w-[860px] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 group-hover/nav:pointer-events-auto group-hover/nav:translate-y-0 group-hover/nav:opacity-100 left-0" style="left: 0;">
 
-                  <div class="lg:col-span-4 border-b border-white/10 lg:border-b-0 lg:border-r border-white/10 p-4 sm:p-6 lg:p-8">
-                    <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">{latestLabel}</h3>
-                    <div class="flex flex-col gap-6">
-                      {changelogs.length > 0 ? (
-                        changelogs.map((log) => (
-                          <a href={l(`/changelog/${log.slug}`)} class="group/feat flex flex-col gap-2">
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-[#FF8844]">
-                              {log.date ? new Date(log.date).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
-                            </span>
-                            <h4 class="text-[14px] font-bold leading-snug text-white/90 transition-colors duration-200 group-hover/feat:text-white">
-                              {log.title}
-                            </h4>
-                          </a>
-                        ))
-                      ) : (
-                        <div class="flex flex-col gap-2 opacity-60">
-                          <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">{updatesLabel}</span>
+                  <div class="absolute -top-[1px] left-0 h-[1px] w-full bg-white/20"></div>
+
+                  <div class="border border-white/15 bg-[#1C2B32] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.6)] relative overflow-hidden">
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 relative z-10">
+                      <div class="lg:col-span-5 border-b border-white/10 lg:border-b-0 lg:border-r border-white/10 p-4 sm:p-6 lg:p-8">
+                        {hf?.exploreLabel && (
+                          <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">{hf.exploreLabel} {group.name}</h3>
+                        )}
+                        <ul class="flex flex-col gap-1">
+                          {group.items.map((sub) => (
+                            <li>
+                              <a href={sub.href || '#'} class="group/item flex flex-col justify-center px-4 py-3 -mx-4 border border-transparent transition-colors hover:bg-white/5">
+                                {sub.label && <span class="text-[14px] font-bold text-white/90 transition-colors group-hover/item:text-white">{sub.label}</span>}
+                                {sub.description && <span class="text-[12px] font-medium text-white/40 transition-colors group-hover/item:text-white/60">{sub.description}</span>}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div class="lg:col-span-4 border-b border-white/10 lg:border-b-0 lg:border-r border-white/10 p-4 sm:p-6 lg:p-8">
+                        {hf?.latestLabel && (
+                          <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">{hf.latestLabel}</h3>
+                        )}
+                        <div class="flex flex-col gap-6">
+                          {changelogs.length > 0 ? (
+                            changelogs.map((log) => (
+                              <a href={l(`/changelog/${log.slug}`)} class="group/feat flex flex-col gap-2">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-[#FF8844]">
+                                  {log.date ? new Date(log.date).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                                </span>
+                                <h4 class="text-[14px] font-bold leading-snug text-white/90 transition-colors duration-200 group-hover/feat:text-white">
+                                  {log.title}
+                                </h4>
+                              </a>
+                            ))
+                          ) : hf?.updatesLabel ? (
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">{hf.updatesLabel}</span>
+                          ) : null}
                         </div>
-                      )}
-                    </div>
-                  </div>
+                      </div>
 
-                  <div class="lg:col-span-3 bg-[#25363F] p-4 sm:p-6 lg:p-8 flex flex-col justify-between">
-                    <div>
-                      <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">{needHelpLabel}</h3>
-                      <p class="text-[13px] leading-relaxed text-white/60 mb-6">
-                        {needHelpDescription}
-                      </p>
+                      <div class="lg:col-span-3 bg-[#25363F] p-4 sm:p-6 lg:p-8 flex flex-col justify-between">
+                        <div>
+                          {hf?.needHelpLabel && (
+                            <h3 class="mb-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">{hf.needHelpLabel}</h3>
+                          )}
+                          {hf?.needHelpDescription && (
+                            <p class="text-[13px] leading-relaxed text-white/60 mb-6">{hf.needHelpDescription}</p>
+                          )}
+                        </div>
+                        {hf?.contactButtonLabel && (
+                          <a href={l('/contact')} class="group/contact flex items-center justify-between border border-white/20 bg-transparent px-4 py-3 text-[13px] font-bold text-white transition-all duration-300 hover:border-white/50 hover:bg-white/5">
+                            <span>{hf.contactButtonLabel}</span>
+                            <svg class="h-4 w-4 transition-transform duration-300 group-hover/contact:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="square" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    <a href={l('/contact')} class="group/contact flex items-center justify-between border border-white/20 bg-transparent px-4 py-3 text-[13px] font-bold text-white transition-all duration-300 hover:border-white/50 hover:bg-white/5">
-                      <span>{contactButtonLabel}</span>
-                      <svg class="h-4 w-4 transition-transform duration-300 group-hover/contact:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="square" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </a>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
 
       <div class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2 sm:right-6 sm:gap-3 lg:right-12">
         {locales.length > 1 && (
-        <!-- Language Dropdown -->
         <div class="lang-dropdown group/lang relative hidden sm:block">
           <button
             type="button"
@@ -238,18 +154,22 @@ const ctaButton2Link = hf?.ctaButton2Link || l('/trial');
           </div>
         </div>
         )}
-        <a
-          href={ctaButton1Link}
-          class="hidden h-9 items-center justify-center border border-white/40 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:border-white hover:bg-white/5 sm:inline-flex"
-        >
-          {ctaButton1Text}
-        </a>
-        <a
-          href={ctaButton2Link}
-          class="inline-flex h-9 items-center justify-center border border-white bg-white px-4 text-[13px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-[rgb(255,254,252)] hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-        >
-          {ctaButton2Text}
-        </a>
+        {hf?.ctaButton1Text && (
+          <a
+            href={hf.ctaButton1Link || '#'}
+            class="hidden h-9 items-center justify-center border border-white/40 bg-transparent px-4 text-[13px] font-medium text-white transition-colors hover:border-white hover:bg-white/5 sm:inline-flex"
+          >
+            {hf.ctaButton1Text}
+          </a>
+        )}
+        {hf?.ctaButton2Text && (
+          <a
+            href={hf.ctaButton2Link || '#'}
+            class="inline-flex h-9 items-center justify-center border border-white bg-white px-4 text-[13px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-[rgb(255,254,252)] hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+          >
+            {hf.ctaButton2Text}
+          </a>
+        )}
         <button
           type="button"
           class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-white/80 transition-colors hover:bg-white/10 hover:text-white md:hidden"
@@ -268,25 +188,25 @@ const ctaButton2Link = hf?.ctaButton2Link || l('/trial');
       </div>
     </nav>
 
-    <div class="hidden border-t border-white/10 bg-[#1C2B32] md:hidden" id="mobile-menu" role="dialog" aria-label="Navigation menu">
+    <div class="hidden border-t border-white/10 bg-[#1C2B32] md:hidden" id="mobile-menu" role="dialog" aria-label="Navigation">
       <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <span class="text-xs font-semibold uppercase tracking-wider text-white/50">{t('nav.menu')}</span>
+        <span></span>
         <button type="button" class="flex h-9 w-9 items-center justify-center rounded-md text-white/70 hover:bg-white/10 hover:text-white" aria-label="Close menu" id="mobile-menu-close">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
       <div class="max-h-[calc(100vh-8rem)] overflow-y-auto pb-6">
-        {navItems.map((item, idx) => (
+        {navGroups.map((group, idx) => (
           <div class="border-b border-white/5" data-mobile-nav-item>
             <div class="flex items-center justify-between gap-2">
-              <a href={item.href} class="flex-1 py-3.5 pl-4 pr-2 text-[15px] font-semibold text-white/95">{item.label}</a>
+              <span class="flex-1 py-3.5 pl-4 pr-2 text-[15px] font-semibold text-white/95">{group.name}</span>
               <button type="button" class="mobile-nav-toggle flex h-11 w-11 shrink-0 items-center justify-center text-white/60 hover:bg-white/5 hover:text-white" aria-expanded="false" aria-controls={`mobile-sub-${idx}`} id={`mobile-toggle-${idx}`} data-mobile-toggle data-target={`mobile-sub-${idx}`}>
                 <svg class="h-5 w-5 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
               </button>
             </div>
             <div id={`mobile-sub-${idx}`} class="hidden flex-col border-t border-white/5 bg-[#0f1a1d] pb-2" data-mobile-sub>
-              {item.overlay.map((sub) => (
-                <a href={sub.href} class="mobile-menu-link block border-l-2 border-transparent py-2.5 pl-6 pr-4 text-[14px] font-medium text-white/75 transition-colors hover:border-white/30 hover:bg-white/5 hover:text-white">
+              {group.items.map((sub) => (
+                <a href={sub.href || '#'} class="mobile-menu-link block border-l-2 border-transparent py-2.5 pl-6 pr-4 text-[14px] font-medium text-white/75 transition-colors hover:border-white/30 hover:bg-white/5 hover:text-white">
                   {sub.label}
                 </a>
               ))}
@@ -294,9 +214,7 @@ const ctaButton2Link = hf?.ctaButton2Link || l('/trial');
           </div>
         ))}
         {locales.length > 1 && (
-        <!-- Mobile language switcher -->
         <div class="border-b border-white/5 px-4 py-3">
-          <p class="text-[11px] font-bold uppercase tracking-widest text-white/40 mb-2">Language</p>
           <div class="flex flex-col gap-1">
             {localeOptions.map((opt) => (
               <a href={opt.href} class={`mobile-menu-link flex items-center gap-2 py-2.5 px-3 text-[14px] font-medium rounded transition-colors ${opt.isActive ? 'bg-white/10 text-white' : 'text-white/75 hover:bg-white/5 hover:text-white'}`}>
@@ -307,14 +225,20 @@ const ctaButton2Link = hf?.ctaButton2Link || l('/trial');
           </div>
         </div>
         )}
-        <div class="mt-4 flex flex-col gap-3 px-4">
-          <a href={ctaButton1Link} class="mobile-menu-link flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10">
-            {ctaButton1Text}
-          </a>
-          <a href={ctaButton2Link} class="mobile-menu-link flex items-center justify-center border border-white py-3.5 text-[14px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-white/90">
-            {ctaButton2Text}
-          </a>
-        </div>
+        {(hf?.ctaButton1Text || hf?.ctaButton2Text) && (
+          <div class="mt-4 flex flex-col gap-3 px-4">
+            {hf?.ctaButton1Text && (
+              <a href={hf.ctaButton1Link || '#'} class="mobile-menu-link flex items-center justify-center border border-white/40 py-3.5 text-[14px] font-medium text-white transition-colors hover:bg-white/10">
+                {hf.ctaButton1Text}
+              </a>
+            )}
+            {hf?.ctaButton2Text && (
+              <a href={hf.ctaButton2Link || '#'} class="mobile-menu-link flex items-center justify-center border border-white py-3.5 text-[14px] font-medium text-[rgb(10,43,49)] transition-colors hover:bg-white/90">
+                {hf.ctaButton2Text}
+              </a>
+            )}
+          </div>
+        )}
       </div>
     </div>
   </div>
