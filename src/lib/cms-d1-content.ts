@@ -1058,6 +1058,9 @@ export type CmsPaymentSeitenPayload = {
   formSubject?: string;
   submitButtonTranslation?: string;
   requestAccessLabel?: string;
+  /** CMS-Feld (Contentful): Titel über dem Formular */
+  formName?: string;
+  /** Legacy-Alias zu formName */
   formTitle?: string;
   formDescription?: string;
 };
@@ -1158,7 +1161,7 @@ export async function loadPaymentLandingPage(
       metaDescription,
       submitButtonLabel: (p.submitButtonTranslation ?? '').trim() || 'Send',
       requestAccessLabel: (p.requestAccessLabel ?? '').trim() || undefined,
-      formTitle: (p.formTitle ?? '').trim() || undefined,
+      formTitle: (p.formName ?? p.formTitle ?? '').trim() || undefined,
       formDescription: (p.formDescription ?? '').trim() || undefined,
     },
     assets,
