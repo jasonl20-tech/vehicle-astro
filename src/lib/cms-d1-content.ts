@@ -561,11 +561,9 @@ export type CmsLandingPagePayload = {
   slug?: string;
   body?: Document;
   layout?: EntryLink;
-  category?: EntryLink;
   ogImage?: EntryLink;
   metaTitle?: string;
   metaDescription?: string;
-  footer?: boolean;
 };
 
 export type LandingPage = {
@@ -575,13 +573,10 @@ export type LandingPage = {
   body?: Document;
   layoutName: string;
   layoutNumber: number | null;
-  categoryId?: string;
-  categoryName?: string;
   ogImage?: EntryLink;
   ogImageUrl?: string;
   metaTitle: string;
   metaDescription: string;
-  footer: boolean;
 };
 
 export type LandingResult = {
@@ -605,8 +600,6 @@ export async function loadLandingPages(opts: { locale?: string; limit?: number }
       const slug = (typeof p.slug === 'string' && p.slug.trim()) ? p.slug.trim() : (slugify(p.title) || r.id);
       const layoutId = p.layout?.sys?.id;
       const layoutEntry = layoutId ? layouts.get(layoutId) : undefined;
-      const catId = p.category?.sys?.id;
-      const catEntry = catId ? categories.get(catId) : undefined;
       return {
         id: r.id,
         slug,
@@ -614,13 +607,10 @@ export async function loadLandingPages(opts: { locale?: string; limit?: number }
         body: p.body,
         layoutName: (layoutEntry?.name ?? '').toLowerCase().replace(/\s+/g, '-'),
         layoutNumber: layoutEntry?.number ?? null,
-        categoryId: catEntry?.id,
-        categoryName: catEntry?.name,
         ogImage: p.ogImage,
         ogImageUrl: resolveAssetUrl(p.ogImage, assets),
         metaTitle: p.metaTitle ?? p.title ?? slug,
         metaDescription: p.metaDescription ?? '',
-        footer: p.footer === true,
       };
     })
     .filter((it) => it.slug);

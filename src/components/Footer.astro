@@ -25,7 +25,7 @@ try {
     const links: FooterSection['links'] = [];
     for (const entryId of cat.entryIds) {
       const lp = landingById.get(entryId);
-      if (!lp || !lp.footer) continue;
+      if (!lp) continue;
       links.push({ label: lp.title || lp.slug, href: l(`/${lp.slug}`) });
     }
     if (links.length > 0) {
