@@ -71,7 +71,7 @@ const alternateUrls = getAlternateUrls(Astro.url.pathname, siteUrl);
     <meta name="twitter:image:height" content={ogImageHeight} />
     {preloadHero && <link rel="preload" as="image" href="/images/hero-car.webp" media="(min-width: 768px)" />}
     {preloadFirstImage && <link rel="preload" as="image" href={preloadFirstImage} media="(max-width: 767px)" />}
-    <script type="application/ld+json" set:html={JSON.stringify(structuredDataGraph ? { '@context': 'https://schema.org', '@graph': structuredDataGraph } : {
+    <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@graph': [
         {
@@ -89,8 +89,9 @@ const alternateUrls = getAlternateUrls(Astro.url.pathname, siteUrl);
           description: 'Studio-quality vehicle imagery API. Car stock photos for dealerships, leasing, and automotive platforms.',
           publisher: { '@id': `${siteUrl}/#organization` },
         },
-      ]},
-    )} />
+        ...(structuredDataGraph ?? []),
+      ],
+    })} />
   </head>
   <body class="antialiased min-h-screen bg-cream text-gray-900">
     <slot />

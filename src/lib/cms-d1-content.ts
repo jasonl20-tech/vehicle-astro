@@ -577,6 +577,7 @@ export type LandingPage = {
   ogImageUrl?: string;
   metaTitle: string;
   metaDescription: string;
+  updatedAt: string;
 };
 
 export type LandingResult = {
@@ -611,6 +612,7 @@ export async function loadLandingPages(opts: { locale?: string; limit?: number }
         ogImageUrl: resolveAssetUrl(p.ogImage, assets),
         metaTitle: p.metaTitle ?? p.title ?? slug,
         metaDescription: p.metaDescription ?? '',
+        updatedAt: r.updatedAt,
       };
     })
     .filter((it) => it.slug);

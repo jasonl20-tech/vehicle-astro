@@ -16,7 +16,7 @@ export default defineConfig({
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'es'],
+    locales: ['en'],
     routing: {
       prefixDefaultLocale: false,
     },
@@ -26,26 +26,27 @@ export default defineConfig({
     sitemap({
       i18n: {
         defaultLocale: 'en',
-        locales: { en: 'en', es: 'es' },
+        locales: { en: 'en' },
       },
       serialize(item) {
         const url = item.url;
         const path = url.replace(site, '') || '/';
-        const cleanPath = path.replace(/^\/es/, '') || '/';
 
-        if (cleanPath === '/' || cleanPath === '') {
+        if (path === '/' || path === '') {
           item.priority = 1;
           item.changefreq = 'weekly';
-        } else if (/\/blog\//.test(cleanPath) || /\/changelog\//.test(cleanPath)) {
+        } else if (/\/blog\//.test(path) || /\/changelog\//.test(path)) {
           item.priority = 0.8;
           item.changefreq = 'weekly';
-        } else if (/^\/(?!blog|changelog|faq|coverage|pricing|es)[^/]+\/?$/.test(cleanPath)) {
+        } else if (/^\/(?!blog|changelog|faq|coverage|pricing)[^/]+\/?$/.test(path)) {
           item.priority = 0.9;
           item.changefreq = 'weekly';
         } else {
           item.priority = item.priority ?? 0.7;
           item.changefreq = item.changefreq ?? 'monthly';
         }
+        // lastmod is patched post-build by scripts/copy-sitemap.mjs using
+        // the real D1 updated_at where available (falls back to today).
         item.lastmod = item.lastmod ?? new Date();
         return item;
       }

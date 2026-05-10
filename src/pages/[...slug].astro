@@ -42,23 +42,48 @@ const pageTitle = entry?.metaTitle || title;
 const pageDescription = entry?.metaDescription || '';
 const canonical = localizeUrl(`/${slug}`, locale);
 const siteUrl = Astro.url.origin;
+const pageUrl = `${siteUrl}${canonical}`;
 
 const ogImage = entry?.ogImageUrl
   ? (entry.ogImageUrl.startsWith('http') ? entry.ogImageUrl : `${siteUrl}${entry.ogImageUrl.startsWith('/') ? '' : '/'}${entry.ogImageUrl}`)
   : undefined;
 
-const jsonLd = JSON.stringify({
-  '@context': 'https://schema.org',
+const updatedAtIso = entry?.updatedAt ? new Date(entry.updatedAt).toISOString() : undefined;
+const inLanguageTag = locale === 'es' ? 'es-ES' : 'en-US';
+
+const webPageSchema: Record<string, unknown> = {
   '@type': 'WebPage',
-  name: title,
+  '@id': `${pageUrl}#webpage`,
+  name: pageTitle,
   description: pageDescription,
-  url: `${siteUrl}${canonical}`,
-});
+  url: pageUrl,
+  inLanguage: inLanguageTag,
+  isPartOf: { '@id': `${siteUrl}/#website` },
+};
+if (ogImage) webPageSchema.primaryImageOfPage = { '@type': 'ImageObject', url: ogImage };
+if (updatedAtIso) webPageSchema.dateModified = updatedAtIso;
+
+const breadcrumbSchema = {
+  '@type': 'BreadcrumbList',
+  '@id': `${pageUrl}#breadcrumb`,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: title, item: pageUrl },
+  ],
+};
+
+const structuredDataGraph: unknown[] = [webPageSchema, breadcrumbSchema];
 
 const layoutNumber = entry?.layoutNumber ?? 1;
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription} canonicalUrl={canonical} ogImage={ogImage}>
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl={canonical}
+  ogImage={ogImage}
+  structuredDataGraph={structuredDataGraph}
+>
   <Header />
   <main class="min-h-screen">
     {layoutNumber === 2 ? (
@@ -74,5 +99,4 @@ const layoutNumber = entry?.layoutNumber ?? 1;
     )}
   </main>
   <Footer />
-  <script type="application/ld+json" set:html={jsonLd} />
 </BaseLayout>
