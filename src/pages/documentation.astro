@@ -126,34 +126,13 @@ const docStructuredData: unknown[] = [techArticleSchema, breadcrumbSchema];
                 #doc-content .doc-section { display: none; }
                 #doc-content .doc-section.active { display: block; }
                 .doc-nav-link.active { background: white !important; border-color: rgba(0,0,0,0.1) !important; color: black !important; font-weight: 500; }
-
-                #doc-content .doc-extra-body h1,
-                #doc-content .doc-extra-body h2,
-                #doc-content .doc-extra-body h3,
-                #doc-content .doc-extra-body h4 { font-weight: 600; color: rgb(0,0,0); margin: 1.5em 0 0.5em; line-height: 1.25; }
-                #doc-content .doc-extra-body h1 { font-size: 1.5rem; }
-                #doc-content .doc-extra-body h2 { font-size: 1.25rem; }
-                #doc-content .doc-extra-body h3 { font-size: 1.125rem; }
-                #doc-content .doc-extra-body p { font-size: 14px; color: rgba(0,0,0,0.6); line-height: 1.7; margin: 0 0 1em; }
-                #doc-content .doc-extra-body ul,
-                #doc-content .doc-extra-body ol { font-size: 14px; color: rgba(0,0,0,0.6); line-height: 1.7; margin: 0 0 1em; padding-left: 1.5em; }
-                #doc-content .doc-extra-body ul { list-style: disc; }
-                #doc-content .doc-extra-body ol { list-style: decimal; }
-                #doc-content .doc-extra-body li { margin-bottom: 0.25em; }
-                #doc-content .doc-extra-body a { color: rgb(200,90,70); text-decoration: none; }
-                #doc-content .doc-extra-body a:hover { text-decoration: underline; }
-                #doc-content .doc-extra-body code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: #f4f4f5; padding: 2px 6px; border-radius: 4px; color: black; }
-                #doc-content .doc-extra-body pre { background: #1e1e1e; color: #d4d4d4; padding: 1.25rem; border-radius: 0.75rem; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 1em 0; }
-                #doc-content .doc-extra-body pre code { background: transparent; padding: 0; color: inherit; }
-                #doc-content .doc-extra-body strong { font-weight: 700; color: black; }
-                #doc-content .doc-extra-body blockquote { border-left: 4px solid rgb(200,90,70); padding-left: 1rem; margin: 1em 0; color: rgba(0,0,0,0.7); font-style: italic; }
               </style>
 
               {page.otherElements.map((extra) => (
                 <section id={extra.slug} data-doc-section={extra.slug} class="doc-section mb-20 scroll-mt-24">
                   <h2 class="text-3xl sm:text-4xl font-normal leading-[1.1] text-black tracking-tight mb-6">{extra.name}</h2>
                   {extra.inhalt ? (
-                    <div class="doc-extra-body" set:html={renderRichText(extra.inhalt, page.assets)} />
+                    <div class="dynamic-body dynamic-body--docs" set:html={renderRichText(extra.inhalt, page.assets)} />
                   ) : null}
                 </section>
               ))}
