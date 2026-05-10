@@ -94,26 +94,44 @@ const company = await getCompanyInfo();
 
 const articleUrl = canonicalUrl ? `${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}` : `${siteUrl}/blog/${fields.slug}`;
 const articleImage = ogImageFull || (featuredImageUrl ? (featuredImageUrl.startsWith('http') ? featuredImageUrl : `https:${featuredImageUrl}`) : undefined);
-const articleSchema = {
-  '@context': 'https://schema.org',
+const bodyPlain = body ? richTextToPlainText(body, 0) : '';
+const wordCount = bodyPlain ? bodyPlain.split(/\s+/).filter(Boolean).length : 0;
+const computedReadingMinutes = wordCount ? Math.max(1, Math.round(wordCount / 200)) : undefined;
+const finalReadingMinutes = readingTimeMinutes ?? computedReadingMinutes;
+const articleSchema: Record<string, unknown> = {
   '@type': 'Article',
+  '@id': `${articleUrl}#article`,
   headline: pageTitle,
   description: metaDescription || title,
   url: articleUrl,
+  inLanguage: 'en-US',
+  isPartOf: { '@id': `${siteUrl}/#website` },
   ...(articleImage && { image: articleImage }),
   ...(publishedAt && { datePublished: publishedAt }),
-  author: { '@type': 'Person', name: authorName || company.companyName },
-  publisher: { '@type': 'Organization', name: company.companyName, logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.svg` } },
+  ...(entry?.sys?.updatedAt && { dateModified: entry.sys.updatedAt }),
+  ...(wordCount && { wordCount }),
+  ...(finalReadingMinutes && { timeRequired: `PT${finalReadingMinutes}M` }),
+  ...(category && { articleSection: category }),
+  ...(tags?.length && { keywords: tags.join(', ') }),
+  author: {
+    '@type': 'Person',
+    name: authorName || company.companyName,
+    ...(authorWebsite && { url: authorWebsite }),
+    ...(authorTwitter && { sameAs: [authorTwitter, authorLinkedIn].filter(Boolean) }),
+  },
+  publisher: { '@id': `${siteUrl}/#organization` },
+  mainEntityOfPage: { '@id': `${articleUrl}#webpage` },
 };
 const breadcrumbSchema = {
-  '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
+  '@id': `${articleUrl}#breadcrumb`,
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
     { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog` },
     { '@type': 'ListItem', position: 3, name: pageTitle, item: articleUrl },
   ],
 };
+const blogStructuredData: unknown[] = [articleSchema, breadcrumbSchema];
 ---
 
 <BaseLayout
@@ -123,10 +141,9 @@ const breadcrumbSchema = {
   ogImageAlt={ogImageAlt || featuredImageAlt}
   canonicalUrl={canonicalUrl || `/blog/${fields.slug}`}
   noIndex={noIndex}
+  structuredDataGraph={blogStructuredData}
 >
   <Header />
-  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <main class="min-h-screen bg-cream">
     <!-- Article header: full-bleed optional image + title block -->
     <header class="relative">

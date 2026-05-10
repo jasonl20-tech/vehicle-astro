@@ -9,6 +9,8 @@ interface Props {
   description?: string;
   ogImage?: string;
   ogImageAlt?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
   canonicalUrl?: string;
   noIndex?: boolean;
   keywords?: string;
@@ -17,7 +19,9 @@ interface Props {
   preloadFirstImage?: string;
 }
 
-const { title, description = '', ogImage, ogImageAlt, canonicalUrl, noIndex = false, keywords = defaultKeywords, structuredDataGraph, preloadHero = false, preloadFirstImage } = Astro.props;
+const BRAND = 'Vehicle Imagery';
+const BRAND_SUFFIX = ' | Vehicle Imagery';
+const { title, description = '', ogImage, ogImageAlt, ogImageWidth: ogImageWidthProp, ogImageHeight: ogImageHeightProp, canonicalUrl, noIndex = false, keywords = defaultKeywords, structuredDataGraph, preloadHero = false, preloadFirstImage } = Astro.props;
 const locale: Locale = getLocaleFromUrl(Astro.url);
 const siteUrl = Astro.url.origin;
 const defaultOgImage = `${siteUrl}/images/hero-car.webp`;
@@ -27,9 +31,16 @@ const ogImageUrl = ogImage
   : defaultOgImage;
 const resolvedOgImageAlt = ogImageAlt || defaultOgImageAlt;
 const ogUrl = canonicalUrl ? `${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}` : Astro.url.href;
-const ogImageWidth = 1200;
-const ogImageHeight = 630;
+const ogImageWidth = ogImageWidthProp ?? 1200;
+const ogImageHeight = ogImageHeightProp ?? 630;
 const alternateUrls = getAlternateUrls(Astro.url.pathname, siteUrl);
+
+// Append brand suffix when the page title doesn't already mention it
+// and there's still room (Google typically truncates around 60 chars).
+const needsBrand = !title.toLowerCase().includes(BRAND.toLowerCase());
+const finalTitle = (needsBrand && (title.length + BRAND_SUFFIX.length) <= 70)
+  ? `${title}${BRAND_SUFFIX}`
+  : title;
 ---
 
 <!doctype html>
@@ -46,13 +57,13 @@ const alternateUrls = getAlternateUrls(Astro.url.pathname, siteUrl);
     <meta name="keywords" content={keywords} />
     {noIndex ? <meta name="robots" content="noindex" /> : <meta name="robots" content="index, follow" />}
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <title>{finalTitle}</title>
     {canonicalUrl && <link rel="canonical" href={`${siteUrl}${canonicalUrl.startsWith('/') ? '' : '/'}${canonicalUrl}`} />}
     {alternateUrls.map(({ locale: loc, href }) => (
       <link rel="alternate" hreflang={loc} href={href} />
     ))}
     <link rel="alternate" hreflang="x-default" href={alternateUrls.find(a => a.locale === 'en')?.href ?? siteUrl} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={finalTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content={ogImageWidth} />
@@ -63,7 +74,7 @@ const alternateUrls = getAlternateUrls(Astro.url.pathname, siteUrl);
     <meta property="og:locale" content={getOgLocale(locale)} />
     <meta property="og:site_name" content="Vehicle Imagery API" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
+    <meta name="twitter:title" content={finalTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={resolvedOgImageAlt} />

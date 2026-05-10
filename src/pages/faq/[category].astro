@@ -40,9 +40,13 @@ try {
 }
 
 const siteUrl = Astro.url.origin;
+const faqUrl = `${siteUrl}/faq/${category}`;
 const faqSchema = faqs.length > 0 ? {
-  '@context': 'https://schema.org',
   '@type': 'FAQPage',
+  '@id': `${faqUrl}#faqpage`,
+  url: faqUrl,
+  inLanguage: 'en-US',
+  isPartOf: { '@id': `${siteUrl}/#website` },
   mainEntity: faqs.map((faq) => ({
     '@type': 'Question',
     name: faq.question,
@@ -50,20 +54,22 @@ const faqSchema = faqs.length > 0 ? {
   })),
 } : null;
 const breadcrumbSchema = {
-  '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
+  '@id': `${faqUrl}#breadcrumb`,
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
     { '@type': 'ListItem', position: 2, name: 'FAQ', item: `${siteUrl}/faq` },
-    { '@type': 'ListItem', position: 3, name: categoryLabel, item: `${siteUrl}/faq/${category}` },
+    { '@type': 'ListItem', position: 3, name: categoryLabel, item: faqUrl },
   ],
 };
+const faqStructuredData: unknown[] = faqSchema ? [faqSchema, breadcrumbSchema] : [breadcrumbSchema];
 ---
 
 <BaseLayout
-  title={`${categoryLabel} FAQ | Vehicle Imagery API`}
+  title={`${categoryLabel} FAQ`}
   description={`Frequently asked questions about ${categoryLabel} – Vehicle Imagery API.`}
   canonicalUrl={`/faq/${category}`}
+  structuredDataGraph={faqStructuredData}
 >
   <Header />
   <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
@@ -151,8 +157,6 @@ const breadcrumbSchema = {
         )}
       </div>
     </section>
-    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
-    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   </main>
   <Footer />
 </BaseLayout>

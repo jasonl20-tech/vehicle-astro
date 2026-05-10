@@ -49,11 +49,13 @@ async function d1Query(sql, params = []) {
     body: JSON.stringify({ sql, params }),
   });
   if (!res.ok) {
-    console.warn(`  D1 HTTP ${res.status} - sitemap lastmod will fall back to build time`);
-    return [];
+    const txt = await res.text().catch(() => '');
+    throw new Error(`D1 HTTP ${res.status} - ${txt.slice(0, 300)}`);
   }
   const data = await res.json();
-  if (!data.success) return [];
+  if (!data.success) {
+    throw new Error(`D1 error: ${JSON.stringify(data.errors ?? data)}`);
+  }
   return data.result?.[0]?.results ?? [];
 }
 

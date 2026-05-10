@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/optimize-images.mjs && astro build && node scripts/generate-redirects.mjs && node scripts/copy-sitemap.mjs",
+    "build": "node scripts/optimize-images.mjs && astro build && node scripts/generate-redirects.mjs && node scripts/copy-sitemap.mjs && node scripts/write-robots.mjs",
     "download-interior": "node scripts/download-interior-images.mjs",
     "preview": "astro preview",
     "astro": "astro"

@@ -19,12 +19,31 @@ export function richTextToPlainText(doc: Document | null | undefined, maxLength 
   return text;
 }
 
-export type AssetMap = Record<string, { fields?: { file?: { url?: string }; title?: string } }>;
+export type AssetFields = {
+  title?: string;
+  description?: string;
+  file?: {
+    url?: string;
+    contentType?: string;
+    details?: { image?: { width?: number; height?: number } };
+  };
+};
+
+export type AssetMap = Record<string, { fields?: AssetFields }>;
 
 function getAssetUrl(asset: { fields?: { file?: { url?: string } } } | null | undefined): string | null {
   if (!asset?.fields?.file?.url) return null;
   const url = asset.fields.file.url;
   return url.startsWith('//') ? `https:${url}` : url;
+}
+
+function getAssetMeta(asset: { fields?: AssetFields } | null | undefined) {
+  const fields = asset?.fields;
+  return {
+    width: fields?.file?.details?.image?.width,
+    height: fields?.file?.details?.image?.height,
+    alt: fields?.description || fields?.title || '',
+  };
 }
 
 type Next = (nodes: unknown) => string;
@@ -75,15 +94,17 @@ export function renderRichText(doc: Document | null | undefined, assetMap?: Asse
         if (!url) return next(node.content ?? []);
         return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${next(node.content ?? [])}</a>`;
       },
-      [BLOCKS.EMBEDDED_ASSET]: (node: { data?: { target?: { sys?: { id?: string }; fields?: { file?: { url?: string }; title?: string } } } }) => {
+      [BLOCKS.EMBEDDED_ASSET]: (node: { data?: { target?: { sys?: { id?: string }; fields?: AssetFields } } }) => {
         let target = node.data?.target;
         if (!getAssetUrl(target) && assetMap && target?.sys?.id) {
           target = assetMap[target.sys.id] as typeof target;
         }
         const url = getAssetUrl(target);
-        const alt = target?.fields?.title ?? '';
         if (!url) return '';
-        return `<figure class="my-8"><img src="${url}" alt="${escapeHtml(alt)}" class="w-full h-auto rounded-lg" loading="lazy" decoding="async"/></figure>`;
+        const { width, height, alt } = getAssetMeta(target);
+        const dims = (width && height) ? ` width="${width}" height="${height}"` : '';
+        const aspect = (width && height) ? ` style="aspect-ratio: ${width} / ${height};"` : '';
+        return `<figure class="my-8"><img src="${url}" alt="${escapeHtml(alt)}"${dims}${aspect} class="w-full h-auto rounded-lg" loading="lazy" decoding="async"/></figure>`;
       },
     },
   });

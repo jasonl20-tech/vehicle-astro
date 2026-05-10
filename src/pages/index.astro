@@ -4,13 +4,14 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCompanyInfo } from '../lib/site-config';
 import { renderRichText, richTextToPlainText } from '../lib/rich-text';
-import { loadChangelogs, loadBlogsWithIncludes, loadMainPage } from '../lib/cms-d1-content';
+import { loadChangelogs, loadBlogsWithIncludes, loadMainPage, loadFirmenKonfiguration } from '../lib/cms-d1-content';
 
 const locale = 'en-US';
 
-const [page, company] = await Promise.all([
+const [page, company, firma] = await Promise.all([
   loadMainPage({ locale }).catch(() => null),
   getCompanyInfo(),
+  loadFirmenKonfiguration({ locale }).catch(() => null),
 ]);
 
 type UpdateItem = { slug: string; title: string; date: string; excerpt?: string; type: 'changelog' | 'blog' };
@@ -52,21 +53,57 @@ const ogImageAbsolute = page?.ogImageUrl
   ? (page.ogImageUrl.startsWith('http') ? page.ogImageUrl : `${siteUrl}${page.ogImageUrl.startsWith('/') ? '' : '/'}${page.ogImageUrl}`)
   : undefined;
 
+const softwareAppSchema = {
+  '@type': 'SoftwareApplication',
+  '@id': `${siteUrl}/#software`,
+  name: 'Vehicle Imagery API',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any (REST API)',
+  url: siteUrl,
+  publisher: { '@id': `${siteUrl}/#organization` },
+  offers: {
+    '@type': 'Offer',
+    url: `${siteUrl}/pricing`,
+    priceCurrency: 'EUR',
+    price: '0',
+    description: 'Free trial available, paid plans on request.',
+  },
+};
+
+const webPageSchema = {
+  '@type': 'WebPage',
+  '@id': `${siteUrl}/#webpage`,
+  url: `${siteUrl}/`,
+  name: page?.metaTitle || 'Vehicle Imagery',
+  description: page?.metaBeschreibung || '',
+  inLanguage: 'en-US',
+  isPartOf: { '@id': `${siteUrl}/#website` },
+  primaryImageOfPage: ogImageAbsolute ? { '@type': 'ImageObject', url: ogImageAbsolute } : undefined,
+  about: { '@id': `${siteUrl}/#software` },
+};
+
+const sameAsLinks = (firma?.socialUrls && firma.socialUrls.length > 0)
+  ? firma.socialUrls
+  : [company.twitterUrl, company.facebookUrl, company.linkedinUrl].filter((u): u is string => Boolean(u));
+
 const homepageStructuredData: unknown[] = [
   {
     '@type': 'Organization',
     '@id': `${siteUrl}/#organization`,
-    name: company.companyName,
+    name: firma?.firmenName || company.companyName,
     url: siteUrl,
-    logo: `${siteUrl}/logo.svg`,
+    logo: firma?.logoUrl || `${siteUrl}/logo.svg`,
+    description: firma?.tagline || undefined,
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: company.phone,
       contactType: 'customer service',
       email: company.emailSupport,
     },
-    sameAs: [company.twitterUrl, company.facebookUrl, company.linkedinUrl].filter(Boolean),
+    sameAs: sameAsLinks,
   },
+  softwareAppSchema,
+  webPageSchema,
 ];
 ---
 

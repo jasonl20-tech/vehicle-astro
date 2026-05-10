@@ -13,16 +13,41 @@ const allSlugs: string[] = page
 const initialSlug = allSlugs[0] ?? '';
 
 const siteUrl = Astro.url.origin;
+const docUrl = `${siteUrl}/documentation`;
 const ogImage = page?.ogImageUrl
   ? (page.ogImageUrl.startsWith('http') ? page.ogImageUrl : `${siteUrl}${page.ogImageUrl.startsWith('/') ? '' : '/'}${page.ogImageUrl}`)
   : undefined;
+
+const techArticleSchema: Record<string, unknown> = {
+  '@type': 'TechArticle',
+  '@id': `${docUrl}#techarticle`,
+  headline: page?.title || 'Documentation',
+  description: page?.metaDescribtion || page?.describtion || '',
+  url: docUrl,
+  inLanguage: 'en-US',
+  isPartOf: { '@id': `${siteUrl}/#website` },
+  publisher: { '@id': `${siteUrl}/#organization` },
+};
+if (ogImage) techArticleSchema.image = ogImage;
+
+const breadcrumbSchema = {
+  '@type': 'BreadcrumbList',
+  '@id': `${docUrl}#breadcrumb`,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: page?.title || 'Documentation', item: docUrl },
+  ],
+};
+
+const docStructuredData: unknown[] = [techArticleSchema, breadcrumbSchema];
 ---
 
 <BaseLayout
-  title={page?.metaTitle || 'Documentation | Vehicle Imagery'}
+  title={page?.metaTitle || page?.title || 'Documentation'}
   description={page?.metaDescribtion || ''}
   canonicalUrl="/documentation"
   ogImage={ogImage}
+  structuredDataGraph={docStructuredData}
 >
   <Header />
   <main class="min-h-screen bg-white" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">

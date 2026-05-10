@@ -564,6 +564,9 @@ export type CmsLandingPagePayload = {
   ogImage?: EntryLink;
   metaTitle?: string;
   metaDescription?: string;
+  /** Optional CMS fields - safe to add later in Contentful */
+  keywords?: string;
+  noIndex?: boolean;
 };
 
 export type LandingPage = {
@@ -575,8 +578,13 @@ export type LandingPage = {
   layoutNumber: number | null;
   ogImage?: EntryLink;
   ogImageUrl?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  ogImageAlt?: string;
   metaTitle: string;
   metaDescription: string;
+  keywords?: string;
+  noIndex: boolean;
   updatedAt: string;
 };
 
@@ -601,6 +609,8 @@ export async function loadLandingPages(opts: { locale?: string; limit?: number }
       const slug = (typeof p.slug === 'string' && p.slug.trim()) ? p.slug.trim() : (slugify(p.title) || r.id);
       const layoutId = p.layout?.sys?.id;
       const layoutEntry = layoutId ? layouts.get(layoutId) : undefined;
+      const ogAsset = p.ogImage?.sys?.id ? assets[p.ogImage.sys.id] : undefined;
+      const ogImageUrl = resolveAssetUrl(p.ogImage, assets);
       return {
         id: r.id,
         slug,
@@ -609,9 +619,14 @@ export async function loadLandingPages(opts: { locale?: string; limit?: number }
         layoutName: (layoutEntry?.name ?? '').toLowerCase().replace(/\s+/g, '-'),
         layoutNumber: layoutEntry?.number ?? null,
         ogImage: p.ogImage,
-        ogImageUrl: resolveAssetUrl(p.ogImage, assets),
+        ogImageUrl,
+        ogImageWidth: ogAsset?.fields?.file?.details?.image?.width,
+        ogImageHeight: ogAsset?.fields?.file?.details?.image?.height,
+        ogImageAlt: ogAsset?.fields?.description || ogAsset?.fields?.title || (p.title ?? slug),
         metaTitle: p.metaTitle ?? p.title ?? slug,
         metaDescription: p.metaDescription ?? '',
+        keywords: typeof p.keywords === 'string' && p.keywords.trim() ? p.keywords.trim() : undefined,
+        noIndex: p.noIndex === true,
         updatedAt: r.updatedAt,
       };
     })
@@ -1037,12 +1052,22 @@ type CmsFirmenKonfigurationPayload = {
   firmenLogo?: EntryLink;
   firmenName?: string;
   meetingEmbed?: string;
+  /** Optional CMS fields - safe to add later in Contentful */
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  facebookUrl?: string;
+  youtubeUrl?: string;
+  instagramUrl?: string;
+  githubUrl?: string;
+  tagline?: string;
 };
 
 export type FirmenKonfiguration = {
   logoUrl: string | null;
   firmenName: string;
   meetingEmbed: string;
+  socialUrls: string[];
+  tagline: string;
 };
 
 export async function loadFirmenKonfiguration(
@@ -1055,10 +1080,21 @@ export async function loadFirmenKonfiguration(
   const p = row.payload;
 
   const assets = await loadAssetMap(locale);
+  const socialUrls = [
+    p.twitterUrl,
+    p.linkedinUrl,
+    p.facebookUrl,
+    p.youtubeUrl,
+    p.instagramUrl,
+    p.githubUrl,
+  ].filter((u): u is string => typeof u === 'string' && u.trim().length > 0);
+
   return {
     logoUrl: resolveAssetUrl(p.firmenLogo, assets) ?? null,
     firmenName: p.firmenName ?? '',
     meetingEmbed: p.meetingEmbed ?? '',
+    socialUrls,
+    tagline: p.tagline ?? '',
   };
 }
 

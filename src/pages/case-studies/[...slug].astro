@@ -34,14 +34,34 @@ const bodyHtml = body ? renderRichText(body, assets) : '';
 const excerptHtml = '';
 const articleUrl = `${siteUrl}/case-studies/${entry?.slug}`;
 
-const articleSchema = { '@context': 'https://schema.org', '@type': 'Article', headline: pageTitle, description: metaDescription || title, url: articleUrl, ...(ogImageFull && { image: ogImageFull }), ...(publishedAt && { datePublished: publishedAt }), author: { '@type': 'Organization', name: 'Vehicle Imagery' }, publisher: { '@type': 'Organization', name: 'Vehicle Imagery', logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.svg` } } };
-const breadcrumbSchema = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` }, { '@type': 'ListItem', position: 2, name: 'Case Studies', item: `${siteUrl}/case-studies` }, { '@type': 'ListItem', position: 3, name: pageTitle, item: articleUrl }] };
+const articleSchema: Record<string, unknown> = {
+  '@type': 'Article',
+  '@id': `${articleUrl}#article`,
+  headline: pageTitle,
+  description: metaDescription || title,
+  url: articleUrl,
+  inLanguage: 'en-US',
+  isPartOf: { '@id': `${siteUrl}/#website` },
+  ...(ogImageFull && { image: ogImageFull }),
+  ...(publishedAt && { datePublished: publishedAt }),
+  author: { '@id': `${siteUrl}/#organization` },
+  publisher: { '@id': `${siteUrl}/#organization` },
+  mainEntityOfPage: { '@id': `${articleUrl}#webpage` },
+};
+const breadcrumbSchema = {
+  '@type': 'BreadcrumbList',
+  '@id': `${articleUrl}#breadcrumb`,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: 'Case Studies', item: `${siteUrl}/case-studies` },
+    { '@type': 'ListItem', position: 3, name: pageTitle, item: articleUrl },
+  ],
+};
+const caseStudyStructuredData: unknown[] = [articleSchema, breadcrumbSchema];
 ---
 
-<BaseLayout title={pageTitle} description={metaDescription} ogImage={ogImageFull} ogImageAlt={featuredImageAlt} canonicalUrl={`/case-studies/${entry?.slug}`} noIndex={noIndex}>
+<BaseLayout title={pageTitle} description={metaDescription} ogImage={ogImageFull} ogImageAlt={featuredImageAlt} canonicalUrl={`/case-studies/${entry?.slug}`} noIndex={noIndex} structuredDataGraph={caseStudyStructuredData}>
   <Header />
-  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <main class="min-h-screen bg-cream">
     <header class="relative">
       {featuredImageUrl && (
