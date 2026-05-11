@@ -718,32 +718,49 @@ export async function loadDocumentationPage(opts: { locale?: string } = {}): Pro
   const entriesById = new Map(entryRows.map((r) => [r.id, r]));
   const extrasById = new Map(extraRows.map((r) => [r.id, r]));
 
+  /** Verlinkte Endpoints zuerst (CMS-Reihenfolge), dann alle übrigen D1-Zeilen — sonst erscheinen neue Rows nicht ohne Parent-Update. */
+  const linkedEndpointIds = (p.endpoints ?? [])
+    .map((link) => link?.sys?.id)
+    .filter((id): id is string => Boolean(id));
+  const endpointRowsOrdered: CmsRow<CmsDocEntryPayload>[] = [];
+  const seenEndpointIds = new Set<string>();
+  for (const id of linkedEndpointIds) {
+    const row = entriesById.get(id);
+    if (row && !seenEndpointIds.has(row.id)) {
+      endpointRowsOrdered.push(row);
+      seenEndpointIds.add(row.id);
+    }
+  }
+  for (const row of entryRows) {
+    if (!seenEndpointIds.has(row.id)) {
+      endpointRowsOrdered.push(row);
+      seenEndpointIds.add(row.id);
+    }
+  }
+
   const endpointSlugs = new Set<string>();
-  const endpoints: DocEndpoint[] = (p.endpoints ?? [])
-    .map((link) => entriesById.get(link?.sys?.id ?? ''))
-    .filter((r): r is CmsRow<CmsDocEntryPayload> => Boolean(r))
-    .map((r) => {
-      const title = r.payload.title ?? r.id;
-      let exampleResponseJson: string | undefined;
-      const ex = r.payload.exampleResponse;
-      if (ex !== undefined && ex !== null) {
-        try {
-          exampleResponseJson = typeof ex === 'string' ? ex : JSON.stringify(ex, null, 2);
-        } catch {
-          exampleResponseJson = String(ex);
-        }
+  const endpoints: DocEndpoint[] = endpointRowsOrdered.map((r) => {
+    const title = r.payload.title ?? r.id;
+    let exampleResponseJson: string | undefined;
+    const ex = r.payload.exampleResponse;
+    if (ex !== undefined && ex !== null) {
+      try {
+        exampleResponseJson = typeof ex === 'string' ? ex : JSON.stringify(ex, null, 2);
+      } catch {
+        exampleResponseJson = String(ex);
       }
-      return {
-        id: r.id,
-        slug: uniqueSlug(slugify(title), `endpoint-${r.id}`, endpointSlugs),
-        type: r.payload.type,
-        title,
-        describtion: r.payload.describtion,
-        endpointUrl: r.payload.endpointUrl,
-        queryParameters: Array.isArray(r.payload.queryParameters) ? r.payload.queryParameters : [],
-        exampleResponseJson,
-      };
-    });
+    }
+    return {
+      id: r.id,
+      slug: uniqueSlug(slugify(title), `endpoint-${r.id}`, endpointSlugs),
+      type: r.payload.type,
+      title,
+      describtion: r.payload.describtion,
+      endpointUrl: r.payload.endpointUrl,
+      queryParameters: Array.isArray(r.payload.queryParameters) ? r.payload.queryParameters : [],
+      exampleResponseJson,
+    };
+  });
 
   const extraSlugs = new Set<string>();
   const otherElements: DocExtra[] = (p.otherElements ?? [])
@@ -975,11 +992,25 @@ export async function loadHeaderFooter(opts: { locale?: string } = {}): Promise<
 
   const entriesById = new Map(entryRows.map((r) => [r.id, r]));
 
+  /** Verlinkte Header-Zeilen zuerst (CMS-Reihenfolge), dann alle übrigen D1-Zeilen — sonst fehlen neue Einträge ohne footerHeader-Update. */
   const linkedIds = (p.headerFields ?? [])
     .map((link) => link?.sys?.id)
     .filter((id): id is string => Boolean(id));
-
-  const orderedIds = linkedIds.length > 0 ? linkedIds : entryRows.map((r) => r.id);
+  const allHeaderEntryIds = entryRows.map((r) => r.id);
+  const orderedIds: string[] = [];
+  const seenHeaderId = new Set<string>();
+  for (const id of linkedIds) {
+    if (!seenHeaderId.has(id)) {
+      seenHeaderId.add(id);
+      orderedIds.push(id);
+    }
+  }
+  for (const id of allHeaderEntryIds) {
+    if (!seenHeaderId.has(id)) {
+      seenHeaderId.add(id);
+      orderedIds.push(id);
+    }
+  }
 
   const subItemsByGroup: Record<string, HeaderSubItem[]> = {};
   const groupOrder: string[] = [];
