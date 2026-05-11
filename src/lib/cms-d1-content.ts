@@ -34,6 +34,30 @@ export function slugify(text: string | undefined | null): string {
     .slice(0, 80);
 }
 
+/** Verlinkte CMS-IDs zuerst, danach alle übrigen Zeilen aus `allRows` (ohne Duplikate). */
+function mergeCmsRowsByLinkedIds<T>(
+  linkedIds: string[],
+  rowsById: Map<string, CmsRow<T>>,
+  allRows: CmsRow<T>[],
+): CmsRow<T>[] {
+  const out: CmsRow<T>[] = [];
+  const seen = new Set<string>();
+  for (const id of linkedIds) {
+    const row = rowsById.get(id);
+    if (row && !seen.has(row.id)) {
+      out.push(row);
+      seen.add(row.id);
+    }
+  }
+  for (const row of allRows) {
+    if (!seen.has(row.id)) {
+      out.push(row);
+      seen.add(row.id);
+    }
+  }
+  return out;
+}
+
 export function plainTextDocument(text: string | undefined | null): Document | undefined {
   const value = (text ?? '').trim();
   if (!value) return undefined;
@@ -376,7 +400,7 @@ export async function loadChangelogs(opts: { locale?: string; limit?: number } =
  * FAQ
  * ======================================================================= */
 
-export type CmsFaqCategoryPayload = { categoryName?: string };
+export type CmsFaqCategoryPayload = { categoryName?: string; entrys?: EntryLink[] };
 export type CmsFaqEntryPayload = {
   question?: string;
   answer?: string;
@@ -427,32 +451,63 @@ export async function loadFaqs(opts: { locale?: string } = {}): Promise<FaqResul
     getCmsRows<CmsFaqEntryPayload>('faqEntrys', locale, 1000),
   ]);
 
+  const entriesById = new Map(entryRows.map((r) => [r.id, r]));
   const catLabel = new Map<string, string>();
-  const catOrder = new Map<string, number>();
-  catRows.forEach((c, i) => {
+  catRows.forEach((c) => {
     catLabel.set(c.id, c.payload.categoryName ?? c.id);
-    catOrder.set(c.id, i);
   });
 
-  const counts = new Map<string, number>();
   const entries: FaqEntry[] = [];
-  entryRows.forEach((row, i) => {
+  let order = 0;
+  const usedEntryIds = new Set<string>();
+
+  const appendEntry = (row: CmsRow<CmsFaqEntryPayload>, categoryLabel: string, categorySlug: string) => {
     const p = row.payload;
     if (!p.question) return;
-    const catId = p.faqCategory?.sys?.id ?? '';
-    const catName = catLabel.get(catId) ?? 'general';
-    const cSlug = slugify(catName) || 'general';
-    counts.set(cSlug, (counts.get(cSlug) ?? 0) + 1);
     entries.push({
       id: row.id,
       question: p.question,
       answerHtml: plainTextToHtml(p.answer ?? ''),
       answerText: (p.answer ?? '').trim(),
-      categorySlug: cSlug,
-      categoryLabel: catName,
-      order: i,
+      categorySlug,
+      categoryLabel,
+      order: order++,
     });
-  });
+    usedEntryIds.add(row.id);
+  };
+
+  for (const c of catRows) {
+    const cid = c.id;
+    const label = catLabel.get(cid) ?? c.id;
+    const cSlug = slugify(label) || slugify(c.id) || 'general';
+
+    const linkedIds = (c.payload.entrys ?? [])
+      .map((link) => link?.sys?.id)
+      .filter((id): id is string => Boolean(id));
+
+    const inThisCategory = entryRows.filter((r) => r.payload.faqCategory?.sys?.id === cid);
+    const mergedRows = mergeCmsRowsByLinkedIds(linkedIds, entriesById, inThisCategory);
+
+    for (const row of mergedRows) {
+      if (usedEntryIds.has(row.id)) continue;
+      appendEntry(row, label, cSlug);
+    }
+  }
+
+  for (const row of entryRows) {
+    if (usedEntryIds.has(row.id)) continue;
+    const p = row.payload;
+    if (!p.question) continue;
+    const catId = p.faqCategory?.sys?.id ?? '';
+    const catName = catLabel.get(catId) ?? 'general';
+    const cSlug = slugify(catName) || 'general';
+    appendEntry(row, catName, cSlug);
+  }
+
+  const counts = new Map<string, number>();
+  for (const e of entries) {
+    counts.set(e.categorySlug, (counts.get(e.categorySlug) ?? 0) + 1);
+  }
 
   const seen = new Map<string, FaqCategory>();
   catRows.forEach((c) => {
@@ -462,10 +517,14 @@ export async function loadFaqs(opts: { locale?: string } = {}): Promise<FaqResul
       seen.set(cs, { id: c.id, slug: cs, label: name, count: counts.get(cs) ?? 0 });
     }
   });
-  // Falls Eintr\u00e4ge ohne passende Kategorie referenziert sind, trotzdem listen.
   for (const [cs, n] of counts) {
     if (!seen.has(cs)) {
-      seen.set(cs, { id: cs, slug: cs, label: cs.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()), count: n });
+      seen.set(cs, {
+        id: cs,
+        slug: cs,
+        label: cs.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
+        count: n,
+      });
     }
   }
 
@@ -718,25 +777,10 @@ export async function loadDocumentationPage(opts: { locale?: string } = {}): Pro
   const entriesById = new Map(entryRows.map((r) => [r.id, r]));
   const extrasById = new Map(extraRows.map((r) => [r.id, r]));
 
-  /** Verlinkte Endpoints zuerst (CMS-Reihenfolge), dann alle übrigen D1-Zeilen — sonst erscheinen neue Rows nicht ohne Parent-Update. */
   const linkedEndpointIds = (p.endpoints ?? [])
     .map((link) => link?.sys?.id)
     .filter((id): id is string => Boolean(id));
-  const endpointRowsOrdered: CmsRow<CmsDocEntryPayload>[] = [];
-  const seenEndpointIds = new Set<string>();
-  for (const id of linkedEndpointIds) {
-    const row = entriesById.get(id);
-    if (row && !seenEndpointIds.has(row.id)) {
-      endpointRowsOrdered.push(row);
-      seenEndpointIds.add(row.id);
-    }
-  }
-  for (const row of entryRows) {
-    if (!seenEndpointIds.has(row.id)) {
-      endpointRowsOrdered.push(row);
-      seenEndpointIds.add(row.id);
-    }
-  }
+  const endpointRowsOrdered = mergeCmsRowsByLinkedIds(linkedEndpointIds, entriesById, entryRows);
 
   const endpointSlugs = new Set<string>();
   const endpoints: DocEndpoint[] = endpointRowsOrdered.map((r) => {
@@ -762,19 +806,21 @@ export async function loadDocumentationPage(opts: { locale?: string } = {}): Pro
     };
   });
 
+  const linkedExtraIds = (p.otherElements ?? [])
+    .map((link) => link?.sys?.id)
+    .filter((id): id is string => Boolean(id));
+  const extraRowsOrdered = mergeCmsRowsByLinkedIds(linkedExtraIds, extrasById, extraRows);
+
   const extraSlugs = new Set<string>();
-  const otherElements: DocExtra[] = (p.otherElements ?? [])
-    .map((link) => extrasById.get(link?.sys?.id ?? ''))
-    .filter((r): r is CmsRow<CmsDocExtraPayload> => Boolean(r))
-    .map((r) => {
-      const name = r.payload.name ?? r.id;
-      return {
-        id: r.id,
-        slug: uniqueSlug(slugify(name), `extra-${r.id}`, extraSlugs),
-        name,
-        inhalt: r.payload.inhalt,
-      };
-    });
+  const otherElements: DocExtra[] = extraRowsOrdered.map((r) => {
+    const name = r.payload.name ?? r.id;
+    return {
+      id: r.id,
+      slug: uniqueSlug(slugify(name), `extra-${r.id}`, extraSlugs),
+      name,
+      inhalt: r.payload.inhalt,
+    };
+  });
 
   return {
     title: p.title ?? 'Documentation',
