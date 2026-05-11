@@ -1254,8 +1254,8 @@ type CmsContactPagesPayload = {
   title?: string;
   topText?: Document;
   bottomText?: Document;
-  /** z. B. ["Book a Call"] oder ["Contact"] */
-  which?: string[];
+  /** z. B. ["Book a Call"], ["Contact"], ["Contact Form"], … */
+  which?: string[] | string;
   metaTitle?: string;
   metaDescription?: string;
 };
@@ -1275,15 +1275,29 @@ function normalizeContactWhichTag(raw: string): string {
     .replace(/[\s_]+/g, ' ');
 }
 
+function contactWhichTags(which: string[] | string | undefined): string[] {
+  if (Array.isArray(which)) return which.map(normalizeContactWhichTag).filter(Boolean);
+  if (typeof which === 'string' && which.trim()) return [normalizeContactWhichTag(which)];
+  return [];
+}
+
+/** Contact-Seite: exakt "contact" oder übliche Varianten wie "Contact Form" / contactform. */
+function contactTagMeansContactPage(t: string): boolean {
+  if (!t) return false;
+  if (t === 'contact' || t === 'contactform') return true;
+  if (t.startsWith('contact ')) return true;
+  return false;
+}
+
 function contactRowMatchesVariant(
-  which: string[] | undefined,
+  which: string[] | string | undefined,
   variant: 'contact' | 'book-a-call',
 ): boolean {
-  const tags = (Array.isArray(which) ? which : []).map(normalizeContactWhichTag);
+  const tags = contactWhichTags(which);
   if (variant === 'book-a-call') {
     return tags.some((t) => t === 'book a call' || t === 'book-a-call');
   }
-  return tags.some((t) => t === 'contact');
+  return tags.some((t) => contactTagMeansContactPage(t));
 }
 
 /**
