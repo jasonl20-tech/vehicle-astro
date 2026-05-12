@@ -1254,7 +1254,7 @@ type CmsContactPagesPayload = {
   title?: string;
   topText?: Document;
   bottomText?: Document;
-  /** z. B. ["Book a Call"], ["Contact"], ["Contact Form"], … */
+  /** z. B. ["Book a Call"], ["Contact"], ["Contact Form"], … oder JSON-String eines Arrays */
   which?: string[] | string;
   metaTitle?: string;
   metaDescription?: string;
@@ -1271,13 +1271,37 @@ export type ContactPageContent = {
 function normalizeContactWhichTag(raw: string): string {
   return String(raw)
     .trim()
+    .replace(/\u00a0/g, ' ')
     .toLowerCase()
     .replace(/[\s_]+/g, ' ');
 }
 
-function contactWhichTags(which: string[] | string | undefined): string[] {
-  if (Array.isArray(which)) return which.map(normalizeContactWhichTag).filter(Boolean);
-  if (typeof which === 'string' && which.trim()) return [normalizeContactWhichTag(which)];
+/** Tags aus which[]; toleriert JSON-String und NBSP. */
+function contactWhichTags(which: unknown): string[] {
+  if (which == null) return [];
+  if (Array.isArray(which)) {
+    return which
+      .map((x) => (x == null ? '' : normalizeContactWhichTag(String(x))))
+      .filter(Boolean);
+  }
+  if (typeof which === 'string') {
+    const t = which.trim().replace(/\u00a0/g, ' ');
+    if (!t) return [];
+    if (t.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(t) as unknown;
+        if (Array.isArray(parsed)) {
+          return parsed
+            .map((x) => (x == null ? '' : normalizeContactWhichTag(String(x))))
+            .filter(Boolean);
+        }
+      } catch {
+        /* weiter mit Einzel-Tag */
+      }
+    }
+    const one = normalizeContactWhichTag(t);
+    return one ? [one] : [];
+  }
   return [];
 }
 
@@ -1290,7 +1314,7 @@ function contactTagMeansContactPage(t: string): boolean {
 }
 
 function contactRowMatchesVariant(
-  which: string[] | string | undefined,
+  which: unknown,
   variant: 'contact' | 'book-a-call',
 ): boolean {
   const tags = contactWhichTags(which);
@@ -1300,21 +1324,41 @@ function contactRowMatchesVariant(
   return tags.some((t) => contactTagMeansContactPage(t));
 }
 
+function contactRowIsExplicitBookACall(which: unknown): boolean {
+  return contactRowMatchesVariant(which, 'book-a-call');
+}
+
 /**
  * Liest eine Zeile aus D1 `contactPages`, passend zu `which` (Contact vs. Book a Call).
  * Reihenfolge: neuestes updated_at zuerst (wie getCmsRows).
+ * Locale: zuerst angefragt, dann `en-US` / `en` falls leer (häufiger D1-Pfad).
+ * Contact: wenn kein which-Treffer, erste Zeile die nicht explizit „Book a Call“ ist.
  */
 export async function loadContactPage(
   variant: 'contact' | 'book-a-call',
   opts: { locale?: string } = {},
 ): Promise<{ page: ContactPageContent | null; assets: AssetMap }> {
-  const locale = opts.locale ?? 'en-US';
-  const [rows, assets] = await Promise.all([
-    getCmsRows<CmsContactPagesPayload>('contactPages', locale, 200),
-    loadAssetMap(locale),
-  ]);
+  const requested = opts.locale ?? 'en-US';
+  const localeCandidates = [...new Set([requested, 'en-US', 'en'].filter(Boolean))];
 
-  const row = rows.find((r) => contactRowMatchesVariant(r.payload.which, variant));
+  let rows: CmsRow<CmsContactPagesPayload>[] = [];
+  let usedLocale = requested;
+  for (const loc of localeCandidates) {
+    const batch = await getCmsRows<CmsContactPagesPayload>('contactPages', loc, 200);
+    if (batch.length > 0) {
+      rows = batch;
+      usedLocale = loc;
+      break;
+    }
+  }
+
+  const assets = await loadAssetMap(usedLocale);
+
+  let row = rows.find((r) => contactRowMatchesVariant(r.payload.which, variant));
+  if (!row && variant === 'contact' && rows.length > 0) {
+    row = rows.find((r) => !contactRowIsExplicitBookACall(r.payload.which));
+  }
+
   if (!row) {
     return { page: null, assets };
   }
