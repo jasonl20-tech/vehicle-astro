@@ -30,7 +30,6 @@ const underlineInput =
   `w-full border-0 border-b border-b-white/15 bg-transparent px-0 py-3 text-[13px] text-white caret-[rgb(200,90,70)] placeholder:text-white/40 shadow-none transition-colors focus:border-0 focus:border-b focus:border-[rgb(200,90,70)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,90,70)]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C2B32]`;
 const underlineTextarea =
   `min-h-[4.5rem] w-full resize-y border-0 border-b border-b-white/15 bg-transparent px-0 py-3 text-[13px] text-white caret-[rgb(200,90,70)] placeholder:text-white/40 shadow-none transition-colors focus:border-b focus:border-[rgb(200,90,70)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(200,90,70)]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C2B32]`;
-const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 lg:px-6';
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription} canonicalUrl={canonicalUrl}>
@@ -42,9 +41,8 @@ const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 l
       </section>
     )}
     {hasForm && form && (
-      <section class="w-full pb-16 pt-4">
-        <div class={shellPad}>
-          <div class="mx-auto flex w-full max-w-xl justify-center">
+      <section class="mx-auto max-w-[900px] px-6 pb-16 pt-4 sm:px-12 lg:px-16">
+        <div class="w-full">
             <div
               class="cms-contact-form-panel group relative w-full overflow-hidden rounded-[2rem] text-white transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(28,43,50,0.45)]"
               style={`background-color: ${panelDark}; color-scheme: dark;`}
@@ -263,7 +261,6 @@ const shellPad = 'mx-auto w-full max-w-[min(100%,1680px)] px-3 sm:px-4 md:px-5 l
                 </script>
               </div>
             </div>
-          </div>
         </div>
       </section>
     )}
