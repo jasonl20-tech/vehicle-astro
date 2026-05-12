@@ -41,43 +41,6 @@ const [hf, firma] = await Promise.all([
   loadFirmenKonfiguration({ locale: cfLocale }).catch(() => null),
 ]);
 
-// Static site-map sections — guarantee at least one internal inlink for every
-// important route on every page (kills Ahrefs orphan reports).
-type StaticFooterSection = { name: string; links: Array<{ label: string; href: string }> };
-
-const productLabel = hf?.productLabel?.trim() || 'Product';
-const resourcesLabel = hf?.resourcesLabel?.trim() || 'Resources';
-const companyLabel = hf?.companyLabel?.trim() || 'Company';
-
-const staticFooterSections: StaticFooterSection[] = [
-  {
-    name: productLabel,
-    links: [
-      { label: 'Pricing', href: l('/pricing') },
-      { label: 'Startups', href: l('/pricing/startups') },
-      { label: 'Free Trial', href: l('/trial') },
-      { label: 'Documentation', href: l('/documentation') },
-    ],
-  },
-  {
-    name: resourcesLabel,
-    links: [
-      { label: 'Blog', href: l('/blog') },
-      { label: 'Changelog', href: l('/changelog') },
-      { label: 'Case Studies', href: l('/case-studies') },
-      { label: 'FAQ', href: l('/faq') },
-      { label: 'Press', href: l('/press') },
-    ],
-  },
-  {
-    name: companyLabel,
-    links: [
-      { label: 'Contact', href: l('/contact') },
-      { label: 'Book a Call', href: l('/book-a-call') },
-    ],
-  },
-];
-
 const currentYear = new Date().getFullYear();
 const MAX_LINKS = 10;
 ---
@@ -155,21 +118,8 @@ const MAX_LINKS = 10;
         )}
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 lg:gap-10 mb-12 items-start">
-        {staticFooterSections.map((section) => (
-          <div>
-            <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{section.name}</h4>
-            <ul class="space-y-4 text-sm text-gray-300">
-              {section.links.map((link) => (
-                <li><a class="hover:text-white transition-colors" href={link.href}>{link.label}</a></li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
       {footerSections.length > 0 && (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 mb-12 items-start border-t border-white/10 pt-12">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 lg:gap-10 mb-12 items-start">
           {footerSections.map((section) => (
             <div>
               <h4 class="font-bold text-white mb-6 uppercase tracking-widest text-xs opacity-70">{section.name}</h4>
