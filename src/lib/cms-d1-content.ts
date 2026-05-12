@@ -2,7 +2,7 @@
  * Build-time loader for all CMS content from Cloudflare D1.
  * Talks to the REST API of the `cms_contents` table and returns rows in the
  * expected shape per domain (Blog, CaseStudy, Changelog, FAQ, Press,
- * LandingPage, Team authors, contactPages).
+ * LandingPage, Team authors, contactPages, forms).
  *
  * No Worker context required — works in any build (local, GitHub Actions,
  * Cloudflare Pages build). Bindings are not used.
@@ -1256,8 +1256,37 @@ type CmsContactPagesPayload = {
   bottomText?: Document;
   /** z. B. ["Book a Call"], ["Contact"], ["Contact Form"], … oder JSON-String eines Arrays */
   which?: string[] | string;
+  /** Optional: `forms`-Eintrag (Contentful-Link `sys.id`) für Kontaktformular-Labels */
+  contactForm?: EntryLink;
   metaTitle?: string;
   metaDescription?: string;
+};
+
+/** D1 `content_type`: forms — Feldnamen wie im CMS (u. a. deutsch „Feld“). */
+export type CmsFormPayload = {
+  formName?: string;
+  nameFeld?: string;
+  emailFeld?: string;
+  companyFeld?: string;
+  messageFeld?: string;
+  submitButtonTranslation?: string;
+  sendButton?: string;
+};
+
+/** Aufbereitetes Kontaktformular für /contact (nicht für book-a-call). */
+export type ContactPageForm = {
+  /** `subject` für /api/submit → submissions.form_tag */
+  subject: string;
+  heading?: string;
+  submitLabel: string;
+  showName: boolean;
+  showEmail: boolean;
+  showCompany: boolean;
+  showMessage: boolean;
+  nameLabel: string;
+  emailLabel: string;
+  companyLabel: string;
+  messageLabel: string;
 };
 
 export type ContactPageContent = {
@@ -1266,6 +1295,8 @@ export type ContactPageContent = {
   bottomText?: Document;
   metaTitle: string;
   metaDescription: string;
+  /** Nur Contact-Variante: aus D1 `forms` */
+  form?: ContactPageForm;
 };
 
 function normalizeContactWhichTag(raw: string): string {
@@ -1328,6 +1359,54 @@ function contactRowIsExplicitBookACall(which: unknown): boolean {
   return contactRowMatchesVariant(which, 'book-a-call');
 }
 
+async function resolveContactPageForm(
+  contactPayload: CmsContactPagesPayload,
+  locale: string,
+): Promise<ContactPageForm | null> {
+  const formRows = await getCmsRows<CmsFormPayload>('forms', locale, 80);
+  if (formRows.length === 0) return null;
+
+  const linkId = contactPayload.contactForm?.sys?.id?.trim();
+  let chosen: CmsRow<CmsFormPayload> | undefined;
+  if (linkId) {
+    chosen = formRows.find((r) => r.id === linkId);
+  }
+  if (!chosen) {
+    /* Neueste `forms`-Row ist oft die Trial-Mail-only-Zeile — zuerst volles Formular (messageFeld) wählen. */
+    chosen = formRows.find((r) => (r.payload.messageFeld ?? '').trim().length > 0);
+  }
+  if (!chosen) {
+    chosen = formRows.find((r) => (r.payload.emailFeld ?? '').trim().length > 0);
+  }
+  if (!chosen) return null;
+
+  const fp = chosen.payload;
+  const heading = (fp.formName ?? '').trim() || undefined;
+  const subject = (heading || 'Contact page').slice(0, 500);
+  const submitRaw = (fp.submitButtonTranslation ?? fp.sendButton ?? '').trim();
+  const submitLabel = submitRaw || 'Send';
+
+  const hasMsg = Boolean((fp.messageFeld ?? '').trim());
+  const showMessage = hasMsg;
+  const showName = Boolean((fp.nameFeld ?? '').trim());
+  const showCompany = Boolean((fp.companyFeld ?? '').trim());
+  const showEmail = Boolean((fp.emailFeld ?? '').trim()) || !showName;
+
+  return {
+    subject,
+    heading,
+    submitLabel,
+    showName,
+    showEmail,
+    showCompany,
+    showMessage,
+    nameLabel: (fp.nameFeld ?? '').trim() || 'Name',
+    emailLabel: (fp.emailFeld ?? '').trim() || 'Email',
+    companyLabel: (fp.companyFeld ?? '').trim() || 'Company',
+    messageLabel: (fp.messageFeld ?? '').trim() || 'Message',
+  };
+}
+
 /**
  * Liest eine Zeile aus D1 `contactPages`, passend zu `which` (Contact vs. Book a Call).
  * Reihenfolge: neuestes updated_at zuerst (wie getCmsRows).
@@ -1375,6 +1454,12 @@ export async function loadContactPage(
     richTextToPlainText(p.topText, 165) ||
     richTextToPlainText(p.bottomText, 165);
 
+  let form: ContactPageForm | undefined;
+  if (variant === 'contact') {
+    const resolved = await resolveContactPageForm(p, usedLocale);
+    if (resolved) form = resolved;
+  }
+
   return {
     page: {
       title: (p.title ?? '').trim() || metaTitle,
@@ -1382,6 +1467,7 @@ export async function loadContactPage(
       bottomText: p.bottomText,
       metaTitle,
       metaDescription,
+      ...(form ? { form } : {}),
     },
     assets,
   };

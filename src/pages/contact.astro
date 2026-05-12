@@ -27,6 +27,7 @@ const bottomHtml = page?.bottomText ? renderRichText(page.bottomText, assets) : 
       canonicalUrl="/contact"
       topHtml={topHtml}
       bottomHtml={bottomHtml}
+      form={page.form}
     />
   ) : (
     <BaseLayout title="Contact" description="" canonicalUrl="/contact">
